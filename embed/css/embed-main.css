@@ -1,0 +1,7 @@
+html,body{height: 100%;}
+.mui-icon-closeempty{padding: 2px !important;font-size: 42px !important;}
+.head-btn{	padding: 10px 15px;color: #1ABC9C;}
+.head-title{left: 65px !important;right: 65px !important;}
+#url_view{font-size: 14px;}
+#url_ipt {-webkit-user-select: auto;background: rgba(0, 0, 0, 0);padding: 0;border: 0px;margin: 0;border-radius: 0;font-size: 14px;border-bottom: 1px solid #1ABC9C;}
+.mui-icon-clear{position: absolute;top: 0;right: 0;padding: 11px 15px;background: white;}

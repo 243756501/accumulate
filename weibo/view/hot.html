@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/icomoon.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/hot.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/module.css"/>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/weibo.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.pullToRefresh.js"></script>
+		<script src="../../js/mui.pullToRefresh.material.js"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-back mui-pull-left"></i>
+			<i id="flushBtn" class="mui-icon mui-icon-refresh mui-pull-right hu-hd-btn"></i>
+			<h1 class="mui-title">热门话题</h1>
+		</header>
+		<div id="sliderView" class="mui-slider mui-fullscreen">
+			<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+				<a topic_class="1" class="mui-control-item mui-active" href="#item1day">
+	            	24小时热门
+				</a>
+				<a topic_class="2" class="mui-control-item" href="#item2week">
+					七日热门
+				</a>
+			</div>
+			<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-6"></div>
+			<div id="loading_page" style="text-align: center;margin-top: 60%;">
+				<i class="mui-spinner"></i>
+			</div>
+			<div id="pullrefresh" style="display: none;" class="mui-slider-group">
+				<div id="item1day" class="mui-slider-item mui-control-content mui-active">
+					<div id="dayScrollWp" class="mui-scroll-wrapper">
+						<div id="dayPullresh" topic_class="1" class="mui-scroll">
+							<ul id="day_hot_list" id="hours-hot" class="mui-table-view">
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div id="item2week" class="mui-slider-item mui-control-content">
+					<div id="weekScrollWp" class="mui-scroll-wrapper">
+						<div id="weekPullresh" topic_class="2" class="mui-scroll">
+							<ul id="week_hot_list" class="mui-table-view">
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--列表项模板-->
+		<script id="hot_topic_li" type="text/html">
+			{{each data as value i}}
+			<li id="{{value.id}}" class="mui-table-view-cell mui-media">
+				<div class="hot mui-clearfix">
+					<img class="imge mui-pull-left" onload="load(this)" src="../../images/topicavatar.png" data-src="{{if value.logo_url.thumb != null}}{{value.logo_url.thumb}}{{/if}}">
+					<div class="mui-media-body">
+						<div class="top-box ">
+							<b{{if page==1 }}
+								{{if i==0 }}style="background-color: #EE4E2F;color: white;"
+								{{/if}}
+								{{if i==1 }}style="background-color: #F39C11;color: white;" 
+								{{/if}}
+								{{if i==2 }}
+								style="background-color: #2AC25F;color: white;"
+								{{/if}}
+							{{/if}} 
+							class="hot-sort">top {{(page-1)*10 + (i + 1)}}</b>
+							<a class="mui-ellipsis">#{{value.name}}#</a>
+						</div>
+						<p class="mui-ellipsis-2 ">{{value.intro}}</p>
+						<div class="bottom-list ">
+							<div class="mui-grid-view mui-clearfix ">
+								<span class="mui-pull-left mui-text-center mui-col-xs-6 ">
+									<i class="icon-bubbles4"></i>{{value.weibos}}</span>
+								<span class="mui-pull-left mui-text-center mui-col-xs-6 ">
+									<i class="icon-fire"></i>{{value.read_count}}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</li>
+			{{/each}}
+		</script>
+    <script src="./js/hot.js"  type="text/javascript"></script>
+	</body>
+</html>

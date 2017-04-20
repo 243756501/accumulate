@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../css/store-main.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/store-goods-list.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/module.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/module.css"/>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+    	.mui-pull-top-pocket{
+	    	top: 90px !important;
+	    }
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <h1 id="class_title" class="mui-title"></h1>
+		<i class="mui-icon mui-action-back scan-btn mui-icon-left-nav"></i>
+		<div class="top-right-view">
+			<span id="store_search" class="mui-icon mui-icon-search right-search hu-hd-btn"></span>
+			<span id="center" class="mui-icon hu-hd-btn">
+				<span class="mui-icon-home">
+				<i id="notice_icon" class="mui-badge notice-icon"></i></span>
+			</span>
+		</div>
+	</header>
+		<!--商品排序导航栏-->
+	<div style="margin-top: 50px;" class="goods-nav">
+		<div id="order_nav" class="mui-segmented-control mui-segmented-control-negative mui-segmented-control-inverted">
+			<a id="sell" class="mui-control-item mui-active">销量</a>
+			<a id="price" class="mui-control-item">
+				<span style="display: inline-block;">价格</span>
+				<div style="display: inline-block;vertical-align: sub;">
+					<i id="price2" class="mui-icon mui-icon-arrowup price-icon"></i>
+					<i id="price1" class="mui-icon mui-icon-arrowdown price-icon"></i>
+				</div>
+			</a>
+			<a id="reputation" class="mui-control-item">好评</a>
+		</div>
+	</div>
+</body>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init({
+      		subpages:[{
+      			url:'store-goods-list-body.html',
+      			id:'store-goods-list-body',
+      			styles:{
+      				top:'95px',
+      				bottom:'0px'
+      			}
+      		}]
+      	});
+      	
+      	var classTitle = document.getElementById('class_title');
+      	var priceIcon1 = document.getElementById('price1');
+      	var priceIcon2 = document.getElementById('price2');
+      	var searchBtn = document.getElementById('store_search');
+		var noticeIcon = document.getElementById('notice_icon');
+		var CenterButton=document.getElementById('center');
+      	
+		/*数据传递方法*/
+		var thisChangeTitle = function(title){
+			classTitle.innerHTML = title;
+		}
+      	
+      	mui.plusReady(function(){
+			var bodyWeb = plus.webview.getWebviewById('store-goods-list-body');
+			var price = 'price1';
+			mui('#order_nav').on('tap','a',function(e){
+				var navId = this.id;
+				if(bodyWeb == null){
+					bodyWeb = plus.webview.getWebviewById('store-goods-list-body');
+				}
+				if(navId == 'price'){
+					if(price == 'price1'){
+						navId = 'price2';
+						price = 'price2'
+						priceIcon1.style.color = 'black';
+						priceIcon2.style.color = '#dd524d';
+					}else{
+						navId = 'price1';
+						price = 'price1'
+						priceIcon2.style.color = 'black';
+						priceIcon1.style.color = '#dd524d';
+					}
+				}else{
+					priceIcon1.style.color = 'black';
+					priceIcon2.style.color = 'black';
+				}
+				bodyWeb.evalJS('chang_nav_store("'+ navId +'")');
+			})
+			
+			var page = plus.webview.getWebviewById('store-search');
+			if(page == null){
+				var page = mui.preload({
+					url:'store-search.html',
+					id:'store-search'
+				});
+			}
+			
+			/*打开搜索页面*/
+			searchBtn.addEventListener('tap',function(e){
+				page.show('slide-in-right');
+			})
+			//个人中心
+			CenterButton.addEventListener('tap', function(event) {
+				if(is_login()){
+					noticeIcon.style.display = 'none';
+					mui.openWindow({
+	      				url:'store-center.html',
+					    id:'store-center',
+					    show:{
+					    	aniShow:'pop-in'
+					    },//窗口参数
+	      			});
+				}else{
+					toast.info('请登录后操作');
+				}
+			})
+		})
+    </script>
+</html>

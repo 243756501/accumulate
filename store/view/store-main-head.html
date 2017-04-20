@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../css/store-main.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/module.css"/>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/store.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+	    .mui-pull-top-pocket{
+	    	top: 85px !important;
+	    }
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<h1 class="mui-title">微店</h1>
+		<i id="goods_class_btn" class="mui-icon mui-icon-list scan-btn hu-hd-btn"></i>
+		<div class="top-right-view">
+			<span id="store_search" class="mui-icon mui-icon-search right-search hu-hd-btn"></span>
+			<span id="center" class="mui-icon hu-hd-btn">
+				<span class="mui-icon-home">
+				<i id="notice_icon" class="mui-badge notice-icon"></i></span>
+			</span>
+		</div>
+		
+	</header>
+		<!--导航栏-->
+	<div id="store_nav" class="store-nav mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+		<a href-data="store_index" class="mui-control-item mui-active">首页</a>
+		<a href-data="store_goods_list" class="mui-control-item">商品</a>
+		<a href-data="store_shop" class="mui-control-item">店铺街</a>
+		<!--<a href-data="store_mine" class="mui-control-item">我的微店</a>-->
+	</div>
+</body>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init({
+		    subpages:[{
+			    url:'store-main-body.html',//子页面HTML地址，支持本地地址和网络地址
+			    id:'store-main-body',//子页面标志
+			    styles:{
+			    	top:'85px',
+			    	bottom: '0'
+		    	}
+		    }]
+		});
+		
+		var goodsClassBtn = document.getElementById('goods_class_btn');
+		var noticeIcon = document.getElementById('notice_icon');
+		var searchBtn = document.getElementById('store_search');
+		var centerPage = null;
+		var searchWeb = null;
+		var goodsClassWeb = null;
+		
+		/*打开商品分类*/
+		goodsClassBtn.addEventListener('tap',function(e){
+			goodsClassWeb.show('pop-in');
+		});
+		
+		mui.plusReady(function(){
+			
+			var bodyWeb = plus.webview.getWebviewById('store-main-body');
+			
+			/*选项卡切换事件实现*/
+			mui('#store_nav').on('tap','a',function(e){
+				var navId = this.getAttribute('href-data');
+				if(bodyWeb == null){
+					bodyWeb = plus.webview.getWebviewById('store-main-body');
+				}
+				bodyWeb.evalJS('chang_nav_store("'+ navId +'")');
+			})
+			var CenterButton=document.getElementById('center');
+				
+			
+			CenterButton.addEventListener('tap', function(event) {
+				if(is_login()){
+					noticeIcon.style.display = 'none';
+					mui.openWindow({
+	      				url:'store-center.html',
+					    id:'store-center',
+					    show:{
+					    	aniShow:'pop-in'
+					    }
+	      			});
+				}else{
+					toast.info('请登录后操作');
+				}
+			})
+			
+			searchWeb = mui.preload({		//搜索web
+				url:'store-search.html',
+				id:'store-search'
+			});
+			goodsClassWeb = mui.preload({		//商品分类页面
+				url:'store-goods-class.html',
+				id:'store-goods-class',
+			});
+			
+			
+			/*打开搜索页面*/
+			searchBtn.addEventListener('tap',function(e){
+				searchWeb.show('slide-in-right');
+			})
+			
+		})
+    </script>
+</html>

@@ -1,0 +1,35 @@
+.slider-bar .mui-active{
+	border-bottom: 2px solid #007aff !important;
+}
+.question-item{
+	padding: 5px;
+	border-bottom: 5px #F2F2F2 solid;
+}
+.user-header{
+	margin-right:10px;
+	width:40px !important;
+	height:40px;
+	border-radius:50%;
+}
+.answer-count{
+	margin-right:10px;
+	color: white;
+	background: #66CC66;
+}
+.question-title{
+	font-size: 15px;
+	color: black;
+}
+.question-content{
+	line-height: 25px;
+	font-size: 15px;
+	padding-bottom: 5px;
+}
+.create-time{
+	font-size: 12px;
+}
+.rank-label{
+	padding: 2px 7px;
+	border-radius: 10px;
+	font-size: 10px;
+}

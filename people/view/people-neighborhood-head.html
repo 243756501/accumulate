@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">附近的人</h1>
+			<a id="clear" class="mui-action-menu mui-icon mui-icon-bars mui-pull-right"></a>
+		</header>
+
+	</body>
+	<script>
+		mui.init({
+			subpages: [{
+				url: 'people-neighborhood-body.html', //子页面HTML地址，支持本地地址和网络地址
+				id: 'people-neighborhood-body', //子页面标志
+				styles: {
+					top: '45px',
+					bottom: '0px'
+				},
+				extras: {} //额外扩展参数
+			}, ]
+		});
+		document.getElementById('clear').addEventListener('tap', function() {
+			if (mui.os.ios) {
+				plus.webview.getWebviewById('people-neighborhood-body').evalJS('clear()');
+			} else {
+				plus.webview.getWebviewById('people-neighborhood-body').evalJS('mui("#topPopover").popover("toggle")');
+				plus.webview.currentWebview().append(plus.webview.getWebviewById('people-neighborhood-body'));
+			}
+		});
+	</script>
+
+</html>

@@ -1,0 +1,21 @@
+/*透明动画*/
+.img-opacity {
+	animation: anim_opacity 1.4s;
+	-webkit-animation: anim_opacity 1.4s;
+}
+@keyframes anim_opacity {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+@-webkit-keyframes anim_opacity {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/core.js" type="text/javascript"></script>
+		<script src="../../js/app.js" type="text/javascript"></script>
+		<script src="../js/shop.js" type="text/javascript"></script>
+		<script src="../js/shop-render.js"></script>
+		<script src="../../js/template.js" type="text/javascript"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/shop.css" rel="stylesheet" />
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<style>
+			.mui-media-body > p {
+				padding-bottom: 5px;
+			}
+		</style>
+	</head>
+
+	<body style="margin:5px">
+		<div id="loading_page" style="text-align: center;margin-top: 30%;">
+			<i class="mui-spinner"></i>
+		</div>
+		<div id="pullrefresh" style="display: none;" class="mui-scroll-wrapper">
+			<div id="mui-scroll" class="mui-scroll">
+				<ul id="shop_list" class="mui-table-view" style="background: none;">
+
+				</ul>
+			</div>
+		</div>
+	</body>
+
+	<script>
+		mui.init({
+			pullRefresh: {
+				container: '#pullrefresh',
+				down: {
+					contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+					callback: pulldown_refresh
+				},
+				up: {
+					contentrefresh: '正在加载...',
+					callback: pullup_refresh
+				}
+			}
+		});
+		var shopList = document.getElementById('shop_list');
+		var loadPages = document.getElementById('loading_page');
+		var lists = document.getElementById('pullrefresh');
+		var myInfo = {
+			page: 1,
+			type: 'uncompleted'
+		};
+		var loadPage = function(flag) {
+			if (flag) {
+				lists.style.display = 'block';
+				loadPages.style.display = 'none';
+			} else {
+				lists.style.display = 'none';
+				loadPages.style.display = 'block';
+			}
+		}
+		var getList = function(infos) {
+				shop.getMyShopList(infos, function(res) {
+					if (res.code == 200 && res.data != null) {
+						loadPage(true);
+						for (var index in res.data) {
+							res.data[index].goods_detail.changetime = res.data[index].goods_detail.changetime.substr(0, 10);
+							var li = get_shop_li(res.data[index]);
+							shopList.appendChild(li);
+						}
+					} else {
+						loadPage(true);
+						toast.info('当前暂无订单');
+						shopList.innerHTML = '<div style="padding: 30px;text-align: center;margin: 30px 0px;font-size: 14px;color: #AAAAAA;background-color: #EEEEF4;">该分类暂无订单</div>';
+					}
+				})
+			}
+			//阻尼系数
+		var deceleration = mui.os.ios ? 0.003 : 0.0009;
+		mui('#scroll_wrapper').scroll({
+			bounce: true,
+			indicators: true, //是否显示滚动条
+			deceleration: deceleration
+		});
+		mui.plusReady(function() {
+			myInfo.page = 1;
+			getList(myInfo);
+		});
+		window.addEventListener('myShop', function(event) {
+				loadPage(false);
+				//获得事件参数
+				shopList.innerHTML = '';
+				if(mui.os.ios){
+					mui('#pullrefresh').pullRefresh().scrollTo(0,0);
+				}
+				var myId = event.detail.type;
+				myInfo.page = 1;
+				myInfo.type = myId;
+				getList(myInfo);
+			})
+			/*获取单个item LI*/
+		var get_shop_li = function(shopMsg) {
+			var li = document.createElement('li');
+			li.className = 'mui-table-view-cell cell';
+			li.shop_info = shopMsg;
+			if (myInfo.type == 'uncompleted') {
+				var html = parse_shop_html(render_my, shopMsg);
+			} else {
+				var html = parse_shop_html(render_my, shopMsg);
+			}
+			li.innerHTML = html;
+			return li;
+		};
+		/**
+		 * 上拉加载更多
+		 */
+		function pullup_refresh() {
+			myInfo.page++;
+			setTimeout(function() {
+				shop.getMyShopList(myInfo, function(res) {
+					var length = typeof(res.data) == 'undefined' ? 0 : res.data.length;
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(length == 10 ? false : true);
+					if (res.code == 200) {
+						for (var index in res.data) {
+							res.data[index].goods_detail.changetime = res.data[index].goods_detail.changetime.substr(0, 10);
+							var li = get_shop_li(res.data[index]);
+							shopList.appendChild(li);
+						}
+					} else {
+						toast.info('没有更多了');
+					}
+				})
+			}, 500);
+		}
+		/**
+		 * 下拉刷新
+		 */
+		function pulldown_refresh() {
+			setTimeout(function() {
+				myInfo.page = 1;
+				shop.getMyShopList(myInfo, function(res) {
+					if (res.code == 200 && res.data != null) {
+						shopList.innerHTML = '';
+						for (var index in res.data) {
+							res.data[index].goods_detail.changetime = res.data[index].goods_detail.changetime.substr(0, 10);
+							var li = get_shop_li(res.data[index]);
+							shopList.appendChild(li);
+						}
+					}
+					mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+					//重置底部加载状态
+					mui('#pullrefresh').pullRefresh().refresh(true);
+				})
+			}, 500);
+		}
+		/**
+		 * 列表项目点击事件
+		 */
+		mui('#pullrefresh').on('tap', '.mui-table-view-cell', function(e) {
+			mui.openWindow({
+				url: 'shop-detail.html',
+				id: 'shop-detail',
+				extras: {
+					detailInfo: this.shop_info.goods_detail
+				}
+			})
+		});
+	</script>
+
+</html>

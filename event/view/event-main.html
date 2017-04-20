@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/iconfont.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/pull-top-tips.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/event.css"/>
+		<style type="text/css">
+	   	 	html,body{height: 100%;}
+	   	 	.mui-slider-indicator{background: #FFF;height: 42px !important;}
+    	</style>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">活动</h1>
+			<i data-event="my_event"  class="mui-icon mui-icon-contact base-head-btn"></i>
+			<i data-event="send" class="mui-icon icons-fasongwangpandibugongjulan mui-pull-right base-head-btn"></i>
+		</header>
+		
+		<div class="mui-content">
+			<div class="mui-slider mui-fullscreen">
+				<div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+					<div id="nav_list" class="mui-scroll">
+						<a class="mui-control-item mui-active" data-type="0" data-pid='0' href="#item_0">全部</a>
+					</div>
+				</div>
+				<div id="slider_group" class="mui-slider-group">
+					<div id="item_0" class="mui-slider-item mui-control-content mui-active">
+						<div id="scroll_wrapper_0" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<ul id="0" data-page="0" class="mui-table-view"></ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script id="group_tplt" type="text/html">
+			<div id="scroll_wrapper_{{id}}" class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul id="{{id}}" data-page="0" class="mui-table-view"></ul>
+				</div>
+			</div>
+		</script>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/core.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/mui.pullToRefresh.js"></script>
+		<script src="../../js/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/event.js"></script>
+		<script src="../js/event-render.js"></script>
+		<script src="js/event-main.js"></script>
+	
+	</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/forum.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/forum-info-body.css"/>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/forum.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/forum-render.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.mui-table-view-cell {
+				padding-bottom: 3px;
+			}
+			.mui-scroll {
+				padding-right: 5px;
+			}
+			.top-post {
+				color: white;
+				font-size: 12px;
+				background: red;
+				padding: 5px 5px 3px 5px;
+				border-radius: 3px;
+				margin-right: 3px;
+			}
+			.top-li{
+				padding: 5px 5px !important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="pullrefresh" style="display: none;" class="mui-scroll-wrapper">
+			<div id="mui_scroll" class="mui-scroll">
+
+				<!--置顶帖列表-->
+				<ul id="post_top_list" class="mui-table-view"></ul>
+
+				<!--全部帖子列表-->
+				<ul id="post_list" style="padding-right: 0px;" class="post-list mui-table-view mui-clearfix"></ul>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" charset="utf-8">
+		mui.init({
+			pullRefresh: {
+				container: '#pullrefresh',
+				down: {
+					contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+					callback: pulldown_refresh
+				},
+				up: {
+					contentrefresh: '正在加载...',
+					callback: pullup_refresh
+				}
+			}
+		});
+		
+		var postTopList = document.getElementById('post_top_list');
+		var postList = document.getElementById('post_list');
+		var indexWeb = null;		//父页面(论坛首页)
+		var detailWeb = null;		//详情页面
+		
+		/*置顶帖渲染*/
+		forum.getPostTop(0, function(res) {
+			if (res.code == 200) {
+				for (var i = 0; i < 3 && i < res.data.length; i++) {
+					var top_post_info = res.data[i];
+					top_post_info.top_post = true;
+					var li = get_post_li(top_post_info);
+					postTopList.appendChild(li);
+				}
+			}
+		})
+			/*数据请求参数*/
+		var restInfo = {
+			id: 0,
+			page: 1
+		};
+		mui.plusReady(function() {
+			
+			indexWeb = plus.webview.getWebviewById('nav_forum');
+			if (mui.os.plus) {
+				setTimeout(function() {
+					mui('#pullrefresh').pullRefresh().pulldownLoading();
+				}, 1000);
+			} else {
+				mui('#pullrefresh').pullRefresh().pulldownLoading();
+			}
+		});
+		
+		/*获取单个微博LI*/
+		var get_post_li = function(post) {
+			var li = document.createElement('li');
+			if(post.top_post){
+				li.className = 'mui-table-view-cell top-li';
+			}else{
+				li.className = 'post-li';
+			}
+			li.post_info = post;
+			var html = post_render(post);
+			li.innerHTML = html;
+			return li;
+		};
+
+		/**
+		 * 下拉刷新
+		 */
+
+		function pulldown_refresh() {
+			setTimeout(function() {
+				restInfo.page = 1;
+				forum.getPostAll(restInfo, function(res) {
+					if (res.code == 200) {
+						if (res.data != null) {
+							postList.innerHTML = '';
+							for (var index in res.data) {
+								var li = get_post_li(res.data[index]);
+								postList.appendChild(li);
+							}
+						}
+					} else {
+						postList.innerHTML = '<div style="text-align: center;padding: 5em;font-size: 20px;">当前没有帖子</div>';
+						toast.info(res.info);
+					}
+					document.getElementById("pullrefresh").style.display = 'block';
+					mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+					/*重置底部加载状态*/
+					mui('#pullrefresh').pullRefresh().refresh(true);
+				});
+			}, 500);
+		}
+			/**
+			 * 上拉加载更多
+			 */
+
+		function pullup_refresh() {
+			setTimeout(function() {
+				restInfo.page++;
+				forum.getPostAll(restInfo, function(res) {
+					var length = typeof(res.data) == 'undefined' ? 0 : res.data.length;
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(length == 10 ? false : true);
+					if (res.code == 200) {
+						for (var index in res.data) {
+							var li = get_post_li(res.data[index]);
+							postList.appendChild(li);
+						}
+					} else {
+						toast.info(res.info);
+					}
+				});
+			}, 500);
+		}
+		
+		/*列表项点击事件*/
+		mui('.mui-scroll').on('tap', 'li', function(e) {
+			var postInfo = this.post_info;
+			webtools.createRptWeb('forum-post-detail',function(web){
+				mui.fire(web,'frumPostChange',{postInfo: postInfo});
+				web.show('pop-in',WEBTRANSTIME);
+			})
+		});
+	</script>
+
+</html>

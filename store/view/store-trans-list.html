@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../../css/icomoon.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/store-place-order.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/pull-top-tips.css"/>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/store.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/store-render.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+    	li[is_default='1']{
+    		color: red;
+    	}
+    	.null-data{
+    		color: #666;
+    		background: #EFEFF4;
+    		text-align: center;
+    		padding: 40px 0;
+    		display: none;
+    	}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+	    <h1 class="mui-title">收货地址</h1>
+	    <i id="create_btn" class="mui-icon icon-plus mui-pull-right url-btn"></i>
+	</header>
+	
+	<div class="mui-content mui-scroll-wrapper">
+		<div class="mui-scroll" style="min-height: 50%;">
+			<ul id="list_view" class="mui-table-view mui-clearfix"></ul>
+	    	<div id="null_view" class="null-data">
+	    		没有送货地址，点击创建!
+	    	</div>
+		</div>
+	    
+	</div>
+</body>
+    <script src="../../js/mui.pullToRefresh.js"></script>
+    <script src="../../js/mui.pullToRefresh.material.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+      	mui.init();
+        //阻尼系数
+        var deceleration = mui.os.ios ? 0.003 : 0.0009;
+        mui('.mui-scroll-wrapper').scroll({
+            bounce: false,
+            indicators: true, //是否显示滚动条
+            deceleration: deceleration
+        });
+      	var createBtn = document.getElementById("create_btn");
+      	var transListView = document.getElementById("list_view");
+      	var nullView = document.getElementById("null_view");
+      	var thisWeb,orderWeb = null;
+      	
+      	var getItem = function(transInfo){		//创建一个list的item
+      		var item = document.createElement('li');
+			item.className = 'trans-list-item';
+			item.innerHTML = trans_list_render(transInfo);
+			item.id = transInfo.id;
+			item.trans_info = transInfo;
+			item.setAttribute('is_default',transInfo.is_default);
+			return item;
+      	}
+      	
+      	
+      	var setTrans = function(opweb,transInfo){
+  			if(orderWeb && opweb){
+	      		orderWeb.evalJS('setTrans('+JSON.stringify(transInfo)+')');
+      		}else if(orderWeb){
+      			orderWeb.evalJS('nullData()');
+      		}
+      	}
+      	var setDefTrans = function(item){		//设置为默认送货地址
+      		var transInfo = item.trans_info;
+      		setTrans(true,transInfo);
+      		if(item.getAttribute('is_default') != '1'){
+				var rstInfo = {trans_id:transInfo.id,phone:transInfo.phone,zip_code:transInfo.zip_code,contact:transInfo.contact,address:transInfo.address,is_default:1};
+				store.setTrans(rstInfo,function(res){
+					if(res.code == 200){
+			      		var itemOne = transListView.childNodes[0];
+			      		itemOne.setAttribute('is_default',0);
+			      		item.setAttribute('is_default',1);
+			      		transListView.insertBefore(item,itemOne);
+						toast.info('已设置为默认地址');
+					}
+				})
+      		}
+      	}
+      	
+      	var initTransList = function(pull){		//初始化列表数据
+	  		store.getTransList(function(res){
+	  			transListView.innerHTML = '';
+	  			if(res.code == 200){
+	      			changePage(nullView,transListView,false);
+	  				var transData = res.data;
+	  				for(var i in transData){
+	  					var transInfo = transData[i];
+	  					var li = getItem(transInfo);
+	  					transListView.appendChild(li);
+	  				}
+	  			}else{
+	  				changePage(nullView,transListView,true);
+	  			}
+  				if(pull){
+  					toast.info('刷新完成');
+                    pull.endPullDownToRefresh();
+  				}
+			})
+      	}
+      	
+      	mui.plusReady(function(){
+
+			initTransList();
+			/*下拉刷新组件*/
+            mui('.mui-scroll').pullToRefresh({
+                down: {
+                    callback: function() {
+                    	initTransList(this);
+                    }
+                }
+            });
+			
+      		thisWeb = plus.webview.currentWebview();
+      		orderWeb = plus.webview.getWebviewById('store-place-order');
+  			
+      		orderWeb.addEventListener('close',function(e){		//清除送货地址有关页面
+      			setTimeout(function(){
+      				thisWeb.close('none');
+      			},100)
+      		})
+      	});
+      	
+      	/*打开创建地址页面*/
+      	var opCtWeb = function(transInfo){
+      		mui.openWindow({
+      			url:'store-trans-create.html',
+      			id:'store-trans-create',
+      			extras:{data:transInfo},
+      			show:{aniShow:'pop-in',duration:200},
+      			waiting:{autoShow:false}
+      		})
+      	}
+      	
+      	/*创建新的送货地址*/
+      	createBtn.addEventListener('tap',function(e){
+      		opCtWeb();
+      	})
+      	nullView.addEventListener('tap',function(e){
+      		opCtWeb();
+      	})
+      	
+      	
+      	/*修改\删除 送货地址按钮*/
+      	mui('#list_view').on('tap','.trans-modify-view',function(e){
+  			var item = get_parent_node(this,'.trans-list-item');
+      		var transInfo = item.trans_info;
+      		var bts=[{title:"修改"},{title:"删除"}];
+			plus.nativeUI.actionSheet({title:"选择操作",cancel:"取消",buttons:bts},
+				function(e){
+					if(e.index == 1){
+						//执行修改操作。这里打开地址信息创建页面
+						opCtWeb(transInfo);
+					}else if(e.index == 2){
+						var bts=["取消","删除"];
+						plus.nativeUI.confirm("删除送货地址？",function(e){
+							if(e.index == 1){
+								//执行删除操作
+								toast.showLoading('删除中..');
+								store.delTrans(transInfo.id,function(res){
+									if(res.code == 200){
+										transListView.removeChild(item);
+										if(item.getAttribute('is_default') == '1' || transListView.childNodes.length ==0){
+											var tempItem = transListView.childNodes[0];
+											if(tempItem){
+												setDefTrans(tempItem);
+											}else{
+												setTrans(false,transInfo);
+												changePage(nullView,transListView,true);
+											}
+										}
+										toast.info('删除成功!');
+									}else{
+										toast.info('删除失败!');
+									}
+									toast.hideLoading();
+								})
+							}
+						},"提示信息",bts);
+					}
+				}
+			);
+      	})
+      	
+      	/*选择配送地址*/
+      	mui('#list_view').on('tap','.trans-info-view',function(e){
+      		var item = get_parent_node(this,'.trans-list-item');
+			setDefTrans(item);
+      		if(orderWeb){
+	      		mui.back();
+      		}
+      	})
+      	
+      	/*新送货地址*/
+      	window.addEventListener('transNew',function(event){
+      		var newTransInfo = event.detail.data;
+      		if(newTransInfo.new_trans){
+      			changePage(nullView,transListView,false);
+      			var li = getItem(newTransInfo);
+      			transListView.appendChild(li);
+      		}else{
+      			var li = document.getElementById(newTransInfo.id);
+				li.innerHTML = trans_list_render(newTransInfo);
+				li.id = newTransInfo.id;
+				li.trans_info = newTransInfo;
+				li.setAttribute('is_default',newTransInfo.is_default);
+      		}
+      	})
+    </script>
+</html>

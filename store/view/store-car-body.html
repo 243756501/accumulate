@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../css/store-car-body.css"/>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/store.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/store-render.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	
+    <div id="loading_page" style="text-align: center;margin-top: 55%;">
+		<i class="mui-spinner"></i>
+	</div>
+	
+	<div id="middlePopover" class="mui-popover">
+		<ul class="mui-table-view">
+			<li style="text-align: center;" id="dele_goods" class="mui-table-view-cell"><a>移除商品</a></li>
+		</ul>
+	</div>
+	
+	<div id="pullrefresh" style="display: block;" class="mui-scroll-wrapper">
+    	<div class="mui-scroll">
+    		<ul id="car_goods_list" class="mui-table-view"></ul>
+    	</div>
+    </div>
+
+</body>
+    <script type="text/javascript" charset="utf-8">
+	    mui.plusReady(function(){
+	    	
+	      	mui.init({
+	      		gestureConfig:{
+	      			longtap: true,
+	      			hold:true
+	      		},
+				pullRefresh: {
+					container: '#pullrefresh',
+					down: {
+						contentover: "释放立即刷新",
+						callback: pulldown_refresh
+					},
+					up: {
+						contentrefresh: '正在加载...',
+						callback: pullup_refresh
+					}
+				}
+			});
+			
+			var lodView = document.getElementById('loading_page');
+			var mainView = document.getElementById('pullrefresh');
+			var thisWeb = plus.webview.currentWebview();
+			thisWeb.setStyle({bottom:'50px'});
+			var parentWeb = thisWeb.parent();
+			var carGoodsList = document.getElementById('car_goods_list');
+			var PopoverView = document.getElementById('middlePopover');
+			var toDelDom = null;
+			/*购物车的一个item*/
+			var get_carGoods_li = function(carGoodsInfo){
+				var li = document.createElement('li');
+				li.className = 'car-goods-item';
+				li.goods_info = carGoodsInfo;
+				li.id = carGoodsInfo.goods_detail.id;
+				li.total = Number(carGoodsInfo.count)*Number(carGoodsInfo.goods_detail.price);
+				li.innerHTML = car_list_render(carGoodsInfo);
+				return li;
+			}
+			
+			/*计算总价*/
+			var chgTag = function(){
+				var sumTotal = 0;
+				var orderInfo = {sumTotal:0,goodsArr:[]};
+				var tempList = carGoodsList.childNodes;
+				for(var i=0; i < tempList.length;i++){
+					var item = tempList[i];
+					var tempeCheck = item.getElementsByClassName('item-check')[0];
+					if(tempeCheck != null && tempeCheck.checked){
+						var tempInfo = item.goods_info;
+						tempInfo.buy_count = item.getElementsByClassName('item-input')[0].value;
+						orderInfo.goodsArr.push(tempInfo);
+						sumTotal+=Number(item.total);
+					}
+				}
+				orderInfo.sumTotal = sumTotal;
+				parentWeb.evalJS('getOrderData('+ JSON.stringify(orderInfo) +')');
+			}
+			
+			var restInfo = {method:'get',page:1}
+			
+			/*下单成功后刷新购物车*/
+//			window.addEventListener('update',function(event){
+//				//通过event.detail可获得传递过来的参数内容
+//				var isUp = event.detail.isUp;
+//				if(isUp){
+//					mui('#pullrefresh').pullRefresh().pulldownLoading();
+//				}
+//			});
+			
+			
+			if (mui.os.plus) {
+	            setTimeout(function () {
+	                mui('#pullrefresh').pullRefresh().pulldownLoading();
+	            }, 1000);
+	        } else {
+	            mui('#pullrefresh').pullRefresh().pulldownLoading();
+	        }
+			
+			/**
+			 * 下拉刷新
+			 */
+			function pulldown_refresh() {
+				setTimeout(function() {
+					carGoodsList.innerHTML = '';
+					restInfo.page = 1;
+					store.handleCar(restInfo,function(res){
+						if (res.code == 200) {
+							for(i in res.data){
+								var carGoodsInfo = res.data[i];
+								var li = get_carGoods_li(carGoodsInfo);
+								carGoodsList.appendChild(li);
+							}
+						} else {
+							carGoodsList.innerHTML = '<div style="text-align: center;background: #EEEEEE;padding: 11em 5em;font-size: 20px;color: #CCCCCC;">购物车里空无一物</div>';
+						}
+						chgTag();
+						changePage(lodView,mainView,false);
+						parentWeb.evalJS('bottomView.style.display = "block"');
+						mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+						/*重置底部加载状态*/
+						mui('#pullrefresh').pullRefresh().refresh(true);
+					});
+				}, 500);
+			}
+			
+			
+			/**
+			 * 上拉加载更多
+			 */
+			function pullup_refresh() {
+				restInfo.page++;
+				store.handleCar(restInfo,function(res){
+					var length = typeof(res.data) == 'undefined' ? 0 : res.data.length;
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(length == 10 ? false : true);
+					if (res.code == 200) {
+						for(i in res.data){
+							var carGoodsInfo = res.data[i];
+							var li = get_carGoods_li(carGoodsInfo);
+							carGoodsList.appendChild(li);
+						}
+					}
+					chgTag();
+				});
+			}
+			
+			/*减少商品数目*/
+			mui('#car_goods_list').on('tap','.reduce-btn',function(e){
+				var inputText = this.nextSibling;
+				var tempLi = get_parent_node(this,'.car-goods-item');
+				var inputValue = inputText.value;
+				if(inputValue > 1){
+					inputText.value--;
+					tempLi.total = Number(tempLi.total) - Number(this.parentNode.id);
+					chgTag();
+				}
+			})
+			/*增加商品数目*/
+			mui('#car_goods_list').on('tap','.add-btn',function(e){
+				var inputText = this.previousSibling;
+				var tempLi = get_parent_node(this,'.car-goods-item');
+				inputText.value++;
+				tempLi.total = Number(tempLi.total) + Number(this.parentNode.id);
+				chgTag();
+			})
+			
+			document.getElementById('dele_goods').addEventListener('tap',function(e){
+				carGoodsList.removeChild(toDelDom);
+				store.handleCar({method:'delete',goodsId:toDelDom.id},function(res){
+					console.log(JSON.stringify(res));
+					if(res.code == 200){
+						mui.fire(goodsDetailWeb,'carChange',{
+							isUp:true
+						});
+						toast.info('删除成功');
+					}
+				})
+				mui("#middlePopover").popover("toggle");
+				chgTag();
+			})
+			
+			/*监听遮罩层的显示和隐藏事件*/
+			PopoverView.addEventListener('shown',function(e){
+				mui('#pullrefresh').pullRefresh().setStopped(true);
+			});
+			PopoverView.addEventListener('hidden',function(e){
+				mui('#pullrefresh').pullRefresh().setStopped(false);
+			});
+			
+			var goodsDetailWeb = plus.webview.getWebviewById('store-goods-detail');
+			/*长按li删除商品*/
+			mui('#car_goods_list').on('longtap','li',function(e){
+				mui("#middlePopover").popover("toggle");
+				toDelDom = this;
+			})
+			
+			mui('#car_goods_list').on('input','.item-input',function(e){
+				var value = this.value;
+				if(value >= 1){
+					var tempLi = get_parent_node(this,'.car-goods-item');
+					tempLi.total = Number(value) * Number(this.parentNode.id);
+					chgTag();
+				}
+			})
+			
+			mui('#car_goods_list').on('change','.item-input',function(e){
+				var value = Number(this.value);
+				if(value < 1){
+					this.value = 1;
+					var tempLi = get_parent_node(this,'.car-goods-item');
+					tempLi.total = Number(this.parentNode.id);
+					chgTag();
+				}
+			})
+			
+			mui('#car_goods_list').on('tap','.check-view',function(e){
+				var check = this.previousSibling;
+				check.checked = check.checked?false:true;
+				chgTag();
+			})
+		})
+    </script>
+</html>

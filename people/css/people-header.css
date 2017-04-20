@@ -1,0 +1,37 @@
+.mui-bar-nav ~ .mui-content .mui-pull-top-pocket {
+	top: 144px !important;
+}
+.bg {
+	visibility: hidden;
+	background-color: white;
+}
+.mui-search {
+	margin-top: 13px;
+	text-align: center;
+}
+.diy-search {
+	height: 34px !important;
+	width: 60% !important;
+	box-sizing: border-box !important;
+	font-size: 16px !important;
+	text-align: left !important;
+	background-color: white !important;
+	border: 0 !important;
+	border-radius: 2px !important;
+}
+.diy-search-before {
+	height: 34px !important;
+	width: 85% !important;
+	box-sizing: border-box !important;
+	font-size: 16px !important;
+	text-align: center !important;
+	background-color: white !important;
+	border: 0 !important;
+	border-radius: 2px !important;
+}
+.search-btn{
+	display: none;
+	background-color: white;
+	border-radius: 2px;
+	margin-right: 20px;
+}

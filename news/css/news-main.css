@@ -1,0 +1,144 @@
+.nm-slideitem {
+	height: 40px !important;
+}
+.nm-shakeIcon
+{
+	position: relative;
+	top: 8px;
+}
+.mui-slider-title {
+	background-color: rgba(0, 0, 0, 0.4);
+	color: #FFFFFF;
+}
+
+.mui-control-item.mui-active {
+	color: #1ABC9C !important;
+	border-bottom: 2px solid #1ABC9C !important;
+}
+
+#nm_slider_group img {
+	width: 100% !important;
+	height: 200px !important;
+}
+#nm_slider_group .mui-slider-title
+{
+	position: absolute;
+	bottom: 5px;
+}
+#nm_slider_group p
+{
+	width: 70%;
+	color: #FFFFFF;
+}
+.mui-slider-title {
+	line-height: 35px;
+	height: 35px;
+}
+
+.nm-slider-group-body {
+	height: 200px !important;
+}
+.nm-list {
+	padding: 5px;
+}
+#scroll_wrapper
+{
+	margin-top: 85px;
+}
+.nm-list-left {
+	margin-right: 5px;
+}
+
+.nm-list-left img {
+	border-radius: 10px !important;
+	width: 110px !important;
+	height: 100px !important;
+}
+
+.nm-list-right {
+	display: flex;
+	flex-direction: column;
+	height: 106px;
+	justify-content: space-between
+}
+
+.list-item-author {
+	margin-top: 3px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	bottom: 0;
+}
+.nm-list-author-div
+{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.list-item-author img {
+	margin-right: 5px;
+}
+
+.list-item-author p {
+	color: #1ABC9C;
+}
+
+.list-item-time {
+	display: flex;
+	align-items: center;
+}
+
+.list-item-time img {
+	width: 20px !important;
+	margin-right: 5px;
+	position: relative;
+	top: -2.5px;
+}
+.list-item-titlefont
+{
+	color: #000000;
+	font-size: 16px;
+}
+.nm-write-div {
+	position: absolute;
+	bottom: 20px;
+	right: 10px;
+	z-index: 999;
+}
+
+.nm-write-icon {
+	width: 75px;
+}
+
+.mui-slider-indicator {
+	position: relative;
+	bottom: 25px;
+}
+#popover
+{
+	height: 30% !important;
+	width: 50% !important;
+	position: absolute;
+	margin: auto;
+	left: 0;right: 0;top: 0;bottom: 0;
+	background: #FFFFFF;
+}
+
+#popoverDiv
+{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+#popoverDiv p
+{
+	position: relative;
+	top: -25px;
+	font-size: 16px;
+}
+.shakeloading-Img
+{
+	width: 100% !important;
+	margin-bottom: 15%;
+}

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../store/js/store.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/plus.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+    	.balance{
+    		float: right;
+    		color: #4cd964;
+    	}
+    	.okay-btn{
+    		height: 3em;
+    		width: 90%;
+    		margin: 10px;
+    	}
+    	.view-1{
+    		margin-bottom: 1em !important;
+    	}
+    	.zongji{
+    		min-height: 40px;
+    		padding: 10px 5px;
+    		text-align: center;
+    		color: red;
+    		font-size: 20px;
+    	}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+	    <h1 class="mui-title">支付方式</h1>
+	</header>
+	
+	<div id="pay_body" class="mui-content">
+		<div class="mui-card view-1">
+			<div id="pay_money" class="zongji"></div>
+		</div>
+	    <div class="mui-card">
+	    	<div style="padding: 15px;border-bottom: 1px solid #ccc;">选择支付方式</div>
+			<div class="mui-input-group">
+				<div id="balance_view" style="display: none;" class="mui-input-row mui-radio mui-left">
+					<label>
+						<span>账户余额</span>
+						<span id="balance" class="balance"></span>
+					</label>
+					<input id="web_bank" name="radio1" type="radio" checked>
+				</div>
+				<div class="mui-input-row mui-radio mui-left">
+					<label>支付宝支付</label>
+					<input id="alipay" name="radio1" type="radio">
+				</div>
+			</div>
+		</div>
+		<div style="text-align: center;">
+			<button id="okay_btn" type="button" class="mui-btn mui-btn-success okay-btn">确认支付</button>
+		</div>
+	</div>
+</body>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+      	
+      	var pay_money = document.getElementById('pay_money');
+      	var balanceView = document.getElementById('balance_view');
+      	var balance = document.getElementById('balance');
+      	var okayBtn = document.getElementById('okay_btn');
+      	var radioList = document.getElementsByName('radio1');
+      	var restInfo = {};
+  		var pays={};
+  		var thisWeb = null,orderListWeb = null;
+  		var currency = 0;
+  		var payment = 'web_bank';
+      	
+      	mui.plusReady(function(){
+      		
+      		thisWeb = plus.webview.currentWebview();
+      		orderListWeb = plus.webview.getWebviewById('store-order-body');
+      		
+  			var orderData = thisWeb.data;
+  			var payMoney = orderData.payMoney.toFixed(2);
+  			var orderId = orderData.orderId;
+      		pay_money.innerHTML = "应付 ¥" + payMoney;
+      		restInfo.orderId = orderId;
+      		restInfo.mod = orderData.mod ||'store';
+			restInfo.subject = orderData.subject;
+			restInfo.body = '支付' + payMoney;
+  			if(orderData.mod != 'recharge'){
+	      		plus.webview.getWebviewById('store-order-okay').close('none');
+  				balanceView.style.display = 'block';
+		      	store.getUSInfo(function(res){
+		      		if(res.code == 200){
+		      			var userStoreInfo = res.data;
+		      			currency = Number(userStoreInfo.currency).toFixed(2);
+		      			balance.innerHTML = '¥ ' + currency;
+		      		}
+		      	})
+  			}
+      		
+      		
+      		
+			// 获取支付通道
+			plus.payment.getChannels(function(channels){
+				var content=document.getElementById('dcontent');
+				var info=document.getElementById("info");
+				for(var i in channels){
+					var channel=channels[i];
+					pays[channel.id]=channel;
+					checkServices(channel);
+				}
+			},function(e){
+				toast.info("获取支付通道失败："+e.message);
+			});
+      		
+      		// 检测是否安装支付服务
+			function checkServices(pc){
+				if(!pc.serviceReady){
+					var txt = null;
+					switch(pc.id){
+						case "alipay":
+							txt = "检测到系统未安装“支付宝快捷支付服务”，无法完成支付操作!";
+							break;
+						default:
+							break;
+					}
+					plus.nativeUI.confirm(txt,function(e){
+						if(e.index==0){
+							pc.installService();
+						}
+					},pc.description);
+				}
+			}
+	      	
+	      	mui('.mui-input-group').on('tap','div',function(e){
+	      		var inputView = this.children[1];
+	      		payment = inputView.id;
+	      	})
+	      	/*确认按钮*/
+	      	okayBtn.addEventListener('tap',function(e){
+
+      			switch(payment){
+      				case 'web_bank':		//账户余额支付
+      					if((currency - payMoney) >= 0){
+      						var btnArray = ['是', '否'];
+							mui.confirm('余额 ¥' + (currency - payMoney).toFixed(2), '支付确认', btnArray, function(e) {
+								if (e.index == 0) {
+									plus.nativeUI.showWaiting();
+									userPlus.orderPay(orderId,function(res){
+										plus.nativeUI.closeWaiting();
+										if(res.code == 200){
+											toast.info(res.info);
+											if(orderListWeb){
+												mui.fire(orderListWeb,'updateOrder',{data:true});
+											}
+											setTimeout(function(){
+												thisWeb.close('zoom-fade-in',300);
+											},100)
+										}else{
+											toast.info(res.info);
+										}
+									})
+								}
+							})
+      					}else{
+      						toast.info('您的余额不足！');
+      					}
+      					break;
+  					case 'alipay':
+						toast.showLoading();
+  						restInfo.channel = 'alipay';
+						userPlus.alipayWapPay(restInfo,function(res){
+							console.log(JSON.stringify(res));
+							if(res.code == 200){
+								var charges = res.info.credential.alipay.orderInfo;
+								toast.hideLoading();
+								plus.payment.request(pays['alipay'],charges,function(result){
+									toast.info("支付成功");
+									if(orderListWeb){
+										mui.fire(orderListWeb,'updateOrder',{data:true});
+									}
+									setTimeout(function(){
+										thisWeb.close('zoom-fade-in',300);
+									},100)
+								},function(e){
+									toast.info("支付失败!");
+								});
+							}else{
+								toast.info(res.info);
+							}
+						})
+  						break;
+					default:
+						break;
+      			}
+	      	})
+      	})
+      	
+    </script>
+</html>

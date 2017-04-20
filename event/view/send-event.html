@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title></title>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link href="../../css/mui.picker.min.css"  rel="stylesheet" />
+    <script src="../../js/mui.min.js"></script>
+    <script src="../js/event.js"></script>
+    <script src="../../js/core.js"></script>
+    <script src="../../js/uploader.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/mui.picker.min.js"></script>
+	<style>
+		.mui-scroll-wrapper{
+			top: 45px;
+		}
+		.mui-scroll{
+			padding: 10px;			
+		}
+		.ui-alert {
+			text-align: center;
+			padding: 20px 10px;
+			font-size: 16px;
+		}
+		.mui-btn {
+			font-size: 16px;
+			padding: 8px;
+			margin: 3px;
+		}
+	</style>
+    <script type="text/javascript" charset="utf-8">
+        mui.init();
+        var category;
+        mui.plusReady(function(){
+        	category = JSON.parse(myStorage.getItem('event_send_category'));
+        	if(category){
+        		show_category(category);
+        	}else{
+        		events.getEventClass(function(res){
+		        	if(res.code=200){
+		                show_category(res.data);
+		            }
+		        })
+        	}
+        })
+    </script>
+</head>
+
+<body>
+<div class="mui-navbar-inner mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-center mui-title">发布活动</h1>
+    <div id="send_btn" class="mui-btn mui-btn-positive mui-pull-right" style="top: 3px;">发布</div>
+</div>
+<div class="mui-scroll-wrapper">
+	<div class="mui-scroll">
+	    <div class="mui-input mui-clearfix">
+			<label>上传封面</label><br>
+            <img id="upload" src="../../images/add.png" style="width: 70px; height: 70px;float: left;"></img>
+            <div id="show_img" style="margin-left: 5px;width: 100px; height: 100px; float: left;"></div>
+	   </div>
+	    
+	    <div class="mui-input">
+				<label>标题</label><br>
+	            <input id="title" type="text" name="title" placeholder="活动标题" maxlength="50"/>
+	    </div>
+	    
+	    <div class="mui-input">
+				<label>分类</label><br>
+	            <input name="category" id="role_id" value="1" type="hidden">
+	            <button id='showUserType' class="mui-btn" type='button'
+	                    style="font-size: 18px;display: block;width: 100%;margin-bottom: 10px;">默认分类
+	            </button>
+	    </div>
+	    
+	    <div class="mui-input">
+				<label>有效期</label><br>
+	            <button id='sTime' style="width:46%;display:inline-block" data-options='{"value":"2015-10-10","beginYear":2010,"endYear":2020}' class="btn mui-btn mui-btn-block">选择日期时间...</button>
+	            <button id='eTime' style="width:46%;display:inline-block" data-options='{"value":"2015-10-10","beginYear":2010,"endYear":2020}' class="btn mui-btn mui-btn-block">选择日期时间...</button>
+	    </div>
+	    
+	    <div class="mui-input">
+				<label>地址</label><br>
+	            <input id="place" type="text" placeholder="活动地址"/>
+	    </div>
+	    
+	    <div class="mui-input">
+				<label>人数</label><br>
+	            <input id="number" type="text" placeholder="活动人数" maxlength="9" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"/>
+	    </div>
+	    
+	    <div class="mui-input">
+				<label>截止日期</label><br>
+	            <button id='time' data-options='{"value":"2015-10-10 10:10","beginYear":2010,"endYear":2020}' class="btn mui-btn mui-btn-block">选择日期时间...</button>
+	    </div>
+	    
+	    <div class="mui-input">
+				<label>介绍</label><br>
+<textarea id="content" rows="1" style="overflow:scroll;overflow-y:hidden;;overflow-x:hidden" onfocus="window.activeobj=this;this.clock=setInterval(function(){activeobj.style.height=activeobj.scrollHeight+'px';},10);" onblur="clearInterval(this.clock);"></textarea>
+	    </div>
+	</div>
+</div>
+</body>
+
+<script src="js/send-event.js"></script>
+
+</html>

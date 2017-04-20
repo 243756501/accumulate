@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/icomoon.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/pull-top-tips.css" />
+		<style type="text/css">
+			.mui-segmented-control{background: #FFF;height: 42px !important;}
+			.issue-item {display: inline-block;width: 49%;box-shadow: 0 0 10px #AAA;margin:0 -4px 10px 0;}
+			.issue-item.item-left{margin-right:2%}
+			.issue-logo{width:100%;height: 180px;}
+			.text-area{font-size: 14px;padding: 5px;}
+			.count-group{font-size: 12px;display: flex;align-items: baseline;justify-content: space-between;}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<i id="send_btn" class="mui-icon-compose mui-icon mui-pull-right base-head-btn"></i>
+			<h1 class="mui-title">专辑</h1>
+		</header>
+
+		<div class="mui-content">
+			<div class="mui-slider mui-fullscreen">
+				<div id="wrapper" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+					<div id="nav_list" class="mui-scroll">
+						<a class="mui-control-item mui-active" data-type="0" data-pid='0' href="#item_0">全部</a>
+					</div>
+				</div>
+				<div id="slider_group" class="mui-slider-group">
+					<div id="item_0" class="mui-slider-item mui-control-content mui-active">
+						<div id="scroll_wrapper_0" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<ul id="0" data-page="0" class="mui-table-view"></ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script id="group_tplt" type="text/html">
+			<div id="scroll_wrapper_{{id}}" class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul id="{{id}}" data-page="0" class="mui-table-view"></ul>
+				</div>
+			</div>
+		</script>
+
+		<!--issue模板-->
+		<script id="li_tmplate" type="text/html">
+			<img class="issue-logo" src="../../images/mediaImages/weibo_df.png" data-src="{{cover_url}}" onload="load(this)">
+			<div class="text-area">
+				<div class="mui-ellipsis">{{title}}</div>
+				<div class="mui-ellipsis">{{user.nickname}}</div>
+				<div class="count-group">
+					<i class="icon-eye "><span>{{view_count}}</span></i>
+					<i class="icon-comment"><span>{{reply_count}}</span></i>
+				</div>
+			</div>
+		</script>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/issue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.pullToRefresh.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.pullToRefresh.material.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init();
+
+			var navList = document.getElementById('nav_list');
+			var sliderGroup = document.getElementById('slider_group');
+			var detlWeb;
+
+			//导航栏
+			var get_nav = function(navInfo) {
+				var navDom = document.createElement('a');
+				navDom.className = 'mui-control-item';
+				navDom.innerHTML = navInfo.title;
+				navDom.setAttribute('href', '#item_' + navInfo.id);
+				navDom.setAttribute('data-type', navInfo.id);
+				navDom.setAttribute('data-pid', navInfo.pid);
+				navDom.id = navInfo.id;
+				return navDom;
+			}
+
+			//列表容器
+			var get_group = function(navInfo) {
+				var div = document.createElement('div');
+				div.id = 'item_' + navInfo.id;
+				div.className = 'mui-slider-item mui-control-content ';
+				div.innerHTML = template('group_tplt', navInfo);
+				return div;
+			}
+
+			var add_view = function(datas, listView, page) {
+				listView.setAttribute('data-page', page);
+				for(var index in datas) {
+					var info = datas[index];
+					var className = index%2==1?'issue-item':'issue-item item-left';
+					var item = app.createListItem(info, className);
+					item.innerHTML = template('li_tmplate', info);
+					listView.appendChild(item);
+				}
+			}
+
+			/*获取专辑分类标题*/
+			issue.getTypeData(function(res) {
+				if(res.data) {
+					for(index in res.data) {
+						var navInfo = res.data[index];
+						navList.appendChild(get_nav(navInfo));
+						sliderGroup.appendChild(get_group(navInfo));
+					}
+					mui('.mui-scroll-wrapper').scroll({
+						bounce: false
+					});
+					mui.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function(index, pullRefreshEl) {
+						mui(pullRefreshEl).pullToRefresh({
+							down: {
+								callback: function() {
+									var self = this;
+									var selfList = pullRefreshEl.children[0];
+									page = 1;
+									var restInfo = {
+										issue_type: selfList.id,
+										page: page
+									};
+									issue.getIssueList(restInfo, function(res) {
+										if(res.data) {
+											selfList.innerHTML = '';
+											add_view(res.data, selfList, page);
+											self.refresh(true);
+										}
+										self.endPullDownToRefresh();
+									});
+								}
+							},
+							up: {
+								callback: function() {
+									var self = this;
+									var selfList = pullRefreshEl.children[0];
+									var page = selfList.getAttribute('data-page');
+									page++;
+									var restInfo = {
+										issue_type: selfList.id,
+										page: page
+									};
+									issue.getIssueList(restInfo, function(res) {
+										if(res.data) {
+											add_view(res.data, selfList, page);
+										}
+										self.endPullUpToRefresh(!res.data||res.data.length<10);
+									});
+								}
+							}
+						});
+					});
+					mui('#scroll_wrapper_0 .mui-scroll').pullToRefresh().pullUpLoading();
+				} else {
+					toast.info(res.info);
+				}
+			})
+
+			/* 发布专辑*/
+			document.getElementById('send_btn').addEventListener('tap', function(e) {
+				if(app.loginHandle()) {
+					mui.openWindow({
+						url: 'issue-send.html',
+						id: 'issue-send'
+					})
+				}
+			});
+			//点击专辑进入专辑详情页
+			mui('body').on('tap', '.issue-item', function(e) {
+				var issueId = this.detail_info.id;
+				webtools.openDtlWeb('issue',issueId);
+			})
+			//监听导航条的滚动事件
+			document.querySelector('.mui-slider').addEventListener('slide', function(event) {
+				var listViews = mui('.mui-scroll .mui-table-view');
+				var index = event.detail.slideNumber;
+				if(listViews[index].children.length == 0){
+					mui(listViews[index].parentNode).pullToRefresh().pullUpLoading();
+				}
+			})
+		</script>
+	</body>
+
+</html>

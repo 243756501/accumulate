@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/forum-info-body.css"/>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/forum.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/forum-render.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<div id="loading_page" style="text-align: center;margin-top: 55%;">
+			<i class="mui-spinner"></i>
+		</div>
+		
+		<div id="pullrefresh" style="display: none;" class="mui-scroll-wrapper">
+			<div id="mui_scroll" class="mui-scroll">
+				<div id="forum_info" class="forum-info"></div>
+				
+				<!--论坛信息-->
+				<script id="forum_info_template" type="text/html">
+					<img class="forum-logo mui-pull-left" src="../../images/app-logo.png" onload="load(this)" data-src="{{logo}}"/>
+					<div class="mui-media-body forum-info-text">
+						<div class="forum-title">
+							<span>{{title}}</span>
+							<span class="mod-css mui-pull-right">{{type_title}}</span>
+						</div>
+						<p class="forum-introduce mui-ellipsis-2">{{if description.length==0}}没有设置介绍内容！{{else}}{{description}}{{/if}}</p>
+							{{if is_follow == 1}}
+							<button id="follow_btn" type="button" class="mui-pull-right forum-follow">已关注</button>
+							{{else}}
+							<button id="follow_btn" type="button" class="mui-pull-right forum-follow">关注</button>
+							{{/if}}
+						<div style="margin-top: 15px;">
+							<span>帖子</span>
+							<span class="forum-count"> {{topic_count}}</span>
+							<span>讨论</span>
+							<span class="forum-count"> {{total_count}}</span>
+						</div>
+					</div>
+				</script>
+				
+				<!--全部帖子列表-->
+				<ul id="post_list" class="post-list mui-table-view mui-clearfix"></ul>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" charset="utf-8">
+		mui.init({
+			beforeback: function(){
+				thisChangePage(true);
+				return true;
+			},
+			pullRefresh: {
+				container: '#pullrefresh',
+				down: {
+					contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+					callback: pulldown_refresh
+				},
+				up: {
+					contentrefresh: '正在加载...',
+					callback: pullup_refresh
+				}
+			}
+		});
+		
+		var thisWeb = null;		//当前页面web对象
+		var headWeb = null;		//父页面web对象
+		var forumInfoDiv = forumInfoDiv = document.getElementById('forum_info');;	//论坛信息view
+		var postList = document.getElementById('post_list');
+		var forumInfo = null;
+		var forumId = 0;
+		var restInfo = null;
+		
+		/*监听论坛id改变事件*/
+		window.addEventListener('forumChange',function(event){
+			forumInfo = event.detail.forumInfo;
+			if(!forumId || forumId != forumInfo.id){
+				headWeb.evalJS('getForumInfo('+ JSON.stringify(forumInfo) +')');
+				forumId = forumInfo.id;
+				/*获取论坛基本信息*/
+				forum.getForumList({forum_id:forumId},function(res){
+					if(res.code == 200){
+						forumInfo = res.data;
+	
+						forumInfoDiv.innerHTML = template('forum_info_template',forumInfo);
+						/*关注论坛操作*/
+						var followBtn = document.getElementById('follow_btn');
+						followBtn.addEventListener('tap',function(e){
+							if(is_login()){
+								forum.forumFollow(forumId,function(res){
+									if(res.code == 200){
+										followBtn.innerText = '已关注';
+										toast.info('关注成功'); 
+									}else if(res.code == 400){
+										followBtn.innerText = '关注';
+										toast.info('已经取消关注')
+									}else{
+										toast.info(res.info);
+									}
+								});
+							}else{
+								toast.info('请登录后操作')
+							}
+						});
+					}
+				});
+				
+				/*获取论坛帖子请求参数*/
+				restInfo = {id:forumId,page:1};
+				mui('#pullrefresh').pullRefresh().pulldownLoading();
+			}else{
+				thisChangePage(false);
+			}
+		})
+		
+		mui.plusReady(function(){
+			headWeb = plus.webview.getWebviewById('forum-info-head');
+			thisWeb = plus.webview.currentWebview();
+		})
+		
+		/*获取单个微博LI*/
+		var get_post_li = function (post){
+		    var li = document.createElement('li');
+		    li.className = 'post-li';
+		    li.post_info = post;
+		    var html = post_render(post);
+		    li.innerHTML = html;
+		    return li;
+		}
+		
+		/**
+		 * 下拉刷新
+		 */
+		function pulldown_refresh(){
+			setTimeout(function(){
+				restInfo.page = 1;
+			    forum.getPostAll(restInfo, function (res) {
+	                postList.innerHTML = '';
+			        if (res.code == 200) {
+			            if (res.data != null) {
+			                for (var index in res.data) {
+			                    var li = get_post_li(res.data[index]);
+			                    postList.appendChild(li);
+			                }
+			            }
+			        } else {
+			        	postList.innerHTML = '<div style="text-align: center;padding: 2em 0;font-size: 18px;color: #666;">没有帖子</div>';
+			            toast.info(res.info);
+			        }
+					thisChangePage(false);
+			        mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+			        /*重置底部加载状态*/
+			        mui('#pullrefresh').pullRefresh().refresh(true);
+		        });
+			},500);
+		}
+		
+		/**
+		 * 上拉加载更多
+		 */
+		function pullup_refresh(){
+			setTimeout(function(){
+				restInfo.page++;
+			    forum.getPostAll(restInfo, function (res) {
+			    	var length = typeof(res.data) == 'undefined'? 0 : res.data.length;
+	            	mui('#pullrefresh').pullRefresh().endPullupToRefresh(length == 10 ? false : true);
+			        if (res.code == 200) {
+		                for (var index in res.data) {
+		                    var li = get_post_li(res.data[index]);
+		                    postList.appendChild(li);
+		                }
+			        } else {
+			            toast.info(res.info);
+			        }
+		        });
+			},500);
+		}
+		
+		
+		/*列表项点击事件*/
+		mui('.mui-scroll').on('tap','li',function(e){
+			var postInfo = this.post_info;
+			webtools.createRptWeb('forum-post-detail',function(web){
+				mui.fire(web,'frumPostChange',{postInfo: postInfo});
+				web.show('pop-in',WEBTRANSTIME);
+			})
+		});
+	</script>
+
+</html>

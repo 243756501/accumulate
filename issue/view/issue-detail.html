@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+	<link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link href="../css/issue-detail.css"rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="../../css/icomoon.css"/>
+    <script src="../../js/mui.zoom.js"></script>
+	<script src="../../js/mui.previewimage.js"></script>
+	<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/issue.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/loadingbBtn.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/support.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../ucenter/js/ucenter.js"></script>
+	<script src="../../js/share.js"></script>
+	<script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="mui-title">专辑详情</h1>
+		</header>
+		<!--专辑内容区域-->
+		<div id="loading_page" style="text-align: center;margin-top: 55%;">
+			<i class="mui-spinner"></i>
+		</div>
+		<div id="issue_detail_page" style="display: none;" class="mui-content">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div id="issue_detail"></div>
+					<!--评论区域-->
+					<div class="comment-title">
+						<span>评论<span id="comment_num" style="margin-left: 5px;"></span></span>
+					</div>
+					<div id="issue_comment" class="comment-list-box" >
+						<ul id="comment_list" class="mui-table-view" style="margin: 0px;padding: 0 7px;"></ul>
+					</div>
+				</div>
+			</div>
+
+			<!--发表评论-->
+			<div id="show_comment" class="diy-bottom-box" style="display: none;">
+				<div class="reply-box-item" style="width: 10%;">
+					<i class="mui-icon mui-icon mui-icon-compose"></i>
+				</div>
+				<div class="reply-box-item" style="width: 70%;">
+					<input id="reply_text" type="text" placeholder="添加评论"></input>
+				</div>
+				<div class="reply-box-item" style="width: 20%;margin-right: -10px;">
+					<button id="send_btn" class="mui-btn mui-btn-blue send-btn">发送</button>
+				</div>
+			</div>
+			
+			<!--底部区域 评论 点赞-->
+			<div id="btm_view" class="diy-bottom-box">
+				<div class="botm-btn left-one">
+					<span class="icon-edit"></span>
+					<input id="btm_reply_input" class="btm-reply-btn" type="text" placeholder="添加你的评论"/>
+				</div>
+				<div class="botm-btn">
+					<i class="icon-bubble2"></i>
+					<span id="comm_count"></span>
+				</div>
+				<div id="shares" class="botm-btn">
+					<i class="icon-share"></i>
+				</div>
+				<div id="support" class="issue_support botm-btn">
+					<div id="support_btn">
+						<i class="icon-heart"></i>
+						<span id="suppt_num" ></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--  专辑详情-->
+		<script id="issue_content_template" type="text/html">
+			<div class="detail-top">
+				<img class="avatar-image mui-pull-left" onload="load(this)" src="../../images/default_avatar.jpg" data-src="{{user.avatar128}}">
+				<div class="mui-media-body">
+					<a class="u-name"><span>{{user.nickname}}</span></a>
+					<div class="item-minor txt-xxs txt-color-gr">
+						<span class="time">{{create_time}}</span>
+					</div>
+					<div class="follow-btn" style="position: absolute;right: 10px;top: 30px;font-size:13px ;">
+						{{if is_following==1}}
+						<a style="padding:2px 5px;color: #FFFFFF;background: #29b6f6;">
+							<span class="icon-checkmark" style="font-size: 11px;"></span>已关注
+						</a>
+						{{else}}
+						<!--未关注-->
+						<a id="self" style="padding:2px 5px;color: #FFFFFF;background: #d59c2d;">
+						<span class="icon-plus"style="font-size: 11px;"></span>未关注
+						</a>
+						{{/if}} 
+					</div>
+				</div>
+			</div>
+			<div style="padding: 10px 0 10px 10px;">{{title}}</div>
+			<p style="padding:0 10px 0 10px;" class="mui-pull-left">阅读 {{view_count}}</p><p id="jubao" >举报</p>
+			<div class="mui-content">
+				<div class="mui-content-padded">
+					<img id="cover_pic" src="../../images/default_load_img.gif" data-preview-src="{{cover_url}}" data-preview-group="1" data-src="{{cover_url}}" onload="load(this)">
+				</div>
+			</div>
+			<div class="issue-content">
+				<h5 class="jieshao">专辑介绍</h5>
+				<div class="mui-content">
+					<div class="detail-info">
+						<p id="content_box"></p>
+					</div>
+				</div>
+			</div>
+		</script>
+		
+		<!--评论li的模板-->
+		<script id="issue_comment_li_template" type="text/html">
+			<img class="avatar-image mui-pull-left" onload="load(this)" src="../../images/default_avatar.jpg" data-src="{{user.avatar128}}">
+				<p id="report" class="mui-pull-right">举报</p>
+			<div class="mui-media-body">
+				<a class="u-name"><span>{{user.nickname}}</span>{{if user.nickname == '游客'}}[{{area}}]{{/if}}</a>
+				<div class="item-minor txt-xxs txt-color-gr">
+					<span class="time">{{create_time}}</span>
+				</div>
+				<p class="issue-comment" style="min-height: 13px;">{{content}}</p>
+				<div class="mui-text-right">
+					<button id="reply_btn" class="comment-li-btn mui-icon mui-icon-chatbubble"></button>
+					<button id="delete" class="comment-li-btn mui-icon mui-icon-trash"></button>
+				</div>
+			</div>
+		</script>
+</body>
+
+	<script type="text/javascript" charset="utf-8">
+      	mui.init();
+      	mui('.mui-scroll-wrapper').scroll();
+		
+		mui.previewImage();
+		var $issue_support = new support();
+		var issueInfo = null;
+		var issueId = 0;
+		var share;
+		
+		//记录评论
+		var requstInfo = {};
+		var fistCount = 0;
+		var secondCount = 0;
+		var block = true;
+		
+		var issue_detail = document.getElementById('issue_detail');
+		var issue_comment = document.getElementById('issue_comment');
+		var commentList = document.getElementById('comment_list');
+		var loading_page = document.getElementById('loading_page');
+		var issue_detail_page = document.getElementById('issue_detail_page');
+		var comment_num = document.getElementById('comment_num');
+		var commCount = document.getElementById('comm_count');
+		var suppt_num = document.getElementById('suppt_num');
+		var support_btn = document.getElementById('support_btn');
+		var supports = document.getElementById('support');
+		
+		var btmView = document.getElementById("btm_view");		//底部功能栏
+		var replyBox = document.getElementById("show_comment");	//快速回复栏
+		var btmreplyText = document.getElementById("btm_reply_input");
+		var replyText = document.getElementById('reply_text');
+		
+  		var get_coment_li = function(commentInfo){
+			var li = document.createElement('li');
+			li.className = 'mui-media issue mui-clearfix';
+			li.commentInfo = commentInfo;
+			li.innerHTML = template('issue_comment_li_template', commentInfo);
+			return li;
+		}
+  		
+  		/*渲染详情页面*/
+  		var initDetlPage = function(){
+	      	issue.getIssueDetail(issueId,function(res){
+	      		if(res.code == 200){
+	      			issueInfo = res.data;
+	      			issue_detail.innerHTML = template('issue_content_template', issueInfo);
+	      			document.getElementById('content_box').innerHTML = imgTools.getDtlContent(issueInfo.content);
+	      			comment_num.innerHTML = issueInfo.reply_count;
+	      			commCount.innerHTML = issueInfo.reply_count;
+	      			suppt_num.innerHTML = issueInfo.support_count;
+	      			var inf = issueInfo.user;
+	      			app.shareHref(issueInfo.share_url,issueInfo.title,issueInfo.content);
+					uid = inf.uid;
+					localUid = is_login();
+					if(localUid == uid){
+						document.getElementById('self').innerText = '自己';	
+					}
+					if(res.data.is_supported == 1){
+      					support_btn.getElementsByTagName('i')[0].style.color = 'red';
+      				}
+	      			supports.setAttribute('row-id',res.data.id);
+  					support_btn.setAttribute('is_bind_event',res.data.is_supported);
+					/*举报专辑*/
+					document.getElementById('jubao').addEventListener('tap',function(event){
+						app.openReportWeb('issue',issueInfo);
+					});
+	      		}else{
+	      			toast.info(res.info);
+	      		}
+	      		changePage(loading_page,issue_detail_page,false);
+	      	});
+	   		 commentList.innerHTML = '';
+			//获取评论列表
+			issue.getIssueCommentData(requstInfo, function(res) {
+				if (res.code == 200) {
+					for(index in res.data){
+	                    var commentInfo = res.data[index];
+						commentList.appendChild(get_coment_li(commentInfo));
+					}
+					if (commentList.children.length == 0) {
+						requstInfo.page--;
+						loadBar.innerText = '暂无评论';
+					} else if (res.data.length < 10) {
+						secondCount = res.data.length;
+						requstInfo.page--;
+						loadBar.innerText = '暂无更多评论';
+					} else {
+						loadBar.innerText = '点击加载更多';
+					}
+				} else {
+					loadBar.innerText = '暂无评论';
+				}
+				issue_comment.appendChild(loadBar);
+			});
+  		}
+  		
+  		/*issue改变事件监听器*/
+  		window.addEventListener('issueChange',function(event){
+  			var tmpId = event.detail.data;
+  			if(!issueId || tmpId != issueId){
+  				mui('.mui-scroll-wrapper').scroll().scrollTo(0,0);	//首先自动滚到最顶部
+				issueId = tmpId;
+	      		requstInfo = {issueId: issueId,page: 1};		//初始化评论参数
+	      		fistCount = 0;
+				secondCount = 0;
+				block = true;
+	      		initDetlPage();
+  			}else{
+  				changePage(loading_page,issue_detail_page,false);
+  			}
+  		})
+  		
+  		
+		mui.plusReady(function(){
+			share = new share();
+			var thisWeb = plus.webview.currentWebview();
+			issueId = thisWeb.issueId;
+			thisWeb.addEventListener('hide',function(e){
+      			changePage(loading_page,issue_detail_page,true);
+			})
+			$issue_support.create('issue_support', {
+				appname: 'Issue',
+				table: 'issue_content',
+				jump: 'issue/index/Detail'
+			});
+			issue.bindEvent();
+		});
+	
+		var loadBar = loadBtn();
+		loadBar.addEventListener('tap', function(event) {
+			if (block) {
+				block = false;
+				requstInfo.page++;
+				issue.getIssueCommentData(requstInfo, function(res) {
+					if (res.code == 200) {
+						fistCount = typeof(res.data) == 'undefined' ? 0 : res.data.length
+						for (var i = secondCount; i < fistCount; i++) {
+							var commentInfo = res.data[i];
+							commentList.appendChild(get_coment_li(commentInfo));
+						}
+						if (fistCount < 10) {
+							secondCount = fistCount;
+							requstInfo.page--;
+							loadBar.innerText = '暂无更多评论';
+						} else {
+							secondCount = 0;
+							loadBar.innerText = '点击加载更多';
+						}
+					} else {
+						mui.toast('没有更多评论');
+					}
+					block = true;
+				});
+			}
+		});
+	
+		/*底部功能栏里面的回复按钮*/
+		btmreplyText.addEventListener('tap',function(e){
+			replyText.value = '';
+			changePage(btmView,replyBox,false);
+			setTimeout(function(){
+				replyText.focus();
+			},500)
+		})
+		
+		/*回复框失焦事件*/
+		replyText.addEventListener('blur',function(e){
+			changePage(btmView,replyBox,true);
+		})
+		
+		//评论专辑
+		document.getElementById('send_btn').addEventListener('tap', function() {
+			if (is_login()) {
+				if (replyText.value == '') {
+					toast.info("评论不能为空。");
+					return;
+				}
+				toast.showLoading('评论中');
+				var sendComment = {
+					content: replyText.value,
+					row_id: issueId,
+				};
+				issue.sendIssueComment(sendComment, function(res) {
+					if (typeof(res) == 'object') {
+						if (res.code == 200) {
+							replyText.value = '';
+							toast.info('发布成功');
+						} else { 
+							toast.info(res.info);
+						}
+					} else {
+						toast.info(res.info);
+					}
+					toast.hideLoading();
+				})
+			} else {
+				toast.info("请登陆后操作");
+			}
+			changePage(btmView,replyBox,true);
+		}, false);
+		
+		/*删除评论*/
+		mui('#comment_list').on('tap', '#delete', function(event) {
+			var li = get_parent_node(this, '.issue');
+			toast.showLoading('删除中')
+			var id = li.commentInfo.id;
+			var deleteComment = {
+				id: id,
+				row_id: issueId,
+			};
+			
+			issue.deleteComment(deleteComment, function(res) {
+				toast.hideLoading();
+				if (res.code == 200) {
+					toast.info('删除回复成功');
+					li.parentNode.removeChild(li)
+				} else {
+					mui.toast(res.info);
+				}
+			});
+		});
+		
+		/*回复评论*/
+		mui('#comment_list').on('tap', '#reply_btn', function(event) {
+			var userName = get_parent_node(this,'.issue').commentInfo.user.nickname||'游客';
+			replyText.value = '回复 @'+ userName +' ：';
+			changePage(btmView,replyBox,false);
+			setTimeout(function(){
+				replyText.focus();
+			},500)
+		});
+		
+		//举报评论
+		mui('#comment_list').on('tap','#report',function(){
+			var info = commentInfo;
+			app.openReportWeb('issue_comment',info);
+		})
+		
+		//关注||取消关注事件
+		mui('#issue_detail').on('tap','.follow-btn',function(event){
+			$this = this;
+			var flag = $this.firstElementChild.innerText;
+			if(flag == '未关注'){
+				ucenter.following(uid, function(res) {
+					if (res.code == 200) {
+						toast.info('关注成功');
+						$this.firstElementChild.innerHTML = "已关注";
+						$this.firstElementChild.setAttribute('background','#29b6f6');
+						$this.firstElementChild.setAttribute('class','icon-checkmark');
+					} else if (res.info == 'open_id错误') {
+						toast.info('未登录');
+					} else {
+						toast.info(res.info);
+					}
+				})
+			}else if(flag == '已关注'){
+				ucenter.unFollowing(uid, function(res) {
+					if (res.code == 200) {
+						toast.info('取消关注成功');
+						$this.firstElementChild.innerHTML = "未关注";
+						$this.firstElementChild.setAttribute('background','#d59c2d');
+						$this.firstElementChild.setAttribute('class', 'icon-plus');
+					} else {
+						toast.info(res.info);
+					} 
+				})
+			}else{
+				toast.info('无法关注自己');
+			}
+		})
+		
+    </script>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/cat.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+    	.check-input-hide{
+    		display: none !important;
+    		top: 12px !important;
+    		right: 0.5em !important;
+    	}
+    	.check-input-show{
+    		display: block !important;
+    		top: 12px !important;
+    		right: 0.5em !important;
+    	}
+    </style>
+</head>
+<body>
+    <div id="loading_page" style="text-align: center;margin-top: 55%;">
+		<i class="mui-spinner"></i>
+	</div>
+	
+	<div id="pullrefresh" style="display: none;" class="mui-scroll-wrapper">
+		<div class="mui-scroll">
+			<ul id="list_view" class="mui-table-view"></ul>
+			<div id="null_data" style="background: #EFEFF4;padding: 50% 0;text-align: center;">没有内容!</div>
+		</div>
+	</div>
+	
+	<!--item模板-->
+	<script id="fav_item_tmplate" type="text/html">
+		<div class="mui-table">
+            <div class="mui-table-cell mui-col-xs-10">
+                <div class="mui-ellipsis">{{title||cat_info.title}}</div>
+				<p>{{entity_name||cat_info.entity_name}}</p>
+				<p>{{create_time.split(' ')[0]}}</p>
+            </div>
+            <div class="mui-table-cell mui-col-xs-2">
+				<input class="{{if need_check == 0}}check-input-hide{{else}}check-input-show{{/if}}" name="checkbox" data-id="{{id}}" type="checkbox">
+            </div>
+        </div>
+	</script>
+</body>
+    <script type="text/javascript" charset="UTF-8">
+  		mui.init({
+			pullRefresh: {
+		        container: '#pullrefresh',
+		        down: {
+		            contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+		            callback: pulldown_refresh
+		        },
+		        up: {
+		            contentrefresh: '正在加载...',
+		            callback: pullup_refresh
+		        }
+		    }
+      	});
+      	
+      	var is_fav = false;
+      	var selfWeb,headWeb = null;
+      	var restInfo;
+      	var cancelRqstInfo = {method:'delete'};
+      	var loadingPage = document.getElementById("loading_page");
+      	var mainPage = document.getElementById("pullrefresh");
+      	var listView = document.getElementById("list_view");
+      	var nullDataView = document.getElementById("null_data");
+      	var cancelCount = 0;	//统计待取消的item数目
+		var cancelArr = [];		//收集需要取消收藏的条目id
+		var checkState = null;
+
+		/*页面更新加载数据*/
+		window.addEventListener('ucTagChange',function(e){
+			var tmpInfo = event.detail.data;
+      		if(!restInfo || restInfo.tag != tmpInfo.tag){
+      			headWeb.evalJS('document.getElementById("title").innerHTML = "' + tmpInfo.title + '"');
+      			restInfo = tmpInfo;
+				mui('#pullrefresh').pullRefresh().pulldownLoading();
+      		}else{
+      			changePage(loadingPage,mainPage,false);
+      		}
+		})
+		
+      	/*监听复选框的切换事件*/
+      	window.addEventListener('checkStateChange',function(e){
+      		checkState = e.detail.state;
+      		if(checkState){
+      			setTimeout(function(){
+		      		selfWeb.setStyle({bottom:'50px'});
+      			},500)
+      		}else{
+      			selfWeb.setStyle({bottom:'0'});
+      		}
+      		var inputArr = mui('input')||[];
+      		for(var i = 0;i < inputArr.length;i++){
+  				inputArr[i].checked = false;
+  				inputArr[i].className = checkState?'check-input-show':'check-input-hide';
+  			}
+      	})
+      	
+		mui.plusReady(function(){
+			
+			selfWeb = plus.webview.currentWebview();
+			headWeb = plus.webview.getWebviewById('cat-ucenter-list-head');
+			headWeb.addEventListener('hide',function(e){
+      			changePage(loadingPage,mainPage,true);
+			})
+			
+			//自动判断是否已经全部选择
+			mui('#list_view').on('tap','input',function(e){
+				var itemCount = listView.children.length;
+				cancelCount = !this.checked?cancelCount +1:cancelCount -1;
+				var allCheckState = cancelCount == itemCount?true:false;
+				headWeb.evalJS('all_Check_state('+ allCheckState +')');
+			})
+		})
+      	
+      	//全选or全否
+      	var change_check_box = function(state){
+      		cancelCount = state?listView.children.length:0;
+      		var inputArr = mui('input')||[];
+      		for(var i = 0;i < inputArr.length;i++){
+  				inputArr[i].checked = state;
+  			}
+      	}
+      	
+      	/*取消收藏功能*/
+      	var cancel_fav = function(){
+      		var inputArr = mui('input') || [];
+      		for(var i = 0;i < inputArr.length;i++){
+      			var tempInput = inputArr[i];
+  				if(tempInput.checked){
+  					cancelArr.push(tempInput.getAttribute('data-id'));
+  				}
+  			}
+      		if(cancelArr.length > 0){
+      			cancelRqstInfo.id = cancelArr;
+				mui.confirm('确认取消收藏？', '提示', ['确认', '取消'], function(e) {
+					if (e.index == 0) {
+		      			cat.favCat(cancelRqstInfo,function(res){
+		      				if(res.code == 200){
+		      					for(var index in cancelArr){
+		      						listView.removeChild(document.getElementById(cancelArr[index]));
+		      					}
+		      					toast.info('操作成功');
+		      				}else{
+		      					toast.info(res.info);
+		      				}
+		      			})
+					}
+				})
+			}else{
+				toast.info('请选择要取消的收藏！');
+			}
+    	};
+      	
+      	/*获取单个item*/
+		var get_fav_item = function (favInfo){
+			favInfo.need_check = checkState;
+		    var li = document.createElement('li');
+		    li.className = 'mui-table-view-cell mui-checkbox';
+		    li.id = favInfo.cat_info?favInfo.info_id:favInfo.id;
+		    li.fav_info = favInfo.cat_info?favInfo.cat_info:favInfo;
+		    var html = template('fav_item_tmplate',favInfo);
+		    li.innerHTML = html;
+		    return li;
+		};
+		
+		/**
+		 * 下拉刷新
+		 */
+		function pulldown_refresh(){
+			restInfo.page = 1;
+		    cat.getUserCat(restInfo, function (res) {
+		    	is_fav = restInfo.port == 'cat_we_fav' && !!res.data;
+	        	headWeb.evalJS('showEdit('+ is_fav +')');
+		        if (res.code == 200) {
+		            if (res.data != null) {
+		                listView.innerHTML = '';
+		                changePage(nullDataView,listView,false);
+		                for (var index in res.data) {
+		                    var li = get_fav_item(res.data[index]);
+		                    listView.appendChild(li);
+		                }
+		            }
+		        } else {
+		        	changePage(nullDataView,listView,true);
+		            toast.info(res.info);
+		        }
+				changePage(loadingPage,mainPage,false);
+		        mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+	        });
+	        /*重置底部加载状态*/
+	        mui('#pullrefresh').pullRefresh().refresh(true);
+		}
+		
+		/**
+		 * 上拉加载更多
+		 */
+		function pullup_refresh(){
+			restInfo.page++;
+		    cat.getUserCat(restInfo, function (res) {
+		    	var length = typeof(res.data) == 'undefined'? 0 : res.data.length;
+            	mui('#pullrefresh').pullRefresh().endPullupToRefresh(length == 10 ? false : true);
+		        if (res.code == 200) {
+	                for (var index in res.data) {
+	                    var li = get_fav_item(res.data[index]);
+	                    listView.appendChild(li);
+	                }
+		        }else{
+		            toast.info('没有更多数据!');
+		        }
+	        });
+		}
+		
+		mui('#list_view').on('tap','.mui-col-xs-10',function(e){
+			var catId = get_parent_node(this,'.mui-checkbox').id;
+			openCatWeb(catId);
+		})
+    </script>
+</html>

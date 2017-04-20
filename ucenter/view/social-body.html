@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+	<!--关注-->
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/icomoon.css"/>
+		<link rel="stylesheet" type="text/css" href="../../people/css/people-list.css"/>
+	</head>
+
+	<body>
+		<div id="loading_page" style="text-align: center;margin-top: 35%;">
+			<i class="mui-spinner"></i>
+		</div>
+		<div id="pullrefresh" style="display: none;" class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<ul id="list_view" class="mui-table-view mui-clearfix">
+				</ul>
+			</div>
+		</div>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/ucenter.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../people/js/people-render.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init({
+				pullRefresh: {
+			        container: '#pullrefresh',
+			        down: {
+			            contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+			            callback: pulldown_refresh
+			        },
+			        up: {
+			            contentrefresh: '正在加载...',
+			            callback: pullup_refresh
+			        }
+			    }
+			});
+			
+			var loadView = document.getElementById('loading_page');
+			var mainView = document.getElementById('pullrefresh');
+			var listView = document.getElementById('list_view');
+			var thisHeadWeb = null;
+			var tlArr = ['待定','粉丝','关注','好友'];
+			var uid = '';
+			var restInfo = {};
+			var typeId = 0;		//社交类型ID
+			
+			mui.plusReady(function(){
+				uid = is_login();
+				thisHeadWeb = plus.webview.currentWebview().opener();
+				
+				//页面被隐藏后把list也一并隐藏，以便后续不同type的数据重新渲染
+				thisHeadWeb.addEventListener('hide',function(e){
+					changePage(loadView,mainView,true);
+				})
+				
+				window.addEventListener('socialChange',function(event){
+					var tmpId = event.detail.data;
+					if(!typeId || tmpId != typeId){
+						listView.innerHTML = '';
+						thisHeadWeb.evalJS('setSoTitle("'+ tlArr[tmpId] +'")');
+						typeId = tmpId;
+						restInfo = {
+							uid:uid,
+							type:typeId,
+							page:0
+						};
+						if(mui.os.ios){
+							mui('#pullrefresh').pullRefresh().pulldownLoading();
+						}else{
+							mui('#pullrefresh').pullRefresh().pullupLoading();
+						}
+					}else{
+						changePage(loadView,mainView,false);
+					}
+				})
+			})
+			
+			/*获取单个微博LI*/
+			var get_user_item = function (userInfo) {
+			    var li = document.createElement('li');
+			    li.className = 'mui-table-view-cell';
+			    li.user_info = userInfo;
+			    var html = parse_people_html(userInfo,userItem);
+			    li.innerHTML = html;
+			    return li;
+			};
+			
+			/**
+			 * 下拉刷新
+			 */
+			function pulldown_refresh(){
+				setTimeout(function(){
+					restInfo.page = 1;
+				    ucenter.getUserList(restInfo, function (res) {
+		                listView.innerHTML = '';
+				        if (res.code == 200) {
+			                for (var index in res.data) {
+			                    var li = get_user_item(res.data[index]);
+			                    listView.appendChild(li);
+			                }
+				        } else {
+				        	list_view.innerHTML = '<div style="text-align: center;background: #EFEFF4;padding: 5em 0;">没有数据</div>';
+				        }
+				        changePage(loadView,mainView,false);
+				        mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+				        //重置底部加载状态
+				        mui('#pullrefresh').pullRefresh().refresh(true);
+			        });
+				},500);
+			}
+			
+			/**
+			 * 上拉加载更多
+			 */
+			function pullup_refresh(){
+				setTimeout(function(){
+					restInfo.page++;
+				    ucenter.getUserList(restInfo, function (res) {
+			    		var length = typeof(res.data) == 'undefined'? 0 : res.data.length;
+		            	mui('#pullrefresh').pullRefresh().endPullupToRefresh(length == 10 ? false : true);
+				        if (res.code == 200) {
+			                for (var index in res.data) {
+			                    var li = get_user_item(res.data[index]);
+			                    listView.appendChild(li);
+			                }
+				        }
+				        changePage(loadView,mainView,false);
+			        });
+				},500);
+			}
+			
+			mui('#list_view').on('tap','.follow-btn',function(event){
+				var toFollowUid = get_parent_node(this,'.mui-table-view-cell').user_info.uid;
+				var thisBtn = this;
+				var isFollow = thisBtn.getAttribute('data-follow');
+				if(isFollow == 0){
+					/*加关注操作*/
+					ucenter.following(toFollowUid,function(res){
+						toast.info(res.info);
+						if(res.code == 200){
+							thisBtn.setAttribute('data-follow',1);
+							thisBtn.innerHTML ='<button class="li-btn"><span class="icon-user-check"></span><div style="font-size: 12px;">已关注</div></button>';
+						}
+					});
+				}else{
+					//取消关注操作
+					var btnArray = ['否', '是'];
+					mui.confirm('确认取消关注？', '提示信息', btnArray, function(e) {
+						if (e.index == 1) {
+							ucenter.unFollowing(toFollowUid, function(res) {
+								if (res.code == 200) {
+									var li = thisBtn.parentNode.parentNode;
+									thisBtn.setAttribute('data-follow',0);
+									toast.info('取消关注成功');
+									if(typeId != 1){	//是粉丝的时候的不需要删除用户item
+										li.parentNode.removeChild(li);
+									}else{
+										thisBtn.innerHTML ='<button style="color:#007AFF" class="li-btn"><span class="icon-user-plus"></span><div style="font-size: 12px;">加关注</div></button>';
+									}
+								} else {
+									toast.info(res.info);
+								}
+							})
+						}
+					})
+				}
+			});
+			
+			//点击头像进入个人主页。
+			app.userListener('.user-flag');
+		</script>
+	</body>
+</html>

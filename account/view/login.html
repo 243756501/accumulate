@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/login-page.css" />
+	</head>
+
+	<body>	
+		<div id="login_background" class="mui-content login-page-background mui-fullscreen">
+			<div id="bgm_view" class="login-backgroundImg-div"></div>
+			<div class="login-page-maincontent mui-fullscreen">
+				<div>
+					<img class="login-page-logo" src="../../images/app-logo.png" />
+					<p id="app_name" class="login-page-title">&nbsp;</p>
+				</div>
+				<div class="mui-input-row login-page-accountdiv">
+					<label><img  class="input-icon mui-pull-left" src="../../images/icon/zhhu.png"/></label>
+					<input id='account' type="text" class="mui-input-clear login-page-account" placeholder="账号">
+				</div>
+				<div class="mui-input-row login-page-passworddiv">
+					<label><img id="mima_switch" class="input-icon mui-pull-left" src="../../images/icon/mima.png"/></label>
+					<input id='password' type="password" class="mui-input-password login-page-password" placeholder="密码">
+				</div>
+				<div class="login-page-forgetdiv">
+					<p id="forget-password" class="user-event mui-pull-right">忘记密码？</p>
+				</div>
+				<div class="login-page-loginbtndiv">
+					<button id="login_btn" class="mui-btn  login-page-loginbtn">登录</button>
+				</div>
+				<div class="login-page-otherbtn">
+					<button id="around_btn" class="show-around-btn">随便看看</button>
+					<button id="reg" class="user-event register-btn">注册</button>
+				</div>
+				<div>
+					<hr class="split-line" />
+					<span class="split-line-text">快速登录</span>
+				</div>
+				<div class="oauth-area"></div>
+			</div>
+			<div id="pop_view" class="mui-popover sync-ch">
+				<div style="padding: 10px;background: #266682;color: white;">
+					认证成功，选择登陆方式
+				</div>
+				<ul class="mui-table-view">
+					<li id="unbind" class="mui-table-view-cell">
+						<a>直接登陆</a>
+					</li>
+					<li id="bind" class="mui-table-view-cell">
+						<a>绑定账号</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		
+	</body>
+	<script src="../../js/mui.min.js"></script>
+	<script src="../../js/mui.enterfocus.js"></script>
+	<script src="../../js/core.js"></script>
+	<script src="../../js/app.js"></script>
+	<script src="../js/account.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/mytools/my_storage.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/login-page.js" type="text/javascript" charset="utf-8"></script>
+
+</html>

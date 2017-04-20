@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<script src="../../js/mui.min.js"></script>
+		<script src="../js/group.js"></script>
+		<script src="../../js/core.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/template.js"></script>
+		<script src="../js/group-render.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/iconfont.css" rel="stylesheet" />
+		<link href="../../css/icomoon.css" rel="stylesheet" />
+		<link href="../css/group.css" rel="stylesheet" />
+		<link href="../../forum/css/forum.css" rel="stylesheet" />
+		<link href="../../forum/css/forum-info-body.css" rel="stylesheet" />
+		<link href="../../forum/css/forum-post-detail.css" rel="stylesheet" />
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<style>
+			.mui-scroll-wrapper {
+				top: 0px;
+				bottom: 0px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="loading_page" style="text-align: center;margin-top: 30%;">
+			<i class="mui-spinner"></i>
+		</div>
+		<div id="pullrefresh" class="mui-scroll-wrapper" style="padding: 8px;display: none;">
+			<div id="mui-scroll" class="">
+				<ul id="group_list" class="mui-table-view" style="background: none;">
+
+				</ul>
+			</div>
+		</div>
+
+		<script id="post_template" type="text/html">
+			<img class="list-user-head mui-pull-left" src="{{user.avatar128}}">
+			<div class="mui-media-body" style="font-size: 14px;">{{user.nickname}} {{if user.rank_link.length > 0}}{{each user.rank_link as value i}}<span style="background: {{value.label_bg}};color: {{value.label_color}};" class="rank-label">{{value.title}}</span>{{/each}}{{/if}}
+				<div style="float: right;">
+					<i class="mui-icon mui-icon-chat reply-count"></i>
+					<span class="forum-count">{{reply_count}}</span>
+				</div>
+				<p style="font-size: 12px;" class='mui-ellipsis'>
+					<span>{{create_time}}</span>
+				</p>
+			</div>
+			<div id="post_content" class="mui-table-view-cell mui-clearfix content-group">
+				<h5 class="group-item-body-content">{{title}}</h5>
+				<p class="post-content mui-ellipsis-2">{{summary}}</p>
+			</div>
+			<div id="image_list">{{each imgList as value i}}{{if i<3}} 
+				<img class="post-img" onload="load(this)" src="../../images/img_error.png" data-src="{{value}}">
+					{{/if}}{{/each}}
+			</div>
+		</script>
+	</body>
+	<script>
+		//阻尼系数
+		var lists = document.getElementById('pullrefresh');
+		var deceleration = mui.os.ios ? 0.003 : 0.0009;
+		var mGroupList = document.getElementById('group_list');
+		var loadPages = document.getElementById('loading_page');
+		var restInfo = {
+			page: 1
+		};
+		mui('#title').scroll({
+			bounce: false,
+			indicators: true, //是否显示滚动条
+			deceleration: deceleration
+		});
+		/*获取单个群组帖子LI*/
+		var get_post_li = function(post) {
+			var li = document.createElement('li');
+			li.className = 'post-li';
+			li.post_info = post;
+			var html = template('post_template', post);
+			li.innerHTML = html;
+			return li;
+		};
+		var loadPage = function(flag) {
+			if (flag) {
+				lists.style.display = 'block';
+				loadPages.style.display = 'none';
+			} else {
+				lists.style.display = 'none';
+				loadPages.style.display = 'block';
+			}
+		}
+		mui.plusReady(function() {
+			mui.init({
+				pullRefresh: {
+					container: '#pullrefresh',
+					down: {
+						contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+						callback: pulldown_refresh
+					},
+					up: {
+						contentrefresh: '正在加载...',
+						callback: pullup_refresh
+					}
+				}
+			});
+			group.getMyCollection(restInfo, function(res) {
+					console.log(JSON.stringify(res));
+					if (res.code == 200 && res.data != null) {
+						loadPage(true);
+						for (var index in res.data) {
+							var li = get_post_li(res.data[index]);
+							mGroupList.appendChild(li);
+						}
+					} else {
+						loadPage(true);
+						mGroupList.innerHTML = '<div style="padding: 30px;text-align: center;margin: 30px 0px;font-size: 14px;color: #AAAAAA;background-color: #EEEEF4;">该群组没有任何帖子</a></div>';
+					}
+				})
+				/**
+				 * 下拉刷新
+				 */
+			function pulldown_refresh() {
+				setTimeout(function() {
+					restInfo.page = 1;
+					group.getMyCollection(restInfo, function(res) {
+						if (res.code == 200) {
+							if (res.data != null) {
+								mGroupList.innerHTML = '';
+								for (var index in res.data) {
+									var li = get_post_li(res.data[index]);
+									mGroupList.appendChild(li);
+								}
+							}
+						} else {
+							mGroupList.innerHTML = '<div style="padding: 30px;text-align: center;margin: 30px 0px;font-size: 14px;color: #AAAAAA;background-color: #EEEEF4;">该群组没有任何帖子</a></div>';
+						}
+						mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+						/*重置底部加载状态*/
+						mui('#pullrefresh').pullRefresh().refresh(true);
+					});
+				}, 500);
+			}
+			/**
+			 * 上拉加载更多
+			 */
+			function pullup_refresh() {
+				setTimeout(function() {
+					restInfo.page++;
+					group.getMyCollection(restInfo, function(res) {
+						var length = typeof(res.data) == 'undefined' ? 0 : res.data.length;
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(length == 10 ? false : true);
+						if (res.code == 200) {
+							for (var index in res.data) {
+								var li = get_post_li(res.data[index]);
+								mGroupList.appendChild(li);
+							}
+						} else {
+							toast.info('没有更多数据');
+						}
+					});
+				}, 500);
+			}
+			/*列表项点击事件*/
+			mui('#group_list').on('tap', '#post_content', function() {
+				var thisLi = get_parent_node(this, '.post-li');
+				var postInfo = thisLi.post_info;
+				mui.openWindow({
+					url: 'group-post-detail.html',
+					id: 'group-post-detail',
+					extras: {
+						postInfo: postInfo
+					}
+				})
+			});
+		});
+	</script>
+
+</html>

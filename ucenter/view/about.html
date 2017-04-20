@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" href="../../css/mui.min.css" />
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			img {
+				width: 100px;
+				height: 100px;
+				margin: 0 auto;
+			}
+			.cache-text{
+				float: right;
+				font-size: 14px;
+				opacity: 0.5;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="mui-title">关于</h1>
+		</header>
+
+		<div id="main_view" class="mui-content mui-text-center" style="margin-top: 20px;">
+			<img src="../../images/app-logo.png" />
+			<div style="margin: 10px;">
+				<div id="ios_vers" style="display: none;"></div>
+				<div id="app_name">&nbsp;</div>
+			</div>
+			<ul id="updata" class="mui-table-view mui-text-left">
+				<li id="get_versions" class="mui-table-view-cell">
+					当前版本
+					<span id="versions" class="mui-badge mui-badge-danger"></span>
+				</li>
+				<li id="clear_cache" class="mui-table-view-cell">
+					清除缓存
+					<span id="cache_size" class="cache-text"></span>
+				</li>
+				<li class="mui-table-view-cell">
+					推送通知
+					<div style="display: none;" id="push_switch" class="mui-switch mui-active">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+				<!--<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" data-url="{{url}}">
+						<span class="mui-badge mui-badge-primary mui-badge-inverted">访问</span> 官网
+					</a>
+				</li>-->
+			</ul>
+		</div>
+
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/ucenter.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="UTF-8">
+			mui.init();
+			document.getElementById("app_name").innerHTML = APP_CONFIG.app.name;
+			var versionView = document.getElementById("versions"); //得到要处理的p标签
+			var vsBtn = document.getElementById('get_versions');
+			var iosVers = document.getElementById("ios_vers");
+			
+			var clChBtn = document.getElementById('clear_cache');
+			var cacheSize = document.getElementById('cache_size');
+			var pushSwitch = document.getElementById("push_switch");
+			var downDict = null;	//下载目录操作对象
+
+			if (mui.os.android){
+				/*安卓平台支持更新按钮*/
+				vsBtn.addEventListener("tap", function(e) {
+					var waitView = plus.nativeUI.showWaiting('获取最新版本信息..');
+					app.getModConfig('base',function(res) {
+						waitView.close();
+						if (res.code == 200) {
+							var baseInfo = res.data.base;
+							if(baseInfo.update == 1){	//卸载安装升级
+								plus.nativeUI.alert('版本太旧，无法自动升级！请卸载旧版后下载最新客户端安装升级');
+							}else if(baseInfo.update == 2 && mui.os.android && baseInfo.apk_link){	//覆盖安装升级
+								app.doUpdate(baseInfo.apk_link);
+							}else if(baseInfo.update == 3 && baseInfo.patch_link){	//差量补丁升级
+								app.doUpdate(baseInfo.patch_link,function(state){
+									if(state == 1){
+										mui.alert('需要重新启动！','成功提示',function(){
+											plus.runtime.restart();
+										})
+									}
+								})
+							}else{
+								toast.info('已经是最新版本')
+							}
+						} else {
+							toast.info('获取版本信息失败！');
+						}
+					});
+				});
+			}else{
+				changePage(vsBtn,iosVers,false);
+			}
+			
+			mui.plusReady(function() {
+				
+				var notice = myStorage.getItem('push_in_notice');		// 内置的推送开关状态
+				if(notice == 0){
+					pushSwitch.classList.remove('mui-active');
+				}
+				pushSwitch.style.display = 'block';
+				
+				versionView.innerHTML = '当前 V' + app.getVersion();
+				iosVers.innerHTML = 'V' + app.getVersion();
+				
+				/*缓存信息*/
+				plus.io.requestFileSystem(plus.io.PUBLIC_DOWNLOADS, function(fs){	//缓存高于100M时自动清理
+					downDict = fs.root;
+					downDict.getMetadata(function(metadata){
+						cacheSize.innerHTML = parseInt(metadata.size/(1024*1024)) + 'M';
+					},function(e){},true);
+				}, function (e){});
+				/*清除缓存功能*/
+				clChBtn.addEventListener('tap',function(e){
+					var bts=["取消","清除"];
+					plus.nativeUI.confirm("清除缓存数据？",function(e){
+						if(e.index == 1){
+							//执行删除操作
+							toast.showLoading('清除中..');
+							downDict.removeRecursively(function(suc){
+								cacheSize.innerHTML = "0M";
+								toast.info('清除成功!');
+							}, function(err){
+								toast.info('没有缓存数据');
+							});
+							toast.hideLoading();
+						}
+					},"提示信息",bts);
+				})
+			});
+			
+			/*推送信息开关监听器*/
+			pushSwitch.addEventListener("toggle", function(event) {
+				var push = event.detail.isActive?'1':'0';
+	    		myStorage.setItem('push_in_notice',push);
+			})
+		</script>
+	</body>
+</html>

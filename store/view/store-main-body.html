@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/store-main.css" />
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/store.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/store-render.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/store-public.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<div id="loading_page" style="text-align: center;margin-top: 35%;">
+			<i class="mui-spinner"></i>
+		</div>
+
+		<div id="pullrefresh" style="display: none;" class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<!--轮播控件-->
+				<div id="recommend_goods" class="mui-slider">
+					<div id="recommend_goods_list" class="mui-slider-group">
+					</div>
+					<div id="recommend_tips" class="mui-slider-indicator">
+					</div>
+				</div>
+
+				<!--微店首页区域-->
+				<div id="store_index" style="display: block;" class="">
+					<!--新品发布区-->
+					<div style="color:orange;" class="goods-class">
+						<span>最新上架</span>
+					</div>
+					<div id="new_goods_view" class="mui-table-view mui-grid-view">				
+					</div>
+
+					<!--热门商品区-->
+					<div style="color:orange;" class="goods-class">
+						<span>热门特销</span>
+					</div>
+					<div id="hot_goods_list" class="mui-table-view mui-grid-view">
+					</div>
+				</div>
+
+				<!--微店商品列表区域-->
+				<div id="store_goods_list" style="display: none;" class="">
+					<ul id="goods_list" class="mui-table-view">
+					</ul>
+				</div>
+
+				<!--店铺列表-->
+				<div id="store_shop" style="display: none;" class="">
+					<ul id="shop_list" class="mui-table-view mui-grid-view">
+
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!--店铺模板-->
+		<script id="shop_item" type="text/html">
+			<div class="shop-cell" style="text-align: center;">
+				<img onload="load(this)" src="../../images/app-logo.png" class="shop-img" data-src="{{logo_url.thumb}}">
+				<span class="mui-ellipsis" style="font-size: 12px;display: block;">{{title}}</span>
+				<p>{{goods_num}}件商品</p>
+			</div>
+		</script>
+
+		<!--新商品模板-->
+		<script id="new_goods_template" type="text/html">
+			<div id="{{data[0].id}}" class="mui-table-view-cell mui-col-xs-6 goods-item">
+				<div id="">
+					<img class="index-img" style="width: 90%;" onload="load(this)" src="../../images/default_load_img.gif" data-src="{{data[0].goods_icon.ori}}">
+					<p class="price">¥{{data[0].price}}</p>
+				</div>
+			</div>
+			{{if data[1]}}
+			<div id="{{data[1].id}}" class="right-new mui-table-view-cell mui-col-xs-6 goods-item">
+				<img class="index-img" onload="load(this)" src="../../images/mediaImages/weibo_df.png" data-src="{{data[1].goods_icon.thumb}}">
+				<p class="price">¥{{data[1].price}}</p>
+				{{if data[2]}}
+				<div class="mui-table-view mui-grid-view">
+					<div id="{{data[2].id}}" class="smoll-left mui-table-view-cell mui-col-xs-6 goods-item">
+						<div>
+							<img style="padding: 5px;" onload="load(this)" src="../../images/mediaImages/weibo_df.png" data-src="{{data[2].goods_icon.thumb}}">
+							<p class="price">¥{{data[2].price}}</p>
+						</div>
+					</div>
+					{{if data[3]}}
+					<div id="{{data[3].id}}" class="mui-table-view-cell mui-col-xs-6 goods-item">
+						<div id="">
+							<img style="padding: 5px;" onload="load(this)" src="../../images/mediaImages/weibo_df.png" data-src="{{data[3].goods_icon.thumb}}">
+							<p class="price">¥{{data[3].price}}</p>
+						</div>
+					</div>
+					{{/if}}
+				</div>
+				{{/if}}
+			</div>
+			{{/if}}
+		</script>
+
+	</body>
+	<script type="text/javascript">
+		mui.init({
+			pullRefresh: {
+				container: '#pullrefresh',
+				up: {
+					contentrefresh: '正在加载...',
+					callback: pullup_refresh
+				}
+			}
+		});
+		var lodView = document.getElementById('loading_page');
+		var mainView = document.getElementById('pullrefresh');
+		var storeIndex = document.getElementById('store_index');
+		var storeGoodsList = document.getElementById('store_goods_list');
+		var storeShop = document.getElementById('store_shop');
+		var recommendGoodsList = document.getElementById('recommend_goods_list');
+		var recommendTipsList = document.getElementById('recommend_tips');
+		var newGoodsView = document.getElementById('new_goods_view');
+		var goodsList = document.getElementById('goods_list');
+		var hotGoodsList = document.getElementById('hot_goods_list');
+		var shopList = document.getElementById('shop_list');
+		var godsDetlWeb = null;		//预载的商品详情页面
+		
+		/*商品请求参数*/
+		var goodsRestInfo = {
+				page: 1
+			}
+			/*店铺请求参数*/
+		var shopRestInfo = {
+				page: 1
+			}
+		
+			/*模拟的导航栏切换功能*/
+		var activeNav = storeIndex;
+		var chang_nav_store = function(navId) {
+				if (navId != activeNav.id) {
+					var tagNav = document.getElementById(navId);
+					tagNav.style.display = 'block';
+					activeNav.style.display = 'none';
+					activeNav = tagNav;
+					if (navId != 'store_index') {
+						if(mui.os.ios){
+							mui('#pullrefresh').pullRefresh().scrollTo(0,0,100);
+							mui('#pullrefresh').pullRefresh().enablePullupToRefresh();
+						}else{
+							window.scrollTo(0,0);
+							mui('#pullrefresh').pullRefresh().setStopped(false);
+							mui('#pullrefresh').pullRefresh().enablePullupToRefresh();
+						}
+					} else {
+						if(mui.os.ios){
+							mui('#pullrefresh').pullRefresh().scrollTo(0,0,100);
+							mui('#pullrefresh').pullRefresh().disablePullupToRefresh();
+						}else{
+							window.scrollTo(0,0);
+							mui('#pullrefresh').pullRefresh().setStopped(true);
+							mui('#pullrefresh').pullRefresh().disablePullupToRefresh();
+						}
+					}
+				}
+			}
+			/*商品item*/
+		var get_goods_li = function(goodsInfo) {
+				var li = document.createElement('li');
+				li.className = 'mui-table-view-cell goods-item';
+				li.id = goodsInfo.id;
+				li.innerHTML = goods_list_render(goodsInfo);
+				return li;
+			}
+			/*店铺item*/
+		var get_shop_li = function(shopInfo) {
+				var li = document.createElement('li');
+				li.className = 'mui-table-view-cell mui-col-xs-4';
+				li.id = shopInfo.id;
+				li.innerHTML = template('shop_item', shopInfo);
+				return li;
+			}
+			/*推荐商品数据获取的渲染*/
+		store.getRecommend(function(res) {
+			if (res.code == 200) {
+				for (var i = 0; i < res.data.length && i < 4; i++) {
+					var recoInfo = res.data[i];
+					var div = document.createElement('div');
+					div.className = 'mui-slider-item';
+					div.id = recoInfo.id;
+					div.innerHTML = '<img onload="load(this)" src="../../images/default_load_img.gif" class="recoImg" data-src="' + recoInfo.image_url.banana + '">';
+					/*加上小圆点*/
+					var tipDiv = document.createElement('div');
+					if (i == 0) {
+						tipDiv.className = 'mui-indicator mui-active';
+					} else {
+						tipDiv.className = 'mui-indicator';
+					}
+					recommendGoodsList.appendChild(div);
+					recommendTipsList.appendChild(tipDiv);
+				}
+				mui('#recommend_goods').slider({
+					interval: 10000
+				});
+			}
+		})
+			/*时间排序获得获取商品列表*/
+		store.getGoodsList(goodsRestInfo, function(res) {
+			if (res.code == 200) {
+				for (i in res.data) {
+					var goodsInfo = res.data[i];
+					var li = get_goods_li(goodsInfo);
+					goodsList.appendChild(li);
+				}
+				newGoodsView.innerHTML = template('new_goods_template', res);
+			} else {
+				toast.info(res.info);
+			}
+			changePage(lodView, mainView, false);
+		});
+		/*销量排序的商品列表*/
+		store.getGoodsList({
+			order: 'sell'
+		}, function(res) {
+			if (res.code == 200) {
+				hotGoodsList.innerHTML = template('new_goods_template', res);
+			} else {
+				toast.info('获取数据失败');
+			}
+		});
+		/*获取店铺列表ajax请求*/
+		store.getShopList(shopRestInfo, function(res) {
+				if (res.code == 200) {
+					for (i in res.data) {
+						var shopInfo = res.data[i];
+						var li = get_shop_li(shopInfo);
+						shopList.appendChild(li);
+					}
+				}
+			})
+			/*暂时隐藏底部加载更多窗口*/
+		mui.plusReady(function() {
+			setTimeout(function() {
+				if(mui.os.ios){
+					mui('#pullrefresh').pullRefresh().disablePullupToRefresh();
+				}else{
+					mui('#pullrefresh').pullRefresh().setStopped(true);
+				}
+			});
+			
+			/*预载商品详情页面*/
+			godsDetlWeb = mui.preload({
+				url:'store-goods-detail.html',
+				id:'store-goods-detail'
+			})
+		})
+			/**
+			 * 上拉加载更多
+			 */
+		function pullup_refresh() {
+			var tabId = activeNav.id;
+			switch (tabId) {
+				case 'store_goods_list':
+					goodsRestInfo.page++;
+					store.getGoodsList(goodsRestInfo, function(res) {
+						var length_1 = typeof(res.data) == 'undefined' ? 0 : res.data.length_1;
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(length_1 == 10 ? false : true);
+						if (res.code == 200) {
+							for (i in res.data) {
+								var goodsInfo = res.data[i];
+								var li = get_goods_li(goodsInfo);
+								goodsList.appendChild(li);
+							}
+						}
+					});
+					break;
+				case 'store_shop':
+					shopRestInfo.page++;
+					store.getShopList(shopRestInfo, function(res) {
+						var length_2 = typeof(res.data) == 'undefined' ? 0 : res.data.length_2;
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(length_2 == 10 ? false : true);
+						if (res.code == 200) {
+							for (i in res.data) {
+								var shopInfo = res.data[i];
+								var li = get_shop_li(shopInfo);
+								shopList.appendChild(li);
+							}
+						}
+					})
+					break;
+				default:
+					break;
+			}
+		}
+		/*商品列表点击连接事件*/
+		goods_li_click('.mui-scroll');
+		/*店铺列表点击连接事件*/
+		mui('#store_shop').on('tap', 'li', function(e) {
+			var shopId = this.id;
+			mui.openWindow({
+				url: 'store-shop-head.html',
+				id: 'store-shop-head',
+				show: {
+					aniShow: 'pop-in' //页面显示动画，默认为”slide-in-right“；
+				},
+				extras: {
+					shopId: shopId
+				}
+			})
+		})
+	</script>
+
+</html>

@@ -1,0 +1,26 @@
+.manage-btn{
+	position: absolute;
+	top: 30px;
+	right: 20px;
+	padding: 5px;
+	width: 20%;
+	text-align: center;
+	background-color: #1ABC9C;
+	color: #FFF;
+}
+.area-title{
+	margin: 10px 0 5px 0;
+}
+.crowd-info-view{
+	box-shadow: 0px 0px 5px #C3C3C3;
+	-webkit-box-shadow: 0px 0px 5px #C3C3C3;
+}
+.item-right-text{
+    position: absolute;
+	right: 5px;
+    top: 25px;
+    font-size: 12px;
+}
+li.base-info-view{
+	position: relative;
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/module.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/pull-top-tips.css"/>
+		<link href="../../css/question.css" rel="stylesheet" />
+		<script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/question.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/question-render.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<img id="sendQuestion" src="../../images/icon/question_send.png" class="mui-icon img-icon hu-hd-btn mui-pull-right"/>
+			<h1 id="title" class="mui-title" onload="">全部问答</h1>
+		</header>
+		
+		<div class="mui-content">
+			<div class="mui-slider mui-fullscreen">
+				<div id="wrapper" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+					<div id="nav_list" class="mui-scroll">
+						<a class="mui-control-item mui-active" data-type="0" href="#item_0">全部</a>
+					</div>
+				</div>
+				<div id="slider_group" class="mui-slider-group">
+					<div id="item_0" class="mui-slider-item mui-control-content mui-active">
+						<div id="scroll_wrapper_0" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<ul id="0" data-page="0" class="mui-table-view mui-clearfix"></ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script id="group_tplt" type="text/html">
+			<div id="scroll_wrapper_{{id}}" class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul id="{{id}}" data-page="0" class="mui-table-view mui-clearfix"></ul>
+				</div>
+			</div>
+		</script>
+		
+	    <script src="../../js/mui.pullToRefresh.js"></script>
+	    <script src="../../js/mui.pullToRefresh.material.js"></script>
+	    <script src="js/question-all.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

@@ -1,0 +1,36 @@
+
+.cat-list-img{
+	float: left;
+	border-radius: 5px;
+    width: 5em;
+    height: 5em;
+    margin-right: 10px;
+}
+.item-house-price{
+	text-align: right;
+	float: right;
+	color: red;
+}
+.cat-list-img-head{
+	float: left;
+	margin-right: 10px;
+	border-radius: 3px;
+	width: 3em;
+	height: 3em;
+}
+.resume-list-view{
+	margin-top: 5px;
+}
+.resume-list-text-one{
+	display: inline-block;
+	width: 80%;
+}
+.resume-list-text-two{
+	display: inline-block;
+	border-left: 1px solid #ddd;
+	text-align: center;
+	width: 18%;
+}
+.icon-eye{
+	color: #444;
+}

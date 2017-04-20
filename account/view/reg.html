@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reg.css" />
+		<script src="../../js/core.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../js/account.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css"/>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav base-header-background">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 id="reg_title" class="mui-title">注册</h1>
+		</header>
+		<!--页面主结构开始-->
+		<div class="mui-content">
+			<div style="padding: 20px;">
+				<span id="title" style="font-size:20px;">
+			</span>
+
+				<div style="margin-top:20px;overflow: hidden;background-clip: padding-box;">
+					<!--注册类型1-->
+					<ul id="reg_class_view" style="padding-top: 25%;" class="reg-type">
+						<li id="normal_reg" class="reg-class-li">
+							<a class="mui-navigate-right">普通注册<br/>
+								<span class="title-ps">注册一个普通账号</span>
+							</a>
+						</li>
+						<li id="invite_reg" class="reg-class-li">
+							<a class="mui-navigate-right">邀请注册<br/>
+								<span class="title-ps">需要邀请码才能注册</span>
+							</a>
+						</li>
+					</ul>
+
+					<!--注册类型2-->
+					<ul id="reg_type_view" class="reg-type">
+						<li id="username">
+							<a class="mui-navigate-right">用户名注册<br/>
+								<span class="title-ps">用户名注册，个性，嚣张</span>
+							</a>
+						</li>
+						<li id="email">
+							<a class="mui-navigate-right">邮箱注册<br/>
+								<span class="title-ps">邮箱验证，安全注册</span>
+							</a>
+						</li>
+						<li id="mobile">
+							<a class="mui-navigate-right">手机号注册<br/>
+								<span class="title-ps">免费验证短信，快速注册</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+			mui.init({
+				beforeback: function() {
+					if(regMainWeb && regMainWeb.isVisible()) {
+						regMainWeb.hide('slide-out-right');
+						return false;
+					} else if(reg_type_view.style.display == 'block' && classView) {
+						reg_type_view.style.display = 'none';
+						reg_class_view.style.display = 'block';
+						return false;
+					} else {
+						return true;
+					}
+				}
+			});
+
+			var regTitleView = document.getElementById('reg_title');
+			var reg_class_view = document.getElementById('reg_class_view');
+			var reg_type_view = document.getElementById('reg_type_view');
+			var normal_reg = document.getElementById('normal_reg');
+			var invite_reg = document.getElementById('invite_reg');
+			var regTypeArr = []; //网站开启的注册种类
+			var roleOriList, roleList = [];
+			var selfWeb, regMainWeb = null;
+			var classView = true; //标记reg_class_view是否存在
+
+			/*控制显示预载注册类型栏*/
+			var typeViewShow = function() {
+				reg_type_view.style.display = 'block';
+				for(var item in regTypeArr) {
+					var name = regTypeArr[item];
+					var typeView = document.getElementById(name);
+					typeView.style.display = 'block';
+				}
+			};
+
+			mui.plusReady(function() {
+
+				selfWeb = plus.webview.currentWebview();
+
+				document.getElementById('title').innerHTML = '欢迎注册';
+				var accountConfig = app.getConfig('account');
+				//获取注册配置项，并且预加载相关页面 
+				if(accountConfig.can_reg == 1) {
+					var reg_type = accountConfig.reg_class.split(',');
+					regTypeArr = accountConfig.reg_type.split(',');
+					if(reg_type.indexOf('invite') > -1) { //如果有邀请注册的配置
+						reg_class_view.style.display = 'block';
+						invite_reg.style.display = 'block';
+						if(reg_type.indexOf('normal') > -1) {
+							normal_reg.style.display = 'block';
+						}
+					} else if(reg_type.indexOf('normal') > -1) { //没有邀请注册的配置
+						classView = false;
+						typeViewShow();
+					}
+				} else {
+					toast.info('网站没有开启注册功能');
+				}
+				if(accountConfig.reg_role && accountConfig.reg_role.length > 0) {
+					roleOriList = accountConfig.reg_role;
+					roleList = roleOriList;
+				} else {
+					toast.info('角色列表获取失败！');
+				}
+				
+				regMainWeb = mui.preload({
+					url:'reg-main.html',
+					id:'reg-main',
+				})
+			});
+
+			/*注册class选择*/
+			mui('#reg_class_view').on('tap', 'li', function(e) {
+				var reg_class = this.id;
+				switch(reg_class) {
+					case 'normal_reg':
+						reg_class_view.style.display = 'none';
+						roleList = roleOriList;
+						typeViewShow();
+						break;
+					case 'invite_reg':
+						plus.nativeUI.prompt("邀请码验证", function(e) {
+							if(e.index != 1 && e.value.trim() != '') {
+								plus.nativeUI.showWaiting();
+								reg.checkInviteCode(e.value, function(res) {
+									plus.nativeUI.closeWaiting();
+									if(res.code == 200) {
+										roleList = [{
+											invite: res.data.code,
+											id: res.data.roles.match(/\d+/g),
+											title: res.data.title
+										}];
+										reg_class_view.style.display = 'none';
+										typeViewShow();
+									} else {
+										toast.info(res.info);
+									}
+								})
+							}
+						}, "", "请输入邀请码", ["确认", "取消"]);
+						break;
+					default:
+						break;
+				}
+			})
+
+			/*注册type选择*/
+			mui('#reg_type_view').on('tap', 'li', function(e) {
+				if(roleList.length > 0) {
+					var regType = this.id;
+					mui.fire(regMainWeb, 'localReg', {
+						data: {
+							type: regType,
+							role: roleList
+						}
+					});
+					regMainWeb.show('slide-in-right', 200);
+				} else {
+					toast.info('角色信息获取失败，无法进行注册');
+				}
+			})
+		</script>
+	</body>
+
+</html>

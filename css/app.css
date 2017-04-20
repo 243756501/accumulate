@@ -1,0 +1,36 @@
+/*
+ *这是单独为hello mui准备的个性化css，可以覆盖标准mui的css定义；
+ * 在实际项目开发时，建议为App单独写一个css文件，从而实现项目的自定义皮肤功能；
+ * 
+ * */
+.mui-android .mui-bar-nav~.mui-content{
+	padding: 0;
+}
+
+.diy-index-nav{
+	border:solid 3px #EFEFF4 !important;
+	background: white;
+}
+
+
+
+.sortable_list li {
+    background-color: #fff;
+}
+.sortable_list .sortable-ghost {
+    opacity: 0.4;
+    background-color: #F4E2C9;
+}
+
+.sortable_list li:first-letter {
+    text-transform: uppercase;
+}
+
+.drag-handle {
+    margin-right: 10px;
+    font: bold 20px Sans-Serif;
+    color: #5F9EDF;
+    display: inline-block;
+    cursor: move;
+    cursor: -webkit-grabbing;  /* overrides 'move' */
+}

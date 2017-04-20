@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/question.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/pull-top-tips.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css"/>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<i id="more_btn" class="mui-icon mui-pull-left mui-icon-bars base-head-btn"></i>
+			<img id="send_question_btn" src="../../images/icon/question_send.png" style="width: 55px;" class="mui-icon base-head-btn mui-pull-right"/>
+			<h1 class="mui-title">问答</h1>
+		</header>
+		
+		<div class="mui-content">
+			<div class="mui-slider mui-fullscreen">
+				<div id="wrapper" class="slider-bar mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+					<a class="mui-control-item mui-active" href="#item_0">待回答</a>
+					<a class="mui-control-item" href="#item_1">热门回答</a>
+				</div>
+				<div id="slider_group" class="mui-slider-group">
+					<div id="item_0" class="mui-slider-item mui-control-content mui-active">
+						<div id="scroll_wrapper_0" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<ul id="wait" data-page="0" class="mui-table-view"></ul>
+							</div>
+						</div>
+					</div>
+					<div id="item_1" class="mui-slider-item mui-control-content">
+						<div id="scroll_wrapper_1" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<ul id="hot" data-page="0" class="mui-table-view"></ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.pullToRefresh.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.pullToRefresh.material.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/question.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/question-render.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			
+	  		var moreBtn= document.getElementById('more_btn');
+  			var sendQBtn = document.getElementById('send_question_btn');
+			var waitList = document.getElementById('wait');
+			
+			var add_view = function(datas, listView, page) {
+				listView.setAttribute('data-page', page);
+				for(var index in datas) {
+					listView.appendChild(get_question_li(datas[index]));
+				}
+			}
+			
+			mui('.mui-scroll-wrapper').scroll({bounce: false});
+			mui.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function(index, pullRefreshEl) {
+				mui(pullRefreshEl).pullToRefresh({
+					down: {
+						callback: function() {
+							var self = this;
+							var selfList = pullRefreshEl.children[0];
+							page = 1;
+							var restInfo = {
+								type: selfList.id,
+								page: page
+							};
+							question.getQuestionList(restInfo, function(res) {
+								if(res.data) {
+									selfList.innerHTML = '';
+									add_view(res.data, selfList, page);
+									self.refresh(res.data&&res.data.length>=10);
+								}
+								self.endPullDownToRefresh();
+							});
+						}
+					},
+					up: {
+						auto:true,
+						callback: function() {
+							var self = this;
+							var selfList = pullRefreshEl.children[0];
+							var page = selfList.getAttribute('data-page');
+							page++;
+							var restInfo = {
+								type: selfList.id,
+								page: page
+							};
+							question.getQuestionList(restInfo, function(res) {
+								if(res.data) {
+									add_view(res.data, selfList, page);
+								}
+								self.endPullUpToRefresh(!res.data||res.data.length<10);
+							});
+						}
+					}
+				});
+			});
+			
+			mui.plusReady(function(){
+				/*缓存问答的分类*/
+				question.getQuestionType(function(res) {
+					if (res.data) {
+						myStorage.setItem('question_type',JSON.stringify(res.data));
+					}
+				})
+			});
+			
+			var add_first = function(info){
+				waitList.insertBefore(get_question_li(info),waitList.children[0]);
+			}
+			
+	      	/*提问投稿*/
+			question.goSendWeb(sendQBtn);
+	      
+	      	/*打开全部*/
+	      	moreBtn.addEventListener('tap',function(e){
+	      		webtools.openSingleWeb('question-all');
+	      	});
+			
+			/*列表项点击事件*/
+			mui('#slider_group').on('tap','li',function(){
+				question.goDtWeb(this.detail_info.id);
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/store.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<style>
+			.mui-row.mui-fullscreen>[class*="mui-col-"] {
+				height: 100%;
+			}
+			.mui-scrollbar.mui-scrollbar-vertical{
+				display: none;
+			}
+			.mui-col-xs-3,
+			.mui-control-content {
+				overflow-y: auto;
+				height: 100%;
+			}
+			.mui-segmented-control .mui-control-item {
+				line-height: 50px;
+				width: 100%;
+			}
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+				background-color: #fff;
+			}
+			.mui-grid-view.mui-grid-9{
+				height: 100%;
+				background-color: white;
+			}
+			.mui-grid-view.mui-grid-9 .mui-table-view-cell{
+				border-color: #fafafa;
+			}
+			.mui-control-item{
+			    border-bottom: 1px solid rgba(200, 199, 204, 0.2) !important;
+			}
+			.mui-pull-left{
+				margin-left: -5px !important;
+			}
+			.class-item{
+				padding-top: 30px !important;
+				padding-bottom: 30px !important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="mui-title">商品分类</h1>
+		</header>
+		<div class="mui-content mui-row mui-fullscreen">
+			<div class="mui-col-xs-3">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll" style="background: #F5F5F5;">
+						<div id="first_nav_list" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="mui-col-xs-9">
+				<div id="second_scroll" class="mui-scroll-wrapper">
+					<div id="second_nav_list" class="mui-scroll">
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!--classItme模板-->
+		<script id="classItemTemplte" type="text/html">
+			<p class="mui-ellipsis">{{title}}</p>
+		</script>
+		<script>
+			mui.init({
+				swipeBack: true //启用右滑关闭功能
+			});
+			mui('.mui-scroll-wrapper').scroll();
+			var leftView = document.getElementById("first_nav_list");
+			var rightView = document.getElementById("second_nav_list");
+			var classId = 0;	//分类ID
+			var leftCount = 0;		//左侧一级目录数目
+			var goodsListWeb = null;
+
+			/*获得一个左边item*/
+			var get_left_item = function(classInfo){
+				var item = document.createElement('a');
+				item.innerHTML = classInfo.title;
+				item.className = 'mui-control-item';
+				item.href = '#nav' + classInfo.id;
+				item.id = classInfo.id;
+				item.classInfo = classInfo;
+				return item;
+			}
+			
+			/*获得一个右边的容器*/
+			var get_right_view = function(classInfo){
+				var div = document.createElement('div');
+				div.id = 'nav' + classInfo.id;
+				div.className = 'mui-control-content';
+				var ul = document.createElement('ul');
+				ul.className = 'mui-table-view mui-grid-view mui-grid-9';
+				for(var i in classInfo.child){
+					var clsInfo = classInfo.child[i];
+					var li = get_right_item(clsInfo);
+					ul.appendChild(li);
+				}
+				div.appendChild(ul);
+				return div;
+			}
+			
+			
+			/*右边一个li*/
+			var get_right_item = function(classInfo){
+				var li = document.createElement('li');
+				li.className = 'mui-table-view-cell mui-col-xs-4 class-item';
+				li.innerHTML = template('classItemTemplte',classInfo);
+				li.id = classInfo.id;
+				li.classInfo = classInfo;
+				return li;
+			}
+			
+			store.getGoodsClass(classId,function(res){
+				if(res.code == 200){
+					for(var i in res.data){
+						var leftClassInfo = res.data[i];
+						var leftItem = get_left_item(leftClassInfo);
+						leftView.appendChild(leftItem);
+						
+						var rightItem = get_right_view(leftClassInfo);
+						rightView.appendChild(rightItem);
+						
+					}
+					 //默认选中第一个
+					leftView.querySelector('.mui-control-item').classList.add('mui-active');
+					rightView.querySelector('.mui-control-content').classList.add('mui-active');
+				}else{
+					toast.info('获取商品分类信息失败');
+				}
+			})
+				
+			mui.plusReady(function(){
+				
+				var thisWeb = plus.webview.currentWebview();
+				thisWeb.addEventListener('show',function(e){
+					console.log('进入到商品分类页面,开始预载商品街页面！');
+					if(!plus.webview.getWebviewById('store-goods-list-head')){
+				 		goodsListWeb = mui.preload({url:'store-goods-list-head.html',id:'store-goods-list-head'});					
+					}
+				})
+			})
+			
+			mui('#second_nav_list').on('tap','li',function(e){
+				var classInfo = this.classInfo;
+				if(!goodsListWeb){
+					goodsListWeb = plus.webview.getWebviewById('store-goods-list-head');
+				}
+				var targWeb = plus.webview.getWebviewById('store-goods-list-body');
+				mui.fire(targWeb,'storeGoodsClassChange',{classInfo:classInfo});
+				goodsListWeb.show('slide-in-right');
+			})
+			
+			mui('#first_nav_list').on('tap','a',function(e){
+				mui('#second_scroll').scroll().scrollTo(0,0);
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,48 @@
+
+.store-list-img{
+	width: 25%;
+	height: 5em;
+	border-radius: 5px;
+	padding: 5px 10px 0px 0px;
+}
+.goods-price{
+	color: red;
+	font-size: 18px;
+}
+.mui-checkbox{
+	margin: 5px 5px 10px 10px;
+}
+.mui-text-left{
+	padding: 10px 0px 10px 10px !important;
+}
+.mui-col-xs-3{
+	padding: 5px !important;
+	margin-right: 0px !important;
+}
+.goods-title{
+	min-height: 35px;
+}
+.item-input{
+	margin: 0px !important;
+	padding: 0px !important;
+	max-width: 20%;
+	text-align: center;
+	max-height: 30px;
+}
+.mui-btn{
+	height: 30px;
+}
+.mui-popover{
+	display: none;
+	width: 60%;
+	left: 20%;
+	top: 40%;
+}
+.check-view{
+	position: relative;
+	top: -25px;
+	right: 30px;
+	opacity: 10;
+	width: 50px;
+	height: 40px;
+}

@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.picker.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reg-main.css" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app-form.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/animate.min.css" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">注册资料完善</h1>
+		</header>
+		<div class="mui-content animated bounceInRight" style="margin-top: 2%;">
+			<div id="enlarge_content_1">
+				<div>
+					<label>昵称</label>
+					<input id="nickname" type="text" class="mui-input-group" style="height: 35px;width: 100%;" placeholder="OSC账号昵称">
+				</div>
+				<div class="app-form-block">
+					<div class="app-ipt-title">分类</div>
+					<div class="mui-table-view-cell mui-collapse">
+						<a id="showUserType" class="mui-navigate-right">选择分类</a>
+					</div>
+				</div>
+
+				<div>
+					<div id="radio_checked">
+						<label style="">承接项目</label>
+						<div class="mui-input-row mui-radio mui-left">
+							<label>是</label>
+							<input id="radio_yes" name="radio" type="radio" checked="checked" value="是">
+						</div>
+						<div class="mui-input-row mui-radio mui-left">
+							<label>否</label>
+							<input id="radio_no" name="radio" type="radio" value="否">
+						</div>
+					</div>
+					<div id="check_checked">
+						<label style="">其他技能</label>
+						<div class="mui-input-row mui-checkbox mui-left">
+							<label>Photoshop</label>
+							<input id="check_photo" name="checkbox" type="checkbox" value="Photoshop">
+						</div>
+						<div class="mui-input-row mui-checkbox mui-left">
+							<label>Flash</label>
+							<input id="check_flash" name="checkbox" type="checkbox" value="Flash">
+						</div>
+					</div>
+				</div>
+
+				<div>
+					<label style="float: left;">简介</label>
+					<textarea id="short_content" class="app-form-textarea" rows="5" placeholder="简单介绍入行以来的工作经验，项目经验"></textarea>
+				</div>
+				<div>
+					<button id="enlarge_submit" type="button" class="mui-btn-primary  reg-okay-btn-submit">提交</button>
+				</div>
+
+			</div>
+
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/mui.picker.min.js"></script>
+		<script src="../js/reg_info.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function() {
+
+				var language_select = document.getElementById("language_select");
+				language_select.addEventListener('tap', function() {
+					//picker对象
+					var picker = new mui.PopPicker();
+					//picker数据源
+					picker.setData([{
+						value: '1',
+						text: 'java'
+					}, {
+						value: '2',
+						text: 'C++'
+					}]);
+					//显示
+					picker.show(function(selectItems) {
+						language_select.innerHTML = selectItems[0].text;
+					})
+				})
+			});
+
+			//点击提交按钮上传数据并且跳转到下一界面
+			document.getElementById("enlarge_submit").addEventListener('tap', function() {
+				//上传数据
+				submitInfo();
+				mui.openWindow({
+					url: 'reg-info-tag.html',
+					id: 'reg-info-tag'
+				})
+			})
+			var submitInfo = function() {
+				//获取擅长语言的选项值
+				var goodat_language = document.getElementById("language_select").innerHTML;
+				//获取简介的文本值
+				var short_content = document.getElementById("short_content").value;
+				//OSC账号昵称
+				var nickname=document.getElementById("nickname").value;
+				//获取单选框的值
+				var radiobtn=document.getElementsByName("radio");
+				for(var i=0;i<radiobtn.length;i++)
+				{
+				if(radiobtn[i].checked==true)
+				{
+					console.log(radiobtn[i].value);
+				}
+				}
+				//获取复选框的值
+				var checkbtn=document.getElementsByName('checkbox');
+				for(var i=0;i<checkbtn.length;i++)
+				{
+					if(checkbtn[i].checked==true)
+					{
+						console.log(checkbtn[i].value);
+					}
+				}
+				
+			
+
+			}
+		</script>
+	</body>
+
+</html>

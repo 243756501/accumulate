@@ -1,0 +1,330 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/icomoon.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/pull-top-tips.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css" />
+		<link rel="stylesheet" type="text/css" href="../css/weibo-community.css" />
+	</head>
+
+	<body>
+		<header class="mui-bar base-head-combine mui-bar-nav">
+   			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="weibo-community-title mui-title">圈子</h1>
+			<i id="create_btn" class="mui-icon icon-plus base-head-btn mui-pull-right mui-hidden"></i>
+		</header>
+
+		<div class="weibo-community-content mui-content">
+			<div id="weibo_slider" class="mui-slider mui-fullscreen">
+				<div class="slider-tab mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+					<div id="first_top_nav">
+						<a class="mui-control-item mui-active" href="#item_0">全部</a>
+						<a class="mui-control-item" href="#item_1">关注</a>
+						<a class="mui-control-item" href="#item_2">我的</a>
+					</div>
+				</div>
+				<div>
+					<!--<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-4"></div>-->
+				</div>
+				<div id="loading_page" class="base-loading">
+					<i class="mui-spinner"></i>
+				</div>
+				<div id="slider_group" class="mui-slider-group" style="display: ;">
+					<div id="item_0" class="mui-slider-item mui-control-content mui-active">
+						<div class="weibo-listview">
+							<div class="mui-scroll-wrapper">
+								<div class="mui-scroll">
+									<ul id="all" page="1" class="weibo-ul"></ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="item_1" class="mui-slider-item mui-control-content ">
+						<div id="comm-follow-div" style="display: none;">
+							<div class="weibo-listview">
+								<div class="mui-scroll-wrapper">
+									<div class="mui-scroll">
+										<ul id="follow" page="1" class="weibo-ul">
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="nogroup" style="display: none;">
+							<img class="nogroup-img" src="../../account/img/account_unknown_img.png" />
+							<button class="nogroup-btn">查看圈子</button>
+						</div>
+					</div>
+					<div id="item_2" class="mui-slider-item mui-control-content">
+						<div id="comm-my-div" class="weibo-listview" style="display: none;">
+							<div class="mui-scroll-wrapper">
+								<div class="mui-scroll">
+									<ul id="my" page="1" class="weibo-ul">
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script id="unload-script" type="text/html">
+			<div id="unload" class="mui-text-center unload" style="margin-top: 60px;display:none;">
+				<img class="community-avatar" src="../../images/default_avatar.jpg" />
+				<div class="mui-content-padded">
+					<div>
+						<p>亲，你还没有登录哟~</p>
+					</div>
+					<div id="join_view" class="link-area">
+						<button id="login_btn" class="community-btn mui-btn">登录</button>
+					</div>
+				</div>
+			</div>
+		</script>
+		<script id="weibo-community-script" type="text/html">
+			<div class="weibo-group-img-div">
+				<img class="weibo-grounp-img" data-event="detail" onload="load(this)" data-src="{{logo}}" src="../../images/app-logo.png"/>
+			</div>
+			<div class="weibo-grounp-content">
+				<span class="weibo-group-content-title">{{title}}</span>
+				<span class="weibo-grounp-content-text">{{notice}}</span>
+				<div class="weibo-group-content-foot">
+					<div class="mui-pull-left"><span>成员：</span>
+						<a>{{member_count}}</a>
+					</div>
+					<div class="mui-pull-right"><span>讨论：</span></a>
+						<a>{{post_count}}</a>
+					</div>
+				</div>
+			</div>
+			{{if !is_follow}}
+			<i data-event="follow" class="event-follow crowd-follow-icon icon-plus"></i>
+			{{else}}
+			<div data-flag="{{my_flag}}" data-event="unfollow" class="event-unfollow base-followed-btn">已关注</div>
+			<div data-flag="{{my_flag}}" data-event="manage" class="event-manage base-btn-2">管理</div>
+			{{/if}}
+		</script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.pullToRefresh.js"></script>
+		<script src="../../js/mui.pullToRefresh.material.js"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/weibo.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/crowd.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init();
+			
+			var createBtn = document.getElementById("create_btn");
+			var lv = document.getElementsByClassName('weibo-ul')[0];
+			var follow_sliderItem = document.getElementById("item_1");
+			var my_sliderItem = document.getElementById("item_2");
+			var follow_div = document.getElementById("comm-follow-div");
+			var my_div = document.getElementById("comm-my-div");
+			var unload = document.getElementsByClassName("unload");
+			var nogroup = document.getElementById("nogroup");
+			var loading = document.getElementById("loading_page");
+			var main_view = document.getElementById("slider_group");
+			var pullRefreshView = document.getElementsByClassName('mui-scroll')[0];
+			
+			mui.plusReady(function() {
+				weibo.getCommunity(communityInfo_all, function(res) {
+					add_datalist_li(lv, res.data);
+					if(!res.data){
+						toast.info('未发现圈子');
+					}
+				})
+				mui.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function(index, pullRefreshEl) {
+					mui(pullRefreshEl).pullToRefresh({
+						down: {
+							callback: function() {
+								var self = this;
+								var selfListView = pullRefreshEl.getElementsByClassName('weibo-ul')[0];
+								add_datalist_down(selfListView, function(res) {
+									self.endPullDownToRefresh();
+									var boolean_value=res?false:true;								
+									self.refresh(!boolean_value);
+									self.endPullUpToRefresh(boolean_value);
+								});
+							}
+						},
+						up: {
+							callback: function() {
+								var self = this;
+								var selfListView = pullRefreshEl.getElementsByClassName('weibo-ul')[0];
+								add_datalist_up(selfListView, function(res) {
+									self.endPullUpToRefresh(res ? false : true);
+								});
+							}
+						}
+					})
+				})
+				loginState_change();
+				createBtn.addEventListener('tap',function(e){
+					mui.openWindow({url:'weibo-crowd-create.html',id:'weibo-crowd-create',show:{autoShow:false}});
+				})
+			})
+			
+			mui('.mui-scroll-wrapper').scroll({
+				bounce:false
+			});
+			var communityInfo_all = {
+				page: 1,
+				flag: "all"
+			};
+			//自定义active时间 传a标签对象和slide对象
+			useMyownActiveStyle('#first_top_nav a', 'weibo_slider');
+            
+            
+			add_unload_div(follow_sliderItem, my_sliderItem);
+			mui('.link-area').on('tap', 'button', function() {
+				webtools.openSingleWeb('../../account/view/login');
+			})
+
+			window.addEventListener('userChange', function() {
+				loginState_change()
+			})
+
+			function add_datalist_down(listView, callback) {
+				communityInfo_all.page = 1;
+				listView.setAttribute('page', communityInfo_all.page);
+				var tmpType = listView.getAttribute('id');
+				switch(tmpType) {
+					case 'all':
+						communityInfo_all.flag = 'all';
+						break;
+					case 'follow':
+						communityInfo_all.flag = 'follow';
+						break;
+					case 'my':
+						communityInfo_all.flag = 'my';
+						break;
+				}
+				weibo.getCommunity(communityInfo_all, function(res) {
+					if(is_login() !== 0) {
+						if(res.info == "null" && tmpType == "follow") {
+							changePage(nogroup, follow_div, true);
+						}
+					}
+					listView.innerHTML = "";
+					add_datalist_li(listView, res.data);
+					callback();
+				})
+			}
+
+			function add_datalist_up(listview, callback) {
+				var page = listview.getAttribute('page');
+				page++
+				listview.setAttribute('page', page);
+				communityInfo_all.page = page;
+				weibo.getCommunity(communityInfo_all, function(res) {
+					add_datalist_li(listview, res.data);
+					callback(res.data);
+				})		
+			}
+
+			function add_datalist_li(listView, data, callback) {
+				for(var index in data) {
+					var dataInfo = data[index];
+					var li = append_community_li(dataInfo);
+					listView.appendChild(li);
+				}
+			    changePage(main_view, loading, true);
+			}
+
+			function append_community_li(dataInfo) {
+				var li = document.createElement('li');
+				dataInfo.my_flag = communityInfo_all.flag;
+				li.className = 'weibo-li';
+				li.detail_info = dataInfo;
+				li.setAttribute('id', 'community_' + dataInfo.id);
+				var html = template('weibo-community-script', dataInfo);
+				li.innerHTML = html;
+				return li;
+			}
+
+			function loginState_change() {
+				if(is_login() !== 0) {
+					createBtn.classList.remove('mui-hidden');
+					changePage(follow_div, unload[0], true);
+					changePage(my_div, unload[1], true);
+				} else {
+					createBtn.classList.add('mui-hidden');
+					changePage(unload[0], follow_div, true);
+					changePage(unload[1], my_div, true);
+				}
+			}
+
+			function add_unload_div(target1, target2) {
+				var data = {}
+				var div1 = document.createElement('div');
+				var div2 = document.createElement('div');
+				var html = template('unload-script', data);
+				div1.innerHTML = html;
+				div2.innerHTML = html;
+				target1.appendChild(div1);
+				target2.appendChild(div2);
+			}
+
+			document.querySelector('.mui-slider').addEventListener('slide', function() {
+				var listViews = mui('.mui-scroll .weibo-ul');
+				var index = event.detail.slideNumber;
+				if(is_login() !== 0) {
+					pullRefreshView = listViews[index].parentNode;
+					if(listViews[index].children.length == 0) {
+						mui(pullRefreshView).pullToRefresh().pullDownLoading();
+					}
+				} else {
+					return;
+				}
+			})
+			
+			//新
+			mui('#slider_group').on('tap','li',function(e){
+				var crowdInfo = this.detail_info;
+				var dataEvent = e.srcElement.getAttribute('data-event');
+				switch(dataEvent){
+					case 'detail':
+						crowd.openDtlWeb(crowdInfo);
+						break;
+					case 'follow':
+						weibo.handleCrowd({id:crowdInfo.id,flag:'join'},function(res){
+							toast.info(res.info);
+							if(res.code == 200){
+								mui(pullRefreshView).pullToRefresh().pullDownLoading();
+							}
+						})
+						break;
+					case 'unfollow':
+						weibo.handleCrowd({id:crowdInfo.id,flag:'quit'},function(res){
+							toast.info(res.info);
+							if(res.code == 200){
+								mui(pullRefreshView).pullToRefresh().pullDownLoading();
+							}
+						})
+						break;
+					case 'manage':
+						webtools.openSingleWeb('weibo-crowd-manage',crowdInfo);
+						break;
+					default:
+						webtools.createRptWeb('weibo-crowd-weibo',function(web){
+							mui.fire(web,'crowdChange',{data:crowdInfo});
+							web.show('pop-in',WEBTRANSTIME);
+						})
+						break;
+				}
+			})
+			
+			window.addEventListener('crowdChange',function(e){
+				mui(pullRefreshView).pullToRefresh().pullDownLoading();
+			})
+		</script>
+	</body>
+
+</html>

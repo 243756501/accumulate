@@ -1,0 +1,57 @@
+#scroll_wrapper {
+	top: 40px;
+}
+
+.mui-segmented-control.mui-scroll-wrapper {
+	height: 40px!important;
+}
+
+.news-top-image {
+	width: 100%!important;
+	height: 200px!important;
+}
+
+.news-item i {
+	margin-right: 3px;
+}
+.news-item-img{
+	margin-top: 5px;
+	margin-right: 10px;
+	height: 90px;
+	width: 90px !important;
+}
+.news-title {
+	margin-top: 10px;
+}
+
+.news-bottom-list {
+	overflow: hidden;
+	margin-top: 10px;
+	font-size: 12px;
+	color: #8F8F94;
+}
+
+.mui-pull-bottom-tips {
+	text-align: center;
+	background-color: #efeff4;
+	font-size: 15px;
+	line-height: 40px;
+	color: #777;
+}
+
+.mui-bar-popover {
+	width: 30%;
+}
+
+#refresh-btn {
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	z-index: 199;
+	background: url(../../images/refresh.png) no-repeat 0 0;
+	background-size: 100%;
+	-webkit-tap-highlight-color: transparent;
+	position: fixed;
+	right: 10px;
+	bottom: 50px
+}

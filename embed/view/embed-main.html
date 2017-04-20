@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css" />
+		<link rel="stylesheet" type="text/css" href="../css/embed-main.css"/>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav base-white-color">
+			<i id="back_btn" class="mui-icon mui-action-back head-btn"></i>
+			<h1 id="url_view" class="mui-title head-title"></h1>
+			<i id="flush_btn" class="mui-icon mui-icon-refresh head-btn mui-pull-right"></i>
+		</header>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init({
+				beforeback:function(){
+					if(dataInfo.target!=1){
+						embed.back();
+						return false;
+					}
+					return true;
+				}
+			});
+			var selfWeb,dataInfo,proLock,homeUrl,embed,embedId,embedTop = '46px',
+				backBtn = document.getElementById("back_btn"),
+				urlView = document.getElementById("url_view"),
+				screenH = document.body.clientHeight;
+
+			mui.plusReady(function() {
+				selfWeb = plus.webview.currentWebview();
+				dataInfo = selfWeb.data;
+				embedId = dataInfo.name;
+				homeUrl = apptools.netUrl(dataInfo.url);
+				onBrowserLoading(dataInfo.title);
+				backBtn.classList.add(dataInfo.target==1?'mui-icon-closeempty':'mui-icon-left-nav');
+				
+				//子页面处理
+				embed = plus.webview.getWebviewById(embedId);
+				if(!embed){
+					embed = plus.webview.create(homeUrl, embedId, {
+						top: embedTop,bottom:'0px'
+					});
+				}
+				selfWeb.append(embed);
+				//embed页面时间监听
+				embed.addEventListener('loaded', function() {
+					setTimeout(function(){
+						togglePros(false);
+					},1000)
+				}, false);
+
+				embed.addEventListener('titleUpdate', function(e){
+					if(!proLock)togglePros(true); //避免两次触发时加载条抽搐
+					setTimeout(function(){
+						onBrowserLoading(dataInfo.title);
+					},500)
+				});
+			})
+			
+			function togglePros(flag){
+				if(flag){
+					embedTop = '46px';
+					mui('body').progressbar({progress: 0}).show();
+					simulateLoading(0);
+				}else{
+					embedTop = '45px';
+					mui('body').progressbar().setProgress(100);
+					mui('body').progressbar().hide();
+					proLock = false;
+				}
+				embed.setStyle({top:embedTop});
+			}
+			
+			//通过随机数模拟业务进度
+			function simulateLoading(container, progress) {
+				proLock = true;
+				if (typeof container === 'number') {
+					progress = container;
+					container = 'body';
+				}
+				setTimeout(function() {
+					progress += Math.random() * 30;
+					mui(container).progressbar().setProgress(progress);
+					if (progress < 100 && proLock) {
+						simulateLoading(container, progress);
+					}else{
+						mui(container).progressbar().hide();
+					}
+				}, Math.random() * 200 + 100);
+			}
+
+			// 页面跳转完成事件
+			function onBrowserLoading(url) {
+				url = url|| embed.getTitle();
+				urlView.innerHTML = url;
+			}
+			
+			//软键盘打开后的处理
+			window.addEventListener('resize',function(e){
+				if(document.body.clientHeight == screenH){
+					embed.evalJS('document.activeElement.blur()');
+				}
+			})
+			document.getElementById("flush_btn").addEventListener('tap',function(e){
+				embed.reload();
+			})
+		</script>
+	</body>
+
+</html>

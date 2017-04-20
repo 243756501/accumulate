@@ -1,0 +1,57 @@
+.msg-link-content {
+	margin-top: 10px;
+	line-height: 19PX;
+}
+.msg-content{
+	margin: 10px 0;
+}
+.msg-link-view {
+	background: #EFEFF4;
+	height: 80px;
+}
+.msg-right{
+	padding: 10px 0 3px 0;;
+}
+.small-left{
+	margin-right: 10px;
+}
+.msg-weibo-reply-btn{
+	position: absolute;
+	right: 15px;
+	top: 25px;
+	padding: 5px 15px;
+	border-radius: 5px;
+	border: 1px solid #EEE;
+	background: -webkit-linear-gradient(white, #EEE);
+}
+.msg-item-weibo{
+	position: relative !important;
+	border-bottom: 10px solid #EFEFF4;
+	padding: 10px 15px;
+	background-color: white;
+}
+.msg-item-weibo p{
+	margin-bottom: 0;
+}
+.mui-table-view-cell{
+	background-color: white;
+}
+.mui-table-view-cell .mui-media-body{
+	overflow: visible;
+}
+.mui-table-view{
+	background: none;
+}
+.announce-time{
+	text-align: center;
+	margin: 20px 10px 0 10px;
+}
+.announce-text{
+	opacity: 0.8;
+	margin-top: 10px;
+	-webkit-line-clamp: 4;
+}
+.sample-img{
+	max-width: 100% !important;
+	
+}

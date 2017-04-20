@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/shop.css" rel="stylesheet" />
+		<script src="../../js/core.js" type="text/javascript"></script>
+		<script src="../../js/app.js" type="text/javascript"></script>
+		<script src="../js/shop.js"></script>
+		<script src="../js/shop-render.js"></script>
+		<script src="../../js/template.js" type="text/javascript"></script>
+		<script src="../../js/mui.pullToRefresh.js"></script>
+		<script src="../../js/mui.pullToRefresh.material.js"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<style>
+			.mui-media-body > p {
+				padding-bottom: 5px;
+			}
+			.mui-media-body > p {
+				padding-bottom: 5px;
+			}
+			.mui-pull-bottom-tips {
+				text-align: center;
+				background-color: #efeff4;
+				font-size: 15px;
+				line-height: 40px;
+				color: #777;
+			}
+			.mui-bar-popover {
+				width: 30%;
+			}
+			.mui-ellipsis-2{
+				height: 45px;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<div id="titles" style="height: 40px;background-color: white;" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+			<div id="top_nav" class="mui-scroll">
+				<a id="0" class="mui-control-item mui-active">全部</a>
+			</div>
+		</div>
+		<div id="second_top_nav">
+
+		</div>
+		<div id="loading_page" style="text-align: center;margin-top: 30%;">
+			<i class="mui-spinner"></i>
+		</div>
+		
+		<div id="pullrefresh" style="margin-top: 40px;" class="mui-scroll-wrapper">
+			<div id="mui-scroll" class="mui-scroll contents">
+				<ul id="shop_0" class="mui-table-view" page='1' style="background: none;"></ul>
+			</div>
+		</div>
+	</body>
+	<script>
+		mui.init();
+		mui('#pullrefresh').scroll();
+		//当前ul对象
+		var flagDiv = '';
+		//上一个ul对象
+		var previousDiv = '0';
+		var open_id = null;
+		
+		//存放的临时变量
+		var flag = null;
+
+		var shopTopNav = document.getElementById('top_nav');
+		var secondTopNav = document.getElementById('second_top_nav');
+		var lists = document.getElementById('pullrefresh');
+		var loadPages = document.getElementById('loading_page');
+		var topNav = [shopTopNav, secondTopNav];
+		var shopInfo = {
+			type_id: 0,
+			page: 1
+		};
+		var loadPage = function(flags) {
+			if (flags) {
+				lists.style.display = 'block';
+				loadPages.style.display = 'none';
+			} else {
+				lists.style.display = 'none';
+				loadPages.style.display = 'block';
+			}
+		}
+		
+		mui('#mui-scroll').on('tap', '.changeBtn', function(e) {
+			open_id = app.getState().open_id || "";
+			if (open_id != ''){
+				flag = this.parentNode.shop_info;
+					mui.openWindow({
+					url: 'change-shop.html',
+					id: 'change-shop',
+					show: {
+						aniShow: 'pop-in',
+						autoShow: true
+					},
+					waiting: {
+						autoShow: true
+					},
+					extras: {
+						shopId: this.id,
+						moneyNeed: flag.money_need
+					},
+					createNew: false
+				})
+				return false;
+			}else{
+				toast.info('未登入！');
+				return false;
+			}
+		})
+		mui('#mui-scroll').on('tap', '.mui-table-view-cell', function() {
+			flag = this.shop_info;
+			mui.openWindow({
+				url: 'shop-detail.html',
+				id: 'shop-detail',
+				show: {
+					aniShow: 'pop-in',
+					autoShow: true
+				},
+				waiting: {
+					autoShow: true
+				},
+				extras: {
+					detailInfo: this.shop_info
+				},
+				createNew: false
+			})
+		})
+		var getList = function(info) {
+			shop.getShopList({
+				type_id: info
+			}, function(res) {
+				if (res.code == 200 && res.data != null) {
+					loadPage(true);
+					for (var index in res.data) {
+						var li = get_shop_li(res.data[index]);
+						flagDiv.appendChild(li);
+					}
+				} else {
+					loadPage(true);
+					toast.info('该分类下无活动');
+				}
+			})
+		}
+		mui.plusReady(function() {
+			flagDiv = document.getElementById('shop_0');
+			previousDiv = document.getElementById('shop_0');
+			//导航栏
+			shop.getShopClass(function(res) {
+				
+				if (res.code == 200 && res.data != null) {
+					for (var index in res.data) {
+						var shopInfo = res.data[index];
+						var nav_a = document.createElement('a');
+						nav_a.className = 'mui-control-item';
+						nav_a.innerText = shopInfo.title;
+						nav_a.id = shopInfo.id;
+						nav_a.href = '#class_' + shopInfo.id;
+						shopTopNav.appendChild(nav_a);
+						
+						var ul = document.createElement('ul');
+						ul.className = 'mui-table-view';
+						ul.id = 'shop_'+shopInfo.id;
+						ul.setAttribute('page',1);
+						ul.style.display = 'none';
+						ul.style.background = 'none';
+						document.getElementById('mui-scroll').appendChild(ul);
+						
+						if (shopInfo.child != null) {
+							nav_a.href = '#class_' + shopInfo.id;
+							var spinnerDiv = document.createElement('div');
+							spinnerDiv.id = 'class_' + shopInfo.id;
+							spinnerDiv.className = 'mui-popover mui-bar-popover';
+							spinnerDiv.innerHTML = parse_shop_html(title_render, shopInfo);
+							secondTopNav.appendChild(spinnerDiv);
+							var ul2 = document.createElement('ul');
+							ul2.className = 'mui-table-view';
+							ul2.id = 'shop_'+shopInfo.child[0].id;
+							ul2.setAttribute('page',1);
+							ul2.style.display = 'none';
+							ul2.style.background = 'none';
+							document.getElementById('mui-scroll').appendChild(ul2);
+						}
+					}
+				}
+				getList();
+				new_pullup();
+			});
+			mui.each(topNav, function(index, navEl) {
+				mui(navEl).on('tap', 'a', function(event) {
+					shopInfo.page = 1;
+					if (navEl.id == 'second_top_nav') {
+						mui(get_parent_node(this, '.mui-popover')).popover('toggle');
+					}
+					var shop_id = this.id;
+					var shop_body = plus.webview.getWebviewById('shop-body');
+					mui.fire(shop_body, 'shop', {
+						shop_id: shop_id
+					});
+				});
+			});
+		})
+		
+		/**
+		 * 切换标题事件
+		 */
+		window.addEventListener('shop', function(event) {
+				previousDiv.style.display = 'none';
+				//获得事件参数
+				mui('#pullrefresh').scroll().scrollTo(0, 0);
+				var num = event.detail.shop_id;
+				flagDiv = document.getElementById('shop_'+num);
+				flagDiv.style.display = 'block';
+				shopInfo.type_id = num;
+				previousDiv = document.getElementById('shop_'+num);
+				if (flagDiv.innerHTML == ''){
+					getList(num);
+				}	
+			})
+		
+		/**
+		 * 库存减少事件
+		 */
+		window.addEventListener('shopBody',function(event){
+			console.log('监听到库存减少事件---->商品页');
+			var id = event.detail.id;
+			var temp = "repository_"+id;
+			document.getElementById(temp).innerHTML = document.getElementById(temp).innerHTML - 1 ;
+			flag.goods_num--;
+		})
+			/*获取单个item LI*/
+		var get_shop_li = function(shopMsg) {
+			var li = document.createElement('li');
+			li.className = 'mui-table-view-cell cell mui-clearfix';
+			li.shop_info = shopMsg;
+			var html = parse_shop_html(render, shopMsg);
+			li.innerHTML = html;
+			return li;
+		};
+		//加载更多
+		function new_pullup() {
+			mui('#mui-scroll').pullToRefresh({
+				up: {
+					callback: function() {
+						var thisView = this;
+						//获取当前下拉刷新的ul标识
+						var tempUl = flagDiv;
+						var temp_page = parseInt(tempUl.getAttribute('page'));
+						setTimeout(function() {
+							shopInfo.page = temp_page + 1;
+							shop.getShopList(shopInfo, function(res) {
+								if (res.code == 200 && res.data != null) {
+									tempUl.setAttribute('page',shopInfo.page);
+									loadPage(true);
+									for (var index in res.data) {
+										var li = get_shop_li(res.data[index]);
+										tempUl.appendChild(li);
+									}
+								} else {
+									loadPage(true);
+									toast.info('没有更多了');
+								}
+								thisView.endPullUpToRefresh();
+							})
+						}, 1000);
+					}
+				}
+			});
+		}
+
+		function pulldown_refresh() {
+			setTimeout(function() {
+				shopInfo.page = 1;
+				shop.getShopList(shopInfo, function(res) {
+					if (res.code == 200 && res.data != null) {
+						for (var index in res.data) {
+							var li = get_shop_li(res.data[index]);
+						}
+					}
+				})
+			}, 500);
+		}
+	</script>
+
+</html>

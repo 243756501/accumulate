@@ -1,0 +1,24 @@
+.list-icon{
+	margin-right:10px;
+	width: 20px;
+	vertical-align: text-bottom;
+}
+.unbind-text{
+    color: #777;
+	font-size: 16px;
+	float: right;
+	animation: showAnima 1.5s forwards;
+	-webkit-animation: showAnima 1.5s forwards; /* Safari and Chrome */
+}
+@keyframes showAnima
+{
+	0% {opacity:0;}
+	90% {opacity:0;}
+	100% {opacity:1;}
+}
+@-webkit-keyframes showAnima /* Safari and Chrome */
+{
+	0% {opacity:0;}
+	90% {opacity:0;}
+	100% {opacity:1;}
+}

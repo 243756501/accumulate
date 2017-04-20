@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/icomoon.css" rel="stylesheet" />
+		<link href="../../css/iconfont.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../account/css/animate.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/pull-top-tips.css" />
+		<link href="../../css/previewimage.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/weibo.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css" />
+		<link rel="stylesheet" type="text/css" href="../../libs/drag/dragging.css" />
+	</head>
+
+	<body>
+		<header id="weibo_alltrends_title" class="mui-text-center alltrends-header mui-bar mui-bar-nav base-header-background">
+			<span id="weibo_menu" class="alltrends-title">全站动态</span>
+			<span id="weibo_menu_icon" class="mui-icon mui-icon-arrowdown"></span>
+		</header>
+		<div id="loading_page" class="base-loading">
+			<i class="mui-spinner"></i>
+		</div>
+		<div class="mui-scroll-wrapper weibo-scroll-wrapper">
+			<div id="pullrefresh" class="mui-scroll" style="display: none;">
+				<div class="base-white-color">
+					<div id="top_show_btn" class="top-title" style="padding:8px;">
+						<span class="icons-zhiding bg">置顶</span>
+						<span id="showTop" class="mui-pull-right bg eye-btn icon-eye-blocked"></span>
+						<span id="hideTop" class="mui-pull-right bg icon-eye"></span>
+					</div>
+					<!--置顶微博列表-->
+					<ul id="weiboTopList" class="mui-table-view weibo-list-view"></ul>
+				</div>
+				<ul id="weiboList" class="mui-table-view mui-table-view-chevron"></ul>
+			</div>
+		</div>
+		<!--
+        	描述：自定义拖动菜单
+     -->
+		<div id="draggable" class="nav">
+			<a class="home">
+				<img class="open" src="../../images/weibo-send-btn.png" title="Menu">
+				<img class="close" src="../../images/weibo-send-btn-change.png" title="Close">
+			</a>
+			<a class="item like" id="weibo-send"><img src="../../images/weibo-send-article.png" alt="User"></a>
+			<a class="item profile" id="weibo-crowd"><img src="../../images/weibo-send-other.png" alt="Like"></a>
+			<a class="item message" id="send_long"><img src="../../images/weibo-send-topic.png" alt="Message"></a>
+		</div>
+		<!-- .nav -->
+		<div id="popover" class="mui-popover" style="display:none;">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul class="mui-table-view alltriends-ul mui-table-view-radio  mui-clearfix">
+						<li id="all" name="全站动态" class="mui-table-view-cell popover-weibo-item mui-selected  mui-clearfix">
+							<a class="mui-navigate-right">
+								<i id="1" class="popover-icon icon-picassa mui-pull-left"></i>
+								<span class="alltrends-section">全站动态</span>
+							</a>
+						</li>
+						<li id="hot" name="热门微博" class="mui-table-view-cell popover-weibo-item  mui-clearfix">
+							<a class="mui-navigate-right">
+								<span class="popover-icon icon-fire2 mui-pull-left"></span>
+								<span class="alltrends-section">热门微博</span>
+							</a>
+						</li>
+						<li id="follow" name="我关注的" class="mui-table-view-cell popover-weibo-item  mui-clearfix">
+							<a class="mui-navigate-right">
+								<span class="popover-icon icon-user2 mui-pull-left"></span>
+								<span class="alltrends-section">我关注的</span>
+							</a>
+						</li>
+						<div class="split-line-div">
+							<hr class="split-line" />
+							<span class="split-line-text">我的圈子</span>
+						</div>
+					</ul>
+					<ul id="alltrend_community" class="mui-table-view alltriends-ul mui-clearfix">
+					</ul>
+				</div>
+			</div>
+		</div>
+		<script id="weibo_popover_community" type="text/html">
+			<img src="{{logo}}" class="alltrend_community_icon mui-pull-left"></img>
+			<span class="alltrends-section">{{title}}</span>
+		</script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/mui.zoom.js"></script>
+		<script src="../../js/mui.previewimage.js"></script>
+		<script src="../../js/template.js"></script>
+		<script src="../../js/core.js"></script>
+		<script src="../js/weibo.js"></script>
+		<script src="../js/weibo-render.js"></script>
+		<script src="../../js/support.js"></script>
+		<script src="../../js/expression.js"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/voice/voiceload.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.pullToRefresh.js"></script>
+		<script src="../../js/mui.pullToRefresh.material.js"></script>
+		<script src="../../libs/cropper/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/drag/TweenMax.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/drag/dragging-animation.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/drag/dragging.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/weibo-main.js"></script>
+	</body>
+
+</html>

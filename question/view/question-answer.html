@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../../css/tools/img_uploader.css"/>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/mytools/img_uploder.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/mytools/body_before.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/question.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+    	.mui-scroll-wrapper{
+    		top: 44px;
+    	}
+    	.mui-scroll{
+    		min-height: 100%;
+    		padding: 5px;
+    		background: white;
+    	}
+    	.answer-content{
+			min-height: 150px;
+			overflow:scroll;
+			overflow-y:hidden;
+			overflow-x:hidden
+    	}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+		<h1 class="mui-title">回答</h1>
+		<button id="answer_btn" type="button" class="mui-btn mui-pull-right mui-btn-green">发表</button>
+	</header>
+	<div class="mui-scroll-wrapper">
+		<div class="mui-scroll">
+			<textarea id="answer_content" class="answer-content" placeholder="内容" onfocus="addself(this)"></textarea>
+			
+			<div class="">图片</div>
+			<!--图片上传区域start-->
+			<div id="image_up_view" class="image-up-view">
+				<span id='image_list' class="image-list"></span>
+				<img id="add_btn" class="add-btn" src="../../images/add.png"/>
+			</div>
+			<!--图片上传区域end-->
+		</div>
+	</div>
+</body>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+      	mui('.mui-scroll-wrapper').scroll();
+      	var questionContent = document.getElementById('answer_content');
+      	var uploadImage = document.getElementById('add_image');
+      	var subBtn = document.getElementById('answer_btn');
+		var questionId,imgLoader;
+		var imageArr = {};
+		var selfWeb,dtlWeb;
+		
+		mui.plusReady(function(){
+			
+			selfWeb = plus.webview.currentWebview();
+			dtlWeb = plus.webview.getWebviewById('question-detail');
+			questionId = selfWeb.data;
+			imgLoader = new ImgLoader({
+				list:'image_list',
+				btn:'add_btn',
+				textView:'answer_content',
+				paths:imageArr
+			});
+			
+			/*提交*/
+			var answer_submit = function(content,list){
+				content = apptools.fmtRichText(content,list);
+				var restInfo = {
+					id:questionId,
+					content:content
+				}
+				question.answerQuestion(restInfo,function(res){
+					console.log(JSON.stringify(res))
+					plus.nativeUI.closeWaiting();
+					toast.info(res.info);
+					if(res.data){
+						dtlWeb.evalJS('add_answer_to_first('+JSON.stringify(res.data)+')');
+						mui.back();
+					}
+				})
+			}
+			/*提交按钮*/
+	      	subBtn.addEventListener('tap',function(e){
+	      		
+				var content = questionContent.value;
+				if(!questionId || content.length < 5){
+					mui.alert('内容不得低于5个字符');
+					return;
+				}
+				var waitView = plus.nativeUI.showWaiting('提交中...');
+	      		/*把内容中的图片锚点替换为url*/
+				UploaderTool('image').doUps(imageArr,function(resPaths){
+					if(typeof(resPaths) == 'string'){
+						waitView.close();
+						mui.alert(resPaths);
+						return;
+					}
+					answer_submit(content,resPaths);
+				})
+	      	});
+		})
+    </script>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/store-pay.css"/>
+		<link href="../../css/icomoon.css" rel="stylesheet" />
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/store.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="mui-title">订单支付</h1>
+		</header>
+		<div class="mui-scroll-wrapper" style="padding:50px 0px;">
+			<div class="mui-scroll">
+
+				<div style="background:#FFFFFF;margin-bottom: 5px;">
+					<div style="padding: 10px;">
+						<div class="order-box order-message">
+							<span>订单编号:</span>
+							<p id="order_id" style="display: inline-block;"></p>
+						</div>
+					</div>
+				</div>
+				
+				<div class="info-box">
+					<div style="border-bottom: solid 2px #eee;font-size: 17px;padding: 5px 0px;">配送信息</div>
+					<div id="adress_view" class="adress-info"></div>
+				</div>
+
+				<div style="margin-top: 10px;background: white;">
+					<div style="padding: 5px;color: red;font-size: 14px;">已选择商品</div>
+					<ul id="goods_list_view" class="mui-table-view"></ul>
+				</div>
+				
+				<div style="background:#FFFFFF;margin-bottom: 10px;">
+					<div class="total-view">
+						<span>合计:</span><span id="sum_total"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="diy-bottom-box" style="">
+			<div class="mui-clearfix diy-bottom ">
+				<div class="mui-text-right">
+					<button id="pay_btn" class="pay-btn">付款</button>
+				</div>
+			</div>
+		</div>
+		
+		<script id="adress_info_tmlate" type="text/html">
+			<div class="adress-item">收货人：{{r_name}}</div>
+			<div class="adress-item">电话号码：{{r_phone}}</div>
+			<div class="adress-item">邮政编码：{{r_code}}</div>
+			<div class="adress-item">收货地址：{{r_pos}}</div>
+		</script>
+		
+		<script id="goods_item_tplt" type="text/html">
+			<div class="mui-media-body">
+				<p class="goods-title">{{good.title}}</p>
+				<div>
+					<div class="mui-pull-left" style="color: red;">
+						<span>￥</span><span class="price" style="margin-right: 1em;">{{good.price}}</span>
+					</div>
+					<div class="mui-pull-right">
+						<span>x</span><span class="count">{{count}}</span>
+					</div>
+				</div>
+			</div>
+		</script>
+	</body>
+	<script>
+		mui.init();
+		mui('.mui-scroll-wrapper').scroll();
+
+		var adressView = document.getElementById('adress_view');
+		var goodsList = document.getElementById('goods_list_view');
+		var sumTotal = document.getElementById('sum_total');
+		var order_id = document.getElementById('order_id');
+		var payBtn = document.getElementById('pay_btn');
+		
+		mui.plusReady(function(){
+			
+			var thisWeb = plus.webview.currentWebview();
+  			orderId = thisWeb.dataId;
+			/*如果上个页面是place-order过来的则吧它关掉*/
+			var beforWeb = plus.webview.getWebviewById('store-place-order');
+			if(beforWeb){
+				beforWeb.close('none');
+			}
+			
+			order_id.innerText = orderId;
+			var payMoney = 0;
+			var restInfo = {orderId:orderId};
+			store.getOrderDetail(restInfo,function(res){
+				if(res.code == 200){
+					var orderInfo = res.data[0];
+					adressView.innerHTML = template('adress_info_tmlate',orderInfo);
+					payMoney = Number(orderInfo.total_cny);
+					sumTotal.innerText = '¥ ' + payMoney.toFixed(2);
+					goodsList.innerHTML = '';
+					for(i in orderInfo.items){
+						var li = document.createElement('li');
+						li.className = 'goods';
+						li.innerHTML = template('goods_item_tplt',orderInfo.items[i])
+						goodsList.appendChild(li);
+					}
+				}else{
+					toast.info('获取订单数据失败');
+				}
+			})
+
+			payBtn.addEventListener('tap',function(e){
+				var orderData = {payMoney:payMoney,orderId:orderId,subject:'微店购买商品'};
+				mui.openWindow({
+					url:'../../plus/view/pay-okay.html',
+					id:'pay-okay',
+					show:{
+						aniShow:'pop-in'
+					},
+				    extras:{
+				    	data:orderData
+				    }
+				});
+			})
+		})
+		
+		
+	</script>
+
+</html>

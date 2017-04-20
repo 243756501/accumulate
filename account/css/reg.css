@@ -1,0 +1,31 @@
+.reg-type {
+    position: relative;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    list-style: none;
+    display: none;
+}
+.reg-type li {
+    position: relative;
+    overflow: hidden;
+    padding: 11px 15px;
+    border: 1px solid #FF7043;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    background-color: #FFFFFF;
+    display: none;
+}
+.reg-type li a {
+    color: #FF7043;
+}
+.reg-class-li{
+	 border: 2px solid #0CB20C !important;
+}
+.reg-class-li a{
+	color: #0CB20C !important;
+}
+.title-ps{
+	font-size: 12px;
+	color: #C7C7CC;
+}

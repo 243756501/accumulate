@@ -1,0 +1,98 @@
+						body {
+							background: #FFFFFF;
+						}
+						
+						.register-page-background {
+							text-align: center;
+							background: #FFFFFF;
+						}
+						
+						.register-page-content {
+							bottom: 120px;
+						}
+						
+						.register-page-emaildiv {
+							margin: 50px 50px 5px 50px;
+							border-bottom: 1px solid #AAAAAA;
+							justify-content: flex-end !important;
+						}
+						
+						.register-page-content div {
+							margin: 15px 50px 5px 50px;
+							border-bottom: 1px solid #AAAAAA;
+							justify-content: flex-end !important;
+						}
+						
+						.input-icon {
+							width: 15px;
+							height: 15px;
+							position: relative;
+							left: -10px;
+							top: -1px;
+						}
+						
+						.mui-input-row label {
+							width: 0px !important;
+							padding: 10px 10px !important;
+						}
+						
+						.register-page-content input {
+							font-size: 12px;
+							position: relative;
+							left: -40px;
+							top: 0px;
+						}
+						
+						.idcode-btn {
+							font-size: 12px;
+							color: #1ABC9C;
+							font-weight: bold;
+							position: absolute;
+							z-index: 1;
+							top: 10px;
+							right: 0;
+						}
+						
+						.register-page-btn {
+							background: #1ABC9C;
+							color: #FFFFFF;
+							border-radius: 20px;
+							width: 100%;
+							height: 40px;
+						}
+						
+						.register-page-btndiv {
+							margin-top: 25px !important;
+							border: 0px !important;
+						}
+						
+						.identity {
+							font-size: 12px;
+							position: relative;
+							width: 70px;
+							top: 10px;
+						}
+						
+						.arrowdown {
+							font-size: 20px;
+							position: absolute;
+							z-index: 1;
+							top: 10px;
+							right: 0;
+							width: 38px;
+							height: 38px;
+							text-align: center;
+							color: #999;
+						}
+						
+						.register-backgroundImg {
+							width: 100%;
+						}
+						
+						#iosbackBtn {
+							position: absolute;
+							color: #FFFFFF;
+							top: 5%;
+							left: 1%;
+							font-size: 25px !important;
+						}

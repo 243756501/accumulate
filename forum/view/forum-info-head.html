@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../../css/module.css"/>
+    <script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+		<h1 id="title" class="mui-title"></h1>
+		<i id="post" class="mui-icon mui-icon-compose mui-pull-right hu-hd-btn"></i>
+	</header>
+</body>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init({
+      		subpages: [{
+				url: 'forum-info-body.html', //子页面HTML地址
+				id: 'forum-info-body', //子页面标志
+				styles: {
+					top: '45px',
+					bottom: '0px',
+				}
+			}]
+      	});
+      	
+      	var title = document.getElementById('title');
+		var forumInfo = null;
+		
+		/*供子页面传递参数调用*/
+		var getForumInfo = function(fInfo){
+			forumInfo = fInfo;
+	      	title.innerText = forumInfo.title;
+		}
+		
+    	mui.plusReady(function(){
+    		var thisHeadWeb = plus.webview.currentWebview();
+	      	title.addEventListener('tap',function(){
+	      		goTop(thisHeadWeb);
+	      	})
+    	});
+    	
+		document.getElementById('post').addEventListener('tap',function(e){
+			if(is_login()){
+				mui.openWindow({
+				url:'forum-send-post.html',
+				id:'forum-send-post',
+				extras:{
+					forumInfo:forumInfo
+				}
+			})
+			}else{
+				toast.info("请登录后操作");
+			}
+		});
+    </script>
+</html>

@@ -1,0 +1,45 @@
+
+.mui-scroll-wrapper{
+	top: 45px;
+}
+.mui-scroll{
+	min-height: 100%;
+	background: white;
+}
+.center-top-view{
+	color: white;
+	background-color: tomato;
+	clear: both;
+	min-height:8em;
+	padding: 10px;
+}
+.top-img{
+	border-radius:50%;
+	width: 50px;
+	height: 50px;
+}
+.top-title{
+	vertical-align:text-bottom;
+	line-height:50px;
+}
+.icon-title{
+	margin-right: 0.5em;
+	color: #666;
+}
+.fav-view{
+	background: white !important;
+}
+.fav-item{
+	padding: 5px !important;
+}
+.fav-img{
+	padding: 5px 10px;
+	width: 100%;
+}
+.fav-title{
+	font-size: 12px;
+	line-height: 15px;
+}
+.mui-grid-view.mui-grid-9 .mui-media{
+	background-color: white;
+}

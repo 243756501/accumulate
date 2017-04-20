@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/core.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/uploader.js"></script>
+		<script src="../../js/expression.js"></script>
+		<script src="../js/news.js"></script>
+		<script src="../../js/mui.picker.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/mui.picker.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/app-form.css" />
+		<link rel="stylesheet" type="text/css" href="../css/news-send.css" />
+		<style>
+			.ui-alert {
+				text-align: center;
+				padding: 20px 10px;
+				font-size: 16px;
+			}
+			
+			.mui-btn {
+				font-size: 16px;
+				padding: 8px;
+			}
+			
+			.sn-content p
+			{
+			margin:5px;	
+			}
+			
+			.sn-newsImg
+			{
+				display: flex;
+				align-items: center;
+				height: 120px;
+				padding: 5px;
+			}
+			.sn-uploadBtn
+			{
+				width: 70px; height: 70px;
+			}
+			.sn-showImg
+			{
+				
+			}
+			.sn-showImg img
+			{
+				width: 70px !important; height: 70px !important;
+				border-radius: 5px;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<div class="mui-navbar-inner mui-bar mui-bar-nav base-header-background">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="mui-title">投稿</h1>
+			<i id="send_btn" class="mui-icon mui-icon-upload mui-pull-right base-head-btn"></i>
+		</div>
+		<div class="mui-content sn-content">
+			<p>封面</p>
+			<div class="sn-newsImg base-white-color mui-input mui-clearfix">
+				<div id="show_img" class="sn-showImg mui-pull-left"></div>
+				<img id="upload" class="sn-uploadBtn mui-pull-right" src="../../images/add.png"></img>	
+			</div>
+			<p>标题(必填)</p>
+			<div class="mui-input">
+				<input id="title" type="text" name="title" placeholder="标题" maxlength="30" />
+			</div>
+            <p>分类</p>
+			<div class="mui-input">			
+				<input name="category" id="role_id" value="1" type="hidden">
+				<button id='showUserType' class="mui-btn" type='button' style="font-size: 18px;display: block;width: 100%;margin-bottom: 10px;">默认分类
+            </button>
+			</div>
+            <p>来源(必填)</p>
+			<div class="mui-input">
+				<input id="source" type="text" placeholder="选文地址..." />
+			</div>
+            <p>有效期</p>
+			<div class="mui-input">
+				<button id='time' data-options='{"value":"2015-10-10 10:10","beginYear":2010,"endYear":2020}' class="btn mui-btn mui-btn-block">选择日期时间...</button>
+			</div>
+            <p>摘要(必填)</p>
+			<div class="mui-input">
+				<input id="description" type="text" placeholder="资讯摘要..." />
+			</div>
+            <p>详情(不能少于20字)</p>
+			<div class="mui-input">
+				<textarea class="app-form-textarea addself-textarea" id="content" placeholder="资讯详情内容..." rows="1" onfocus="window.activeobj=this;this.clock=setInterval(function(){activeobj.style.height=activeobj.scrollHeight+'px';},10);" onblur="clearInterval(this.clock);"></textarea>
+			</div>
+		</div>
+
+	</body>
+	<script type="text/javascript" charset="utf-8">
+		mui.init();
+		mui.plusReady(function() {
+			var category = JSON.parse(myStorage.getItem('news_send_category'));
+			if(category) {
+				show_category(category);
+			} else {
+				news.getNewsClass({}, function(res) {
+					if(res.code = 200) {
+						show_category(res.data);
+					}
+				});
+			}
+		})
+	</script>
+	<script>
+		(function($) {
+			$.init();
+			apptools.webBlur();
+			var result = $('#result')[0];
+			var btns = $('.btn');
+			var pickers = {};
+			btns.each(function(i, btn) {
+				btn.addEventListener('tap', function() {
+					var optionsJson = this.getAttribute('data-options') || '{}';
+					var options = JSON.parse(optionsJson);
+					var id = this.getAttribute('id');
+					/*
+					 * 首次显示时实例化组件
+					 * 示例为了简洁，将 options 放在了按钮的 dom 上
+					 * 也可以直接通过代码声明 optinos 用于实例化 DtPicker
+					 */
+					pickers[id] = pickers[id] || new $.DtPicker(options);
+					pickers[id].show(function(rs) {
+						/*
+						 * rs.value 拼合后的 value
+						 * rs.text 拼合后的 text
+						 * rs.y 年，可以通过 rs.y.vaue 和 rs.y.text 获取值和文本
+						 * rs.m 月，用法同年
+						 * rs.d 日，用法同年
+						 * rs.h 时，用法同年
+						 * rs.i 分（minutes 的第二个字母），用法同年
+						 */
+						//							result.innerText = '选择结果: ' + rs.text;
+						console.log(rs.text);
+						document.getElementById('time').innerHTML = rs.value;
+					});
+				}, false);
+			});
+		})(mui);
+
+		(function($, doc) {
+
+			var titleDom = doc.getElementById('title');
+			var contentDom = doc.getElementById('content');
+
+			$.plusReady(function() {
+				// 隐藏滚动条
+				plus.webview.currentWebview().setStyle({
+					scrollIndicator: 'none'
+				});
+				doc.getElementById('upload').createUploader({
+					limit: 1,
+					title: '上传封面',
+					input_name: 'attach_ids',
+					showDiv: 'show_img',
+					multiple: false
+				});
+
+				var settings = app.getSettings();
+				var state = app.getState();
+
+				doc.getElementById('send_btn').addEventListener('tap', function() {
+					var mCover = doc.getElementsByName('attach_ids')[0].value;
+					var mTitle = titleDom.value;
+					var mSource = doc.getElementById('source').value;
+					var mContent = contentDom.value;
+					var mDescription = doc.getElementById('description').value;
+					var mTime = doc.getElementById('time').innerHTML;
+					var mCategory = doc.getElementById('role_id').value;
+					if(settings.autoLogin && state.open_id) {
+						if(mCover == '') {
+							mui.toast("请上传封面");
+							return;
+						}
+						if(mTitle == '') {
+							mui.toast("标题不能为空");
+							return;
+						}
+						if(mSource == '') {
+							mui.toast("来源不能为空");
+							return;
+						}
+						if(mTime == '选择日期时间...') {
+							mui.toast("请选择截至时间");
+							return;
+						}
+						if(mDescription == '') {
+							mui.toast("摘要不能为空");
+							return;
+						}
+						if(mContent == '') {
+							mui.toast("详情不能为空");
+							return;
+						} else if(mContent.length < 20) {
+							mui.toast("详情不能少于20字");
+							return;
+						}
+						console.log(mTime);
+						toast.showLoading('投稿中');
+						var sendInfo = {
+							cover: mCover,
+							title: mTitle,
+							category: mCategory,
+							source: mSource,
+							dead_line: mTime,
+							description: mDescription,
+							content: mContent,
+						}
+						news.sendNews(sendInfo, function(res) {
+							toast.hideLoading();
+							if(typeof(res) == 'object') {
+								if(res.code == 200) {
+									if(res.info == '发布成功，请等待管理员审核通过！') {
+										mui.toast('发布成功，请等待管理员审核通过！');
+									} else {
+										mui.toast('发布成功');
+									}
+									mui.back();
+								} else {
+									mui.toast(res.info);
+								}
+							} else {
+								toast.info(res.info);
+							}
+						})
+					} else {
+						mui.toast("未登录");
+					}
+
+				}, false);
+
+			});
+		}(mui, document));
+	</script>
+
+</html>

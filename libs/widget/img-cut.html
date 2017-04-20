@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css"/>
+		<style type="text/css">
+			html,body {height: 100%;margin: 0;background-color: #000;padding: 0;border: 0;}
+			.cut-view{height: 100%;overflow: hidden;}
+			.mask-container{position: relative;height: 100%;opacity: 0.5;z-index: 9;}
+			#cut_img {position:relative;}
+			.mask-grop{height: 20%;}
+			.mask-grop div{display: inline-block;height: 100%;margin-right: -4px;}
+			#mask_l,#mask_r{background-color: #EEE;width: 30%;}
+			#mask{width: 40%;}
+			#mask_1{background-color: #EEE;height: 30%;}
+			#mask_2{background-color: #EEE;height: 50%;}
+			.range-view{position: absolute;bottom: 50px;width: 90%;z-index: 99;margin: 0 5%;}
+			.range-view input{height: 30px !important;}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <i class="mui-action-back mui-icon text-btn base-head-btn base-cancel-color">取消</i>
+			<i id="sub_btn" class="mui-icon text-btn base-head-btn base-ok-color mui-pull-right">完成</i>
+		</header>
+		<div class="cut-view">
+			<div class="mask-container">
+				<div id="mask_1"></div>
+				<div class="mask-grop">
+					<div id="mask_l"></div>
+					<div id="mask" ></div>    
+					<div id="mask_r"></div>
+				</div>
+				<div id="mask_2"></div>
+			</div>
+			<img id="cut_img" src="" />
+			<div class="range-view mui-input-range">
+            	<input id="zoom_bar" type="range" id='block-range' value="100" min="0" max="100" >
+        	</div>
+		</div>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init();
+			var selfWeb, parentWeb;
+			var screenH = document.body.clientHeight,	//屏幕高
+				imgBcrt,	//图片坐标对象
+				touchObj;	//拖动开始事件对象
+			
+			var img1 = document.getElementById("cut_img");
+			var zoomBar = document.getElementById("zoom_bar");
+			var msk = {
+				view:document.getElementById("mask"),
+			};
+			
+			mui.plusReady(function () {
+				selfWeb = plus.webview.currentWebview();
+				if(selfWeb.data){	//区分裁图区域形状
+					document.getElementById("mask_l").style.display = 'none';
+					document.getElementById("mask_r").style.display = 'none';
+					msk.view.style.width = '100%';
+					img1.style.minWidth = '100%';
+				}
+				var mskBcrt = msk.view.getBoundingClientRect();
+				msk.left = mskBcrt.left;
+				msk.right = mskBcrt.right;
+				msk.top = mskBcrt.top;
+				msk.bt = mskBcrt.bottom;
+				msk.height = msk.view.offsetHeight;
+				msk.width = msk.view.offsetWidth;
+				
+				parentWeb = selfWeb.opener();
+	    		plus.gallery.pick(function(path) {
+					img1.src = path;
+	    			selfWeb.show('slide-in-right',500);
+				}, function(err) {
+					mui.back();
+				}, {
+					filter: "image"
+				});
+			})
+			
+			img1.style.top = -screenH +'px';
+
+			window.addEventListener('touchstart',function(e){
+				imgBcrt = img1.getBoundingClientRect();
+				touchObj = e.changedTouches[0];
+			})
+
+			window.addEventListener('touchmove',function(e){
+				if(e.srcElement.tagName == 'INPUT'){
+					return;
+				}
+				var moveX = imgBcrt.left + e.changedTouches[0].clientX -touchObj.clientX;
+				var moveY = imgBcrt.top + e.changedTouches[0].clientY -touchObj.clientY;
+				(function(){
+					if(moveX >msk.left){
+						moveX = msk.left;		//右移时左边界不超出,左移同理
+					}else{
+						if(moveX < imgBcrt.left && Math.abs(moveX-imgBcrt.left)>imgBcrt.right - msk.right){
+							return;
+						}
+					}
+					img1.style.left = moveX +'px';
+				}());
+				(function(){
+					if(moveY > msk.top){			//下移时上边界不的低于剪裁区域的上边界,上移同理
+						moveY = msk.top;
+					}else{
+						if(moveY < imgBcrt.top && Math.abs(moveY-imgBcrt.top)>imgBcrt.bottom - msk.bt){
+							return;
+						}
+					}
+					img1.style.top = moveY-screenH +'px';
+				}());
+			})
+			
+			//图片大小控制器
+			var barValue = 100;
+			zoomBar.addEventListener('input',function(e){
+				if(img1.naturalWidth > msk.width){
+					var zoom = (img1.naturalWidth - msk.width)/100;
+					img1.style.top = msk.top-screenH +'px';
+					img1.style.left = msk.left+'px';
+					if(msk.height >= img1.offsetHeight && barValue > this.value){	//图片高度不得低于剪裁区域高度
+						img1.style.width = '';
+						img1.style.height = msk.height+'px';
+					}else{
+						img1.style.height = '';
+						barValue = parseInt(this.value);
+						img1.width = msk.width + barValue*zoom;
+					}
+				}
+			})
+			
+			document.getElementById("sub_btn").addEventListener('tap',function(e){
+				var canvas = document.createElement('canvas');
+				var zoom = 1;	//原图宽低于屏幕宽时计算放大比率，剪裁时需缩回去
+				if(img1.naturalWidth != img1.width){
+					zoom = img1.naturalWidth/img1.width;
+				}
+
+				var ctx = canvas.getContext("2d");
+				var sx = Math.abs(msk.left-img1.getBoundingClientRect().left)*zoom;
+				var sy = Math.abs(msk.top -img1.getBoundingClientRect().top)*zoom;
+				var sh = msk.height*zoom;
+				var sw = msk.width*zoom;
+				sh = sh>img1.naturalHeight?img1.naturalHeight:sh;
+				sh = sh>img1.naturalWidth?img1.naturalWidth:sh;
+				canvas.width = msk.width;
+				canvas.height = msk.height;
+				ctx.drawImage(img1,sx,sy,sw,sh,0,0,msk.width,msk.height);
+				var imgStr = canvas.toDataURL();
+
+				plus.nativeUI.showWaiting();
+				app.uploadAttach({type:'image',data:imgStr}, function(res) {
+					plus.nativeUI.closeWaiting();
+					if(res.data){
+						res.data.imgStr = imgStr;
+						parentWeb.evalJS('setCover('+JSON.stringify(res.data)+')');
+						selfWeb.close('slide-out-right',WEBTRANSTIME);
+					}else{
+						toast.info('图片上传失败！')
+					}
+				});
+			})
+		</script>
+	</body>
+
+</html>

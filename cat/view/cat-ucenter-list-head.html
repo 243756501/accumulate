@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <style type="text/css">
+		.all-check-view{
+			position: relative !important;
+		    top: 5px !important;
+		    right: -10px !important;
+		}
+		.mui-btn-danger{
+			margin-left: 60%;
+			height: 40px;
+		}
+    	.diy-bottom-box {
+    		padding: 5px;
+    		display: none;
+			position: fixed;
+			width: 100%;
+			height: 50px;
+			bottom: 0px;
+			border-top: solid 1px #ddd;
+			z-index: 999!important;
+			overflow: hidden;
+			background-color: #fafafa;
+		}
+		.down-anima{
+			bottom: 0px;
+			-webkit-animation:myfirst 0.5s;
+		}
+		@-webkit-keyframes myfirst {
+			0%   {bottom: -50px;}
+			100% {bottom: 0px;}
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+	    <button id="editor_btn" type="button" style="display: none;" class="mui-btn mui-pull-right">编辑</button>
+	    <h1 id="title" class="mui-title"></h1>
+	</header>
+		<!--footer-->
+	<div id="footer_view" class="diy-bottom-box">
+		<button id="cancel_btn" type="button" class="mui-btn-danger">取消收藏</button>
+		<div style="display: inline-block;" class="mui-checkbox">
+			<input class="all-check-view" id="check_all" type="checkbox" name="checkbox"/>
+		</div>
+	</div>
+</body>
+    <script type="text/javascript" charset="UTF-8">
+      	mui.init({
+      		beforeback: function(){
+      			bodyWeb = plus.webview.getWebviewById('cat-ucenter-list-body');
+      			btnState = 0;
+				mui.fire(bodyWeb,'checkStateChange',{state:btnState});
+	  			editorBtn.innerHTML = '编辑';
+	  			footerView.style.display = 'none';
+	  			footerView.classList.remove('down-anima');
+	  			all_Check_state(btnState);
+				return true;
+			},
+      		subpages:[{
+      			url:'cat-ucenter-list-body.html',
+      			id:'cat-ucenter-list-body',
+      			styles:{top:'45px',bottom:'0'}
+      		}]
+      	});
+      	var editorBtn = document.getElementById("editor_btn");
+      	var footerView = document.getElementById("footer_view");
+      	var checkAll = document.getElementById("check_all");
+      	var cancelFavBtn = document.getElementById("cancel_btn");
+      	var bodyWeb = null;
+      	var btnState = 0;		//编辑按钮的状态
+      	
+      	var toggleView = function(){
+
+      	}
+      	
+      	mui.plusReady(function(){
+      		
+	      	editorBtn.addEventListener('tap',function(e){
+	      		footerView.classList.toggle('down-anima');
+	      		bodyWeb = plus.webview.getWebviewById('cat-ucenter-list-body');
+	      		btnState ++;
+	      		btnState = btnState %2;
+	  			editorBtn.innerHTML = btnState?'取消':'编辑';
+	  			footerView.style.display = btnState?'block':'none';
+	  			mui.fire(bodyWeb,'checkStateChange',{state:btnState});
+	      	})
+	      	
+	      	/*选择/取消全部*/
+	      	checkAll.addEventListener('tap',function(e){
+	      		bodyWeb.evalJS('change_check_box('+ !this.checked +')');
+	      	})
+	      	
+	      	/*取消收藏按钮*/
+	      	cancelFavBtn.addEventListener('tap',function(e){
+	      		bodyWeb.evalJS('cancel_fav()');
+	      	})
+      	})
+      	
+      	//改变全选按钮的状态
+      	var all_Check_state = function(state){
+      		checkAll.checked = state;
+      	}
+      	
+      	//隐藏/显示编辑按钮
+      	var showEdit = function(isShow){
+      		editorBtn.style.display = isShow?'inline-block':'none';
+      	}
+    </script>
+</html>

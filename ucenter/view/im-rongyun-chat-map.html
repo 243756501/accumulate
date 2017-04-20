@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css" />
+		<style>
+			#map {
+				width: 100%;
+				position: fixed;
+				top: 0px;
+				bottom: 0px;
+				line-height: 200px;
+				text-align: center;
+				background: #FFFFFF;
+				margin: 45px 0 80px 0;
+			}
+			
+			.mui-bar-tab {
+				height: 80px !important;
+				display: flex !important;
+				align-items: center;
+			}
+			
+			.map-discription {
+				display: flex;
+			}
+			
+			.map-distance {
+				font-size: 12px;
+				padding: 5px 20px;
+			}
+			
+			.map-title {
+				padding: 5px;
+				font-weight: bold;
+			}
+			
+			.map-locatmion p {
+				margin-left: 5px;
+				font-size: 12px;
+				color: #444444;
+				width: 80%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav base-header-background">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="mui-title">位置信息</h1>
+		</header>
+		<div id="map">地图加载中...</div>
+		<nav class="mui-bar mui-bar-tab">
+			<div>
+				<div class="map-discription">
+					<span id="aimUserName" class="map-title"></span>
+					<div class="map-distance"><span id="mapDistance"><span></div>
+		  </div>
+		  <div class="map-locatmion">
+		  	<p id="mapLocation" class="mui-ellipsis-2"></p>
+		  </div>	
+		</div> 
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/mytools/my_storage.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init();
+			var ownLongitude,ownLatitude,aimLongitude,aimLatitude,locationName,aimUserName,aimPoint,nowPoint,maps,sender,ownUserName,Data=null;
+			mui.plusReady(function(){
+				var self=plus.webview.currentWebview();
+				Data=self.data;
+				aimLatitude=Data.latitude;
+				aimLongitude=Data.longitude;
+				locationName=Data.aimPoi;
+				aimUserName=Data.aimUserName;
+				sender=Data.sender;
+				ownUserName=JSON.parse(myStorage.getItem('user_info')).nickname;
+				locationName=='' ?document.getElementById("mapLocation").innerHTML='数据获取超时...' : document.getElementById("mapLocation").innerHTML=locationName;
+				document.getElementById("aimUserName").innerHTML='位置分享';
+				aimPoint=new plus.maps.Point(aimLongitude,aimLatitude);
+				plus.geolocation.getCurrentPosition(function(event){
+					ownLongitude=event.coords.longitude;
+					ownLatitude=event.coords.latitude;
+					nowPoint=new plus.maps.Point(ownLongitude,ownLatitude);
+					plus.maps.Map.calculateDistance(nowPoint,aimPoint,function(event){
+	            	document.getElementById("mapDistance").innerHTML='距离我'+(event.distance/1000).toFixed(2)+'千米';
+	            },function(err){console.log(err.message);document.getElementById("mapDistance").innerHTML='距离我0千米';})
+				},function(err){console.log(err.message)});	
+				maps=new plus.maps.Map('map');
+				maps.centerAndZoom(aimPoint, 18);
+				marker=new plus.maps.Marker(aimPoint);
+			    sender=='self'? marker.setLabel(ownUserName): marker.setLabel(aimUserName);
+			    var bubble = new plus.maps.Bubble(locationName+" "+'经度:'+aimLongitude+" "+'纬度:'+aimLatitude);
+	            marker.setBubble(bubble);
+	            maps.addOverlay(marker);
+			})
+		</script>
+	</body>
+</html>

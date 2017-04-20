@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../../css/icomoon.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/cat-list-body.css"/>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/cat.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/cat-render.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<div id="loading_page" style="text-align: center;margin-top: 55%;">
+		<i class="mui-spinner"></i>
+	</div>
+	
+	<div id="pullrefresh" class="mui-scroll-wrapper" style="display: none;">
+		<div class="mui-scroll">
+			<ul id="cat_list_view" class="mui-table-view list-view"></ul>
+			<div id="null_data_view" style="background: #EFEFF4;padding: 50% 0;text-align: center;">没有分类信息!</div>
+		</div>
+	</div>
+</body>
+    <script type="text/javascript" charset="UTF-8">
+      	mui.init({
+			pullRefresh: {
+		        container: '#pullrefresh',
+		        down: {
+		            contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+		            callback: pulldown_refresh
+		        },
+		        up: {
+		            contentrefresh: '正在加载...',
+		            callback: pullup_refresh
+		        }
+		    }
+      	});
+      	
+      	var clbHeadWeb = null;
+      	var typeInfo = null;
+      	var typeId = 0;
+      	var restInfo = {id:0,page:1};
+      	var loadPage = document.getElementById("loading_page");
+      	var mainPage = document.getElementById("pullrefresh");
+      	var listView = document.getElementById("cat_list_view");
+      	var nullView = document.getElementById("null_data_view");
+      	
+      	
+      	/*类型改变后执行的变化*/
+      	window.addEventListener('catTypeChange',function(event){
+      		typeInfo = event.detail.data;
+      		if(!typeId || typeInfo.id != typeId){
+      			clbHeadWeb.evalJS('document.getElementById("title").innerHTML = "' + typeInfo.alias + '"');
+      			typeId = typeInfo.id;
+      			restInfo.id = typeId;
+				mui('#pullrefresh').pullRefresh().pulldownLoading();
+      		}else{
+      			changePage(loadPage,mainPage,false);
+      		}
+      	})
+      	
+		mui.plusReady(function(){
+			clbHeadWeb = plus.webview.getWebviewById('cat-list-head');
+			clbHeadWeb.addEventListener('hide',function(){
+				changePage(loadPage,mainPage,true);
+			})
+			catDetailWeb = mui.preload({
+				url:'cat-detail.html',
+				id:'cat-detail'
+			})
+		})
+		
+		
+      	/*获取单个微博LI*/
+		var get_cat_item = function (catInfo){
+		    var li = document.createElement('li');
+		    li.className = 'mui-table-view-cell cat-list-item';
+		    li.catInfo = catInfo;
+		    li.id = catInfo.id;
+		    var html = parse_cat_item(catInfo);
+		    li.innerHTML = html;
+		    return li;
+		};
+		
+		
+		/**
+		 * 下拉刷新
+		 */
+		function pulldown_refresh(){
+			restInfo.page = 1;
+		    cat.getCatList(restInfo, function (res) {
+		        if (res.code == 200) {
+		            listView.innerHTML = '';
+		            if (res.data != null) {
+			        	changePage(nullView,listView,false);
+		                for (var index in res.data) {
+		                    var li = get_cat_item(res.data[index]);
+		                    listView.appendChild(li);
+		                }
+		            }
+		        } else {
+		        	changePage(nullView,listView,true);
+		            toast.info(res.info);
+		        }
+		        /*加载完毕通知父页面显示*/
+				changePage(loadPage,mainPage,false);
+		        mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+		        /*重置底部加载状态*/
+		        mui('#pullrefresh').pullRefresh().refresh(true);
+	        });
+		}
+		
+		/**
+		 * 上拉加载更多
+		 */
+		function pullup_refresh(){
+			restInfo.page++;
+		    cat.getCatList(restInfo, function (res) {
+		    	var length = typeof(res.data) == 'undefined'? 0 : res.data.length;
+            	mui('#pullrefresh').pullRefresh().endPullupToRefresh(length == 10 ? false : true);
+		        if (res.code == 200) {
+	                for (var index in res.data) {
+	                    var li = get_cat_item(res.data[index]);
+	                    listView.appendChild(li);
+	                }
+		        } else {
+		            toast.info('没有更多数据!');
+		        }
+	        });
+		}
+		
+		/*列表点击事件*/
+		mui('#cat_list_view').on('tap','li',function(e){
+			var catId = this.id;
+      		var readGid = typeInfo.can_read_gid;
+      		if(checkCatPms(readGid,'您没有阅读权限')){
+				openCatWeb(catId);
+      		}
+		})
+		
+    </script>
+</html>

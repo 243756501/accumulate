@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+	<script src="../js/ucenter.js"></script>
+	<script src="../../js/app.js"></script>
+	<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/core.js"></script>
+	<script src="../../js/template.js"></script>
+	<script src="../js/sign-render.js"></script>
+	<script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+	<style>
+		.avatar {
+			width: 45px;
+			height: 45px;
+			border-radius: 50%;
+		}
+	</style>
+</head>
+<body>
+	<div id="loading_page" style="text-align: center;margin-top: 10%;">
+		<i class="mui-spinner"></i>
+	</div>
+	<div id="pullrefresh" class="mui-scroll-wrapper" style="display: none;">
+		<div class="mui-scroll">
+			<ul id="today_list" class="mui-table-view mui-clearfix"></ul>
+			<ul id="con_list" class="mui-table-view mui-clearfix"></ul>
+			<ul id="total_list" class="mui-table-view mui-clearfix"></ul>
+		</div>
+	</div>
+</body>
+	<script type="text/javascript" charset="utf-8">
+		mui.init({
+			pullRefresh: {
+				container: '#pullrefresh',
+				down: {
+					contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+					callback: pulldown_refresh
+				},
+				up: {
+					contentrefresh: '正在加载...',
+					callback: pullup_refresh
+				}
+			}
+		});
+		var loadView = document.getElementById('loading_page');
+		var mainView = document.getElementById('pullrefresh');
+		var activeList = document.getElementById('today_list');
+		
+		var restInfo = {type: 'today',page: 0}
+		/*获取单个item LI*/
+		var get_sign_li = function(type,signMsg) {
+			var li = document.createElement('li');
+			li.className = 'mui-table-view-cell';
+			li.sign_info = signMsg;
+			var html = parse_sign_html(type, signMsg);
+			li.innerHTML = html;
+			return li;
+		};
+		
+		/*签到后自动追加自己的条目在今日签到列表*/
+		var addMe = function(){
+			changePage(loadView,mainView,true);
+			mui('#pullrefresh').pullRefresh().pulldownLoading();
+		}
+		
+		/*导航切换*/
+		window.addEventListener('signType',function(event){
+			var tmpType = event.detail.data;
+			if(tmpType != restInfo.type){
+				mui('#pullrefresh').pullRefresh().refresh(true);
+				activeList.setAttribute('data-page',restInfo.page);
+				
+				var tempList = document.getElementById(tmpType + '_list');
+				changePage(activeList,tempList,false);
+				restInfo.type = tmpType;
+				restInfo.page = tempList.getAttribute('data-page');
+				activeList = tempList;
+				if(tempList.children.length == 0){
+					changePage(loadView,mainView,true);
+					mui('#pullrefresh').pullRefresh().pullupLoading();
+				}
+			}else{
+				window.scrollTo(0,0);
+			}
+		})
+		
+		mui.plusReady(function(){
+			if (mui.os.plus) {
+	            setTimeout(function () {
+	                mui('#pullrefresh').pullRefresh().pullupLoading();
+	            }, 1000);
+	        } else {
+	            mui('#pullrefresh').pullRefresh().pullupLoading();
+	        }
+		})
+		
+		/**
+		 * 下拉刷新
+		 */
+		function pulldown_refresh() {
+			var tpList = activeList;
+			var tpType = restInfo.type;
+			restInfo.page = 1;
+			ucenter.getSignTop(restInfo, function(res) {
+				tpList.innerHTML = '';
+				if (res.code == 200) {
+					var rank = 1;
+					for (var index in res.data) {
+						res.data[index].rank = rank++;
+						var li = get_sign_li(tpType,res.data[index]);
+						tpList.appendChild(li);
+					}
+				}
+				changePage(loadView,mainView,false);
+				mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+				//重置底部加载状态
+				mui('#pullrefresh').pullRefresh().refresh(true);
+			});
+		}
+		/**
+		 * 上拉加载更多
+		 */
+		function pullup_refresh() {
+			var tpList = activeList;
+			var tpType = restInfo.type;
+			restInfo.page++;
+			ucenter.getSignTop(restInfo, function(res) {
+				var length = res.data ? res.data.length:0;
+				mui('#pullrefresh').pullRefresh().endPullupToRefresh(length == 10 ? false : true);
+				if (res.code == 200) {
+					var rank = 10 * (restInfo.page - 1) + 1;
+					for (var index in res.data) {
+						res.data[index].rank = rank++;
+						var li = get_sign_li(tpType,res.data[index]);
+						tpList.appendChild(li);
+					}
+				}
+				changePage(loadView,mainView,false);
+			});
+		}
+		//点击头像进入个人主页。
+		app.userListener('.user-flag');
+	</script>
+</html>

@@ -1,0 +1,209 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/pull-top-tips.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/weibo-crowd-detail.css"/>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 id="title_view" class="mui-title"></h1>
+		</header>
+		
+		<div id="load_view" class="base-loading">
+			<i class="mui-spinner"></i>
+		</div>
+		
+		<div id="main_view"  class="mui-scroll-wrapper mui-content" style="display: none;">
+			<div class="mui-scroll">
+				<div id="info_view" class="base-info-view crowd-info-view"></div>
+				<p></p>
+			    
+			    <div class="base-info-view">
+			    	<div class="area-title">管理员</div>
+			    	<ul id="admin_user_list" class="mui-table-view mui-clearfix"></ul>
+			    </div>
+			    
+			    <div class="base-info-view">
+			    	<div id="">
+			    		普通成员
+			    	</div>
+			    	<ul id="normal_user_list" class="mui-table-view mui-clearfix">
+			    		
+			    	</ul>
+			    </div>
+			</div>
+		</div>
+		
+		<!--圈子信息模板-->
+		<script id="crowd_info_tpl2" type="text/html">
+			<div class="app-grid mui-col-xs-2">
+				<img class="base-round base-img-mid" onload="load(this)" data-src="{{logo}}" src="../../images/mediaImages/weibo_df.png" />
+			</div>
+			<div class="app-grid mui-col-xs-1">
+
+			</div>
+			<div class="app-grid mui-col-xs-9">
+				<div style="margin-left: 10px;">
+					<div class="mui-ellipsis">{{title}}</div>
+					<h5 class="base-content-1 mui-ellipsis">{{type_str}}圈子</h5>
+					<div class="base-text-p">
+						<div class="app-grid mui-col-xs-4">
+							<i class="mui-icon mui-icon-person"></i>{{member_count}}
+						</div>
+						<div class="app-grid mui-col-xs-4">
+							<i class="mui-icon mui-icon-chatbubble"></i>{{post_count}}
+						</div>
+					</div>
+				</div>
+			</div>
+			{{if permission>1}}<div id="do_btn" class="manage-btn">管理</div>{{/if}}
+	    	<div class="area-title">介绍</div>
+	    	<p class="base-text-0">{{intro}}</p>
+	    	<div class="base-ok-color base-text-p"><strong>公告: </strong>{{notice}}</div>
+		</script>
+		
+		<!--成员列表模板-->
+		<script id="crowd_user_tpl" type="text/html">
+			<div class="app-grid">
+				<img data-uid="{{user.uid}}" class="user-flag {{if position==1}}base-cir{{else}}base-round{{/if}} base-img-small" onload="load(this)" data-src="{{user.avatar128}}" src="../../images/default_avatar.jpg" />
+			</div>
+			<div class="app-grid mui-col-xs-8">
+				<div class="mui-ellipsis">{{user.nickname}}</div>
+				<h5 class="base-content-1 mui-ellipsis">
+					{{user.signature?user.signature:'还没有个性签名'}}
+				</h5>
+			</div>
+			<div class="item-right-text">{{contribution}} 贡献 </div>
+		</script>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/mui.pullToRefresh.js"></script>
+		<script src="../../js/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/core.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/template.js"></script>
+		<script src="../../libs/imgtools/md5.min.js"></script>
+		<script src="../../libs/imgtools/imgload.js"></script>
+		<script src="../js/weibo.js"></script>
+		<script src="../js/crowd.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			
+			var loadView = document.getElementById("load_view");
+			var mainView = document.getElementById("main_view");
+			var titleView = document.getElementById("title_view");
+			var infoView = document.getElementById("info_view");
+			var adminListView = document.getElementById("admin_user_list");
+			var normalListView = document.getElementById("normal_user_list");
+			var selfWeb, crowdInfo = {};
+			var rqstInfo = {
+				flag:'normal'
+			};
+			
+			window.addEventListener('crowdChange',function(e){
+				var tmpInfo = e.detail.data || {};
+				if(tmpInfo.is_change == 2){	//圈子已解散
+					if(tmpInfo.id == crowdInfo.id){
+						selfWeb.close();
+					}else{
+						return;
+					}
+				}
+				if(tmpInfo.id != crowdInfo.id || tmpInfo.is_change ==1){
+					crowdInfo = tmpInfo;
+					rqstInfo.id = crowdInfo.id;
+				 	titleView.innerText = crowdInfo.title;
+				 	adminListView.innerHTML = '';
+				 	normalListView.innerHTML = '';
+				 	rqstInfo.page = 0;
+				    weibo.getCrowdInfo(crowdInfo.id,function(res){
+						if(res.data){
+						 	crowdInfo = res.data;
+						 	infoView.innerHTML = template('crowd_info_tpl2',crowdInfo);
+						 	
+						 	//获取成员信息
+						 	render_list(adminListView,'admin');
+							mui('.mui-scroll').pullToRefresh().refresh(true);
+							mui('.mui-scroll').pullToRefresh().pullUpLoading();
+						 	changePage(loadView,mainView,false);
+						}else{
+						 	toast.info('圈子信息获取失败!');
+						}
+					})
+			    }else{
+					changePage(loadView,mainView,false);
+				}
+			})
+			
+			mui.plusReady(function () {
+			    selfWeb = plus.webview.currentWebview();
+				selfWeb.addEventListener('hide', function(e) {
+					changePage(loadView,mainView,true);
+				})
+			})
+			mui('.mui-scroll-wrapper').scroll({
+				bounce:false
+			});
+			
+			mui('.mui-scroll').pullToRefresh({
+				down: {
+					callback: function() {
+						rqstInfo.page = 1;
+						var selfPull = this;
+						weibo.getCrowdUser(rqstInfo, function(res) {
+							normalListView.innerHTML = '';
+							add_view(normalListView,res.data);
+
+							//重置底部加载状态
+							selfPull.refresh(res.data&&res.data.length>=10);
+							selfPull.endPullDownToRefresh();
+						})
+					}
+				},
+				up: {
+					callback: function() {
+						rqstInfo.page ++;
+						var selfPull = this;
+						weibo.getCrowdUser(rqstInfo, function(res) {
+							add_view(normalListView,res.data);
+							selfPull.endPullUpToRefresh(!res.data||res.data.length<10);
+						});
+					}
+				}
+			})
+			
+			function add_view(listView,dataArr){
+				for(var i in dataArr){
+					var tmpUser = dataArr[i];
+				 	var item = app.createListItem(tmpUser,'mui-table-view-cell');
+				 	item.innerHTML = template('crowd_user_tpl',tmpUser);
+					listView.appendChild(item);
+				}
+			}
+			
+			//listView装载器
+			var render_list = function(listView,type){
+				weibo.getCrowdUser({id:crowdInfo.id,flag:type},function(res){
+					add_view(listView,res.data);
+				})
+			}
+			
+			//管理
+			mui('#main_view').on('tap','#do_btn',function(e){
+				webtools.openSingleWeb('weibo-crowd-manage',crowdInfo);
+			})
+			
+			//用户中心监听器
+			app.userListener();
+		</script>
+	</body>
+
+</html>

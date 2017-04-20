@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../../css/mui.picker.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/icomoon.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/usercenter.css"/>
+    <script src="../../js/mui.min.js"></script>
+    <script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/ucenter.js" type="text/javascript" charset="utf-8"></script>
+	<style>
+		#headimg{
+			margin-right:10px;
+			border-radius:50%;
+			width: 40px;
+			height: 40px;
+		}
+		.mui-scroll-wrapper{
+			margin-top:50px;
+			height: auto;
+		}
+		.head {
+			height: 40px;
+		}
+		#head {
+			line-height: 40px;
+		}
+		.mui-pull-right{
+			color: #999;
+			padding-top: 2px;
+		}
+		#footerchose{
+			display: none;
+		}
+		.info-nav{
+			text-align: center;
+			line-height: 44px;
+			border-bottom: solid 1px #CCCCCC;
+		}
+	</style>
+</head>
+<body>
+	<div id="userAllInfo">
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="mui-title">个人资料</h1>
+		</header>
+		<div class="mui-content">						
+			<div class="mui-scroll-wrapper">
+				<div id="user_page" class="mui-scroll">
+				</div>
+			</div>
+		</div>
+	</div>
+	<script id="info_template" type="text/html">
+		<ul class="mui-table-view">
+			<li id="head_li" class="mui-table-view-cell">
+				<a id="head" class="mui-icon-right-nav">头像
+					<span class="mui-pull-right head">
+						<img id="headimg" onload="load(this)" src="../../images/default_avatar.jpg" data-src="{{avatar128}}"/>
+					</span>
+				</a>
+			</li>
+			<li id="nickname_li" class="mui-table-view-cell">
+				昵称<span id="nickname" class="mui-pull-right">{{nickname}}</span>
+			</li>
+			<li id="sex_li" class="mui-table-view-cell">
+				性别<span class="mui-pull-right">{{if sex == 1}}男{{else if sex == 2}}女{{else}}保密{{/if}}</span>
+			</li>
+			<li id="email_li" class="mui-table-view-cell">
+				邮箱<span id="email" class="mui-pull-right">{{email}}</span>
+			</li>
+			<li id="phone_li" class="mui-table-view-cell">
+				手机号<span id="mobile" class="mui-pull-right">
+					{{if mobile}}
+						{{mobile}}
+					{{else if expand_info.手机}}
+						{{expand_info.手机.data}}
+					{{else}}
+						未填写
+					{{/if}}
+				</span>
+			</li>
+			<li id="address_li" class="mui-table-view-cell">
+				住所<span class="mui-pull-right">{{province}}{{city}}{{district}}</span>
+			</li>
+			<li id="signature_li" class="mui-table-view-cell">
+				<span style="margin-bottom: 5px;">个性签名</span>
+				<p style="word-wrap:break-word;">{{signature}}</p>
+			</li>
+		</ul>
+		<ul style="margin-top: 15px;" id="realinfo" class="mui-table-view">
+			<li class="info-nav">
+				拓展资料
+			</li>
+			<li id="qq_li" class="mui-table-view-cell">
+				QQ号<span class="mui-pull-right">{{expand_info.qq?expand_info.qq.data:''}}</span>
+			</li>
+		</ul>
+	</script>
+	<nav id="footerchose" class="mui-bar mui-bar-tab">
+	  <a id="cancel" class="mui-tab-item">
+		<span class="mui-icon icon-cross"></span>
+		<span class="mui-tab-label">取消</span>
+	  </a>
+	  <a id="saveBtn" class="mui-tab-item">
+		<span class="mui-icon icon-checkmark"></span>
+		<span class="mui-tab-label">保存</span>
+	  </a>
+	</nav>
+	<script src="../../js/mui.picker.min.js"></script>
+	<script src="../js/usercenter-render.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/mytools/head_cut.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" charset="utf-8">
+      	mui.init();
+		//初始化单页的区域滚动
+		mui('.mui-scroll-wrapper').scroll();
+		
+		var ucenterWeb = null;
+		var tempUserInfo_1 = {};
+		var tempUserInfo_2 = {};
+		var userAllInfoDiv = document.getElementById('userAllInfo');
+		var footerchose = document.getElementById("footerchose");
+		var nickname = document.getElementById("nickname");
+			//保存和取消按钮
+		var saveBtn = document.getElementById("saveBtn");
+		var cancelBtn = document.getElementById("cancel");
+		window.addEventListener('changeInfo',function(event){
+			footerchose.style.display = "block";
+			//获得事件参数
+		});
+		
+		function isEmptyObject(obj){
+		    for(var n in obj){return true} 
+		    return false; 
+		}
+		cancelBtn.addEventListener('tap',function(){
+			footerchose.style.display = "none";
+		});
+		
+		/*提交个人信息修改*/
+		saveBtn.addEventListener('tap',function(e){
+			if(isEmptyObject(tempUserInfo_1)){
+				ucenter.setUserInfo(tempUserInfo_1,function(res){
+					if(res.code == 200){
+						tempUserInfo_1 = {};
+						toast.info('修改成功');
+						footerchose.style.display = "none";
+						mui.fire(ucenterWeb,'ucenter-changeImg', {
+							change: true
+						});
+					}else{
+						toast.info(res.info);
+					}
+				});
+			}
+			
+			/*修改qq号码*/
+			if(isEmptyObject(tempUserInfo_2)){
+				ucenter.setInfoqq(tempUserInfo_2.qq,function(res){
+					if(res.code == 200){
+						tempUserInfo_2 = {};
+						toast.info('修改成功');
+						footerchose.style.display = "none";
+					}else{
+						toast.info(res.info);
+					}
+				})
+			}
+		});
+
+		
+		
+		function showPrompt(){
+			var bts=["确认","取消"];
+			plus.nativeUI.prompt("请输入昵称",function(e){
+				var i = e.index;
+			},"","昵称",bts);
+		}
+		
+		/*打开修改手机和邮箱页面*/
+		var openChangeWeb = function(type){
+			mui.openWindow({
+				url:'userinfo-modify.html',
+				id:'userinfo-modify',
+				extras:{
+					data:type
+				},
+				show:{
+			    	aniShow:'slide-in-right',
+			    	duration:200
+			    },
+			    waiting: {
+					autoShow: false
+				}
+			})
+		}
+		
+		mui.plusReady(function(){
+			ucenterWeb = plus.webview.getWebviewById('nav_ucenter');
+			var thisWeb = plus.webview.currentWebview();
+			var userPage = document.getElementById('user_page');
+			var userInfo = JSON.parse(myStorage.getItem('user_info'));
+			var user_headInfo=document.getElementById("user_info");
+			console.log(JSON.stringify(userInfo));
+			userPage.innerHTML = template('info_template',userInfo);
+			var userSign = userInfo.signature;
+			
+			myHeadCut({
+				trigger:document.getElementById("head_li"),
+		        img:document.getElementById("headimg")
+			},function(res){
+				if(res.code == 200){		       
+				    mui.fire(ucenterWeb,'ucenter-changeImg',{
+				    	change:true
+				    })
+		        }
+			})
+			/*点击修改资料*/
+			mui('.mui-table-view').on('tap','li',function(e){
+				var li_id = this.id;
+				var chirldDom = this.children[0];
+				switch(li_id){
+					case 'nickname_li':
+						plus.nativeUI.prompt("修改昵称",function(e){
+							if(e.index != 1 && e.value != ''){
+								if(e.value.length >= 2 && e.value.length <= 32){
+									tempUserInfo_1.nickname = e.value;
+									chirldDom.innerText = e.value;
+									chirldDom.style.color = 'green';
+									mui.fire(thisWeb,'changeInfo');
+								}else{
+									plus.nativeUI.alert("无效的昵称");
+								}
+							}
+						},"","请输入昵称",["确认","取消"]);
+						break;
+					case 'sex_li':
+						var choiceArry = [{title: "男"},{title: "女"},{title: "保密"}];
+						plus.nativeUI.actionSheet({
+							title: "修改性别",
+							cancel: "取消",
+							buttons: choiceArry
+						}, function(b){
+							switch (b.index) {
+								case 0:
+									break;
+								case 1:
+									tempUserInfo_1.sex = 1;
+									chirldDom.style.color = 'green';
+									chirldDom.innerText = '男';
+									mui.fire(thisWeb,'changeInfo');
+									break;
+								case 2:
+									tempUserInfo_1.sex = 2;
+									chirldDom.style.color = 'green';
+									chirldDom.innerText = '女';
+									mui.fire(thisWeb,'changeInfo');
+									break;
+								case 3:
+									tempUserInfo_1.sex = 0;
+									chirldDom.style.color = 'green';
+									chirldDom.innerText = '保密';
+									mui.fire(thisWeb,'changeInfo');
+									break;
+								default:
+									break;
+							}
+						});
+						break;
+					case 'qq_li':
+						plus.nativeUI.prompt("修改QQ",function(e){
+							if(e.index != 1 && e.value != ''){
+								var qqRegx = /^[1-9][0-9]{5,14}?$/
+								if(qqRegx.test(e.value)){
+									tempUserInfo_2.qq = e.value;
+									chirldDom.innerText = e.value;
+									chirldDom.style.color = 'green';
+									mui.fire(thisWeb,'changeInfo');
+								}else{
+									plus.nativeUI.alert("请填写正确的qq号");
+								}
+							}
+						},"","请输入qq",["确认","取消"]);
+						break;
+					case 'email_li':
+						openChangeWeb('email');
+						break;
+					case 'signature_li':
+						chirldDom = this.children[1];
+						plus.nativeUI.prompt("修改个性签名",function(e){
+							if(e.index != 1 && e.value != ''){
+								if(e.value.length >=1 && e.value.length <=100){
+									tempUserInfo_1.signature = e.value;
+									chirldDom.innerText = e.value;
+									chirldDom.style.color = 'green';
+									mui.fire(thisWeb,'changeInfo');
+								}else{
+									plus.nativeUI.alert("格式错误，请重新输入");
+								}
+							}
+						},"",userSign,["确认","取消"]);
+						break;
+					case 'phone_li':
+						openChangeWeb('mobile');
+						break;
+					case 'address_li':
+						var cityPicker3 = new mui.PopPicker({layer: 3});
+						cityPicker3.setData(cityData3);
+						cityPicker3.show(function(items) {
+							tempUserInfo_1.province = (items[0] || {}).text || '';
+							tempUserInfo_1.city = (items[1] || {}).text || '';
+							tempUserInfo_1.district = (items[2] || {}).text || '';
+							chirldDom.style.color = 'green';
+							mui.fire(thisWeb,'changeInfo');
+							chirldDom.innerText =(items[0] || {}).text + " " + (items[1] || {}).text + " " + (items[2] || {}).text;
+							//返回 false 可以阻止选择框的关闭
+							//return false;
+						});
+						break;
+					default:
+						break;
+				}
+			});
+		});
+		/*动态修改邮箱,或者手机，供修改页面使用*/
+		var changeText = function(data){
+			document.getElementById(data.type).innerText = data.text;
+		}
+    </script>
+</body>
+
+</html>

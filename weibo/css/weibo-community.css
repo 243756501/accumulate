@@ -1,0 +1,145 @@
+.slider-tab {
+	background-color: white;
+	height: 40px;
+}
+#weibo_slider
+{
+	background: #FAFAFA;
+}
+.weibo-listview {
+	margin: 5px;
+}
+
+.weibo-ul {
+	padding: 0px 10px;
+}
+
+.weibo-ul li {
+	margin-top: 40px;
+}
+.mui-pull-bottom-tips
+{
+	background: #FAFAFA !important;
+}
+.weibo-li {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	background: #FFFFFF;
+	height: 100px;
+	border-radius: 5px;
+}
+
+.weibo-grounp-content-text {
+    min-height: 21px;
+	color: #AAAAAA;
+	font-size: 14px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 1;
+	position: relative;
+	top: 5px;
+}
+
+.weibo-group-content-title {
+	color: #000000;
+}
+
+.weibo-group-content-foot {
+	color: #808080;
+	margin-top: 10px;
+}
+
+.weibo-group-content-foot a {
+	color: #1abc9c;
+}
+
+.weibo-grounp-content {
+	flex: 3;
+	padding: 5px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.weibo-group-img-div {
+	flex:2;
+	text-align: center;
+}
+
+.weibo-grounp-img {
+	width: 85px !important;
+	height: 85px;
+	border-radius: 5px;
+	position: relative;
+	top: -20px;
+}
+
+
+.mui-slider-progress-bar {
+	background-color: #1ABC9C !important;
+}
+
+.mui-control-item .mui-active {}
+
+.nogroup-btn {
+	margin-top: 30px;
+	border-radius: 25px;
+	background-color: #1ABC9C;
+	height: 40px !important;
+	width: 100%;
+	color: #FFFFFF;
+}
+
+.nogroup-img {
+	width: 200px !important;
+}
+
+#nogroup {
+	text-align: center;
+	padding: 50px;
+}
+
+#first_top_nav a {
+	border-bottom: 2px solid #FFFFFF;
+	width: 24%;
+	margin: 0% 4.5% !important;
+	float: left;
+	color: #C8C7CC;
+}
+
+.weibo-community-title{
+	color: #1abc9c;
+}
+
+.crowd-follow-icon{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex: 1;
+	font-size: 25px;
+	color: #1abc9c;
+}
+.community-avatar
+{
+	width: 80px !important;	
+	border-radius: 50%;
+}
+.community-btn
+{
+	background: #1ABC9C;
+	color: #FFFFFF;
+	width: 150px;
+	border-radius: 15px;
+}
+li .event-unfollow[data-flag='my']{
+	display: none;
+}
+li .event-manage[data-flag='my']{
+	display: block;
+}
+li .event-manage{
+	display: none;
+}

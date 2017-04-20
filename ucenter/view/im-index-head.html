@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+	<link rel="stylesheet" type="text/css" href="../../css/module.css"/>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+	    <i id="friend_btn" class="mui-icon mui-icon-person mui-pull-right hu-hd-btn"></i>
+	    <h1 class="mui-title">对话</h1>
+	</header>
+</body>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init({
+      		beforeback: function(){
+      			var tempWeb = plus.webview.getWebviewById('im-friend-list');
+      			if(tempWeb.isVisible()){
+      				tempWeb.hide('auto');
+      				return false;
+      			}else{
+					return true;
+      			}
+			},
+      		subpages:[{
+      			url:'im-index-body.html',
+      			id:'im-index-body',
+      			show:{
+      				aniShow:'zoom-fade-out'
+      			},
+      			styles:{
+      				top:'45px',
+      				bottom:'0px'
+      			}
+      		}]
+      	});
+      	
+      	var friendBtn = document.getElementById('friend_btn');
+      	friendBtn.addEventListener('tap',function(e){
+      		var subPage = plus.webview.getWebviewById('im-index-body');
+      		subPage.evalJS('open_friend()');
+      	})
+    </script>
+</html>

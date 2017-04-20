@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app-form.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.picker.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/icons-extra.css" />
+		<link rel="stylesheet" type="text/css" href="../css/register-page.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css"/>
+	</head>
+
+	<body>
+		<div id="main_container" class="register-page-background mui-content mui-fullscreen">
+			<div class="register-page-content mui-fullscreen">
+				<img class="register-backgroundImg" src="../../images/register-background.png"/>
+				<i id="iosbackBtn" style="display: none;" class="mui-icon-extra mui-icon-extra-arrowleftcricle text-btn base-head-btn mui-action-back"></i>
+				<div id="account" class="mui-input-row register-page-emaildiv">
+					<label>
+						<i id="accountImg" class="mui-icon input-icon mui-icon-phone"></i>
+					</label>
+					<input id="accountInp" type="text" class="mui-input-clear register-page-email" placeholder="">
+				</div>
+				<div id="verify_view" class="mui-input-row idcode-div">
+					<label>
+						<i class="mui-icon input-icon mui-icon-more"></i>
+					</label>
+					<input id="reg_verify" type="text" class="register-page-idcode" placeholder="请输入验证码">
+					<p id="send_verify" class="idcode-btn">点击获取</p>
+				</div>
+				<div class="mui-input-row">			
+					<label>
+						<i class="mui-icon input-icon mui-icon-person"></i>
+					</label>
+					<input id="nickname" type="text" class="mui-input-clear register-page-nickname" placeholder="请输入昵称">
+				</div>
+				<div class="mui-input-row">
+					<label>
+						<i class="mui-icon input-icon mui-icon-locked"></i>
+					</label>
+					<input id="password" type="password" class="mui-input-password register-page-password" placeholder="请输入密码">
+				</div>
+				<div  id="showUserType"  class="mui-input-row ">
+					<input name="role_id" id="role_id" value="1" type="hidden">
+					<label>
+						<i class="mui-icon input-icon mui-icon-personadd"></i>
+					</label>
+					<input  id="showUserType_text" type="text" class="mui-input identity" placeholder="选择身份">
+					<i class="mui-icon mui-icon-arrowdown mui-pull-right arrowdown"></i>
+				</div>
+				<div class="register-page-btndiv">
+					<button id="reg_btn" class="register-page-btn">注册</button>
+				</div>
+			</div>
+
+		</div>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/mui.picker.min.js"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/account.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mytools/my_storage.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/reg-main.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

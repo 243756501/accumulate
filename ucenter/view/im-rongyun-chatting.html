@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css" />
+		<link href="../../css/icomoon.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/im-rongyun-chat.css" />
+		<link href="../../css/previewimage.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../account/css/animate.min.css" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav base-header-background">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 id="chatName" class="mui-title"></h1>
+			<i id="setting" class="top-btn mui-icon mui-pull-right mui-icon-more hu-hd-btn"></i>
+		</header>
+		<div class="im-chat-list mui-content mui-fullscreen">
+			<div class="mui-scroll-wrapper">
+			    <div class="mui-scroll">
+			       <div id="chatList"></div>
+			    </div>
+			</div>	
+		</div>
+		<nav class="mui-bar mui-bar-tab">
+			<div class="imchat-nav-top">
+				<input id="sendTxt" class="imchat-sendtxt" type="text" />
+				<button id="sendBtn" type="button" class="mui-btn mui-btn-success imchat-sendbtn">发送</button>
+			</div>
+			<div id="imchatNav" class="imchat-nav-bottom">
+				<i id="chatVoice" class="mui-tab-item mui-icon icon-mic"></i>
+				<i id="chatPictrue" class="mui-tab-item mui-icon mui-icon-image"></i>
+				<i id="chatExpression" class="mui-tab-item mui-icon icon-smile"></i>
+				<i id="chatOther" class="mui-tab-item mui-icon icon-plus"></i>
+			</div>
+			<div id="imchatTool" class="im-chat-footer-toolview">
+				<div id="imchatTool_voice" class="im-chat-footer-toolview-item chat-voice" style="display: none;">
+					<div class="mui-text-center">
+						<p id="recordText">按住说话
+							<p>
+					</div>
+					<div class="record-btn-div-tool">
+						<div id="recordDelete" class="record-btn-extra record-btn-delete animated fadeInRight mui-text-center" style="display: none;">
+							<i class="mui-icon mui-icon-trash"></i>
+						</div>
+						<div class="record-btn-div">
+							<div id="recordBtn" class="chat-voice-btn">
+								<i class="mui-icon mui-icon-mic"></i>
+							</div>
+						</div>
+						<div id="recordConfirm" class="record-btn-extra record-btn-confirm animated fadeInLeft mui-text-center" style="display: none;">
+							<i class="mui-icon mui-icon-checkmarkempty"></i>
+						</div>
+					</div>
+					<p id="voiceCount" class="mui-text-center">00:00</p>
+				</div>
+				<div id="imchatTool_expression" class="im-chat-footer-toolview-item chat-expression" style="display: none;">
+				</div>
+				<div id="imchatTool_other" class="im-chat-footer-toolview-item chat-other" style="display: none;">
+					<ul class="chat-other-ul mui-table-view mui-grid-view mui-grid-9">
+					<li id="other_location" class="chat-other-li mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+					    <img src="../../images/icon/icon-im-location.png">
+					    <p>位置</p>
+					</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<script id="one_msg" type="text/html">
+			{{if sender == 'self'}}
+			<img uid="{{uid}}" class="msg-user" onload="load(this)" src="../../images/default_avatar.jpg" data-src="{{head}}" /> {{else}}
+			<img uid="{{uid}}" class="msg-user-img" onload="load(this)" src="../../images/default_avatar.jpg" data-src="{{head}}" /> {{/if}}
+			<div class="msg-content">
+				<div class="msg-content-inner">
+					{{if conversationType == 1}}{{if content.messageName=="TextMessage"}}{{content.content.parseContent() || '&nbsp;&nbsp;'}}{{/if}} {{if content.messageName=="ImageMessage"}}<img src='{{content.content}}' width="80px" data-preview-src='{{content.imageUri}}' data-preview-group="{{messageUId}}">{{/if}} {{if content.messageName=='VoiceMessage'}}{{if sender=='self'}}
+					<div id="{{messageUId}}" class="im-voice-btn" type="im" src="{{content.extra}}" self="true" voice-src=""><span class="voice-duration">{{content.duration}}</span><img src="../../images/icon/icon-im-voice-self.png" style="height: 20px;"></div>{{else}}
+					<div id="{{messageUId}}" class="im-voice-btn" src="{{content.extra}}" self="false" type="im" voice-src=""><img class="im-voice-btn" src="../../images/icon/icon-im-voice.png" style="height: 20px;"><span class="voice-duration">{{content.duration}}</span></div>{{/if}}{{/if}}{{if content.messageName=="LocationMessage"}}<div  aimpoi="{{content.poi}}"  longitude='{{content.longitude}}' latitude='{{content.extra}}' sender={{sender}} class="chat-item-location"><img  class="chat-item-location-thumb" src="../../images/icon/icon-im-location-thumb.png"/><div class="chat-item-location-text"><span class="chat-item-location-title">位置分享</span><span class="chat-item-location-content mui-ellipsis-2">{{content.poi}}</span></div></div>{{/if}}{{else if conversationType == 2}}
+					<img class="msg-content-image" onload="load(this)" src="../../images/default_avatar.jpg" data-src="{{baseMessage.content.photoContent.imageUrl}}" style="max-width: 100px;" /> {{else if conversationType == 3 }}
+					<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
+					<span class="play-state">点击播放</span> {{else}} 一个附件消息 {{/if}}
+				</div>
+				<div class="msg-content-arrow"></div>
+			</div>
+			<div class="mui-item-clear"></div>
+		</script>
+		<script id='chatList_template' type="text/html">
+			{{each record as item i}} {{if i%20 == 0}}
+			<div class="msg-time" id="{{item.targetId}}"><span class="time-view">{{item.timeAt}}</span></div>
+			{{/if}}
+			<div id="imeachItem" class="msg-item {{item.sender=='self'?' msg-item-self':''}}" id="{{item.targetId}}" msg-type='{{item.messageType}}' msg-content='{{item.targetId}}'>
+				{{include 'one_msg' item}}
+			</div>
+			{{/each}}
+		</script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<!--<script src="../../js/mui.imageViewer.js"></script>-->
+		<script src="../../js/template.js"></script>
+		<script src="../../js/expression.js"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.zoom.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.previewimage.js"></script>
+		<script src="../../js/mytools/net_tools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mytools/img_uploder.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/voice/voiceload.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/im-rongyun-chatting.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

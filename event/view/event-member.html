@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/pull-top-tips.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css"/>
+		<style type="text/css">
+			.mui-scroll{min-height: 50%;}
+			.slider-bar .mui-active {border-bottom: 2px solid #007aff !important;}
+			.item-right-text{position: absolute;right: 5px;top: 20px;font-size: 12px;}
+			.mmb-pop{width: 70%;left: 15%;top: 20%;padding: 10px;}
+			.pop-title{text-align: center;margin-bottom: 20px;}
+			.info-line{margin: 10px 0;padding: 0 10px;}
+			.info-line P{margin-bottom: 5px;}
+			.card-head{width: 50px;height: 50px;position: absolute;right: 10px;border-radius: 10%;}
+			.audit-tip{padding: 0 5px;background: red;border-radius: 50%;position: relative;font-size: 9px;top: -10px;display: none;}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 id="title_view" class="mui-title"></h1>
+		</header>
+		
+		<div class="mui-content">
+			<div class="mui-slider mui-fullscreen">
+				<div id="slider_bar" class="slider-bar mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+					<a class="mui-control-item mui-active" href="#item_0">已审核
+						<span id="attention_count"></span>
+					</a>
+					<a class="mui-control-item" href="#item_1">待审核
+						<span id="audit_tip" class="audit-tip"></span>
+					</a>
+				</div>
+
+				<div id="slider_group" class="mui-slider-group">
+					<div id="item_0" class="mui-slider-item mui-control-content mui-active">
+						<div id="scroll_wrapper_0" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<ul id="1" data-page="0" class="mui-table-view"></ul>
+							</div>
+						</div>
+					</div>
+					<div id="item_1" class="mui-slider-item mui-control-content">
+						<div id="scroll_wrapper_1" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<ul id="0" data-page="0" class="mui-table-view"></ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="mmb_pop" class="mui-popover mmb-pop"></div>
+		
+		<!--列表模板-->
+		<script id="user_tpl" type="text/html">
+			<div class="app-grid">
+				<img data-uid="{{uid}}" onload="load(this)" class="user-flag base-cir base-img-small" data-src="{{user.avatar128}}" src="../../images/default_avatar.jpg" />
+			</div>
+			<div class="app-grid mui-col-xs-8">
+				<div class="mui-ellipsis">{{user.nickname||'匿名'}}</div>
+				<h5 class="base-content-1 mui-ellipsis">{{user.signature||'还没有个性签名'}}</h5>
+			</div>
+			{{if status==0}}<div class="item-right-text">
+				<button type="button" data-event="check" class="mui-btn mui-btn-success mui-btn-outlined">审核</button>
+			</div>{{/if}}
+		</script>
+		<!--报名信息模板-->
+		<script id="pop_tpl" type="text/html">
+			<div class="pop-title">
+				<span>报名信息</span>
+				<img class="card-head mui-pull-right" onload="load(this)" src="../../images/default_avatar.jpg" data-src="{{user.avatar128}}"/>
+			</div>
+			<div class="info-line">
+				<p>姓名：</p>
+				<div>{{name||'匿名'}}</div>
+			</div>
+			<div class="info-line">
+				<p>电话：</p>
+				<div>{{phone||'无效的联系方式'}}</div>
+			</div>
+			{{if status==1}}<div class="mui-text-right">
+				<button id="del_btn" type="button" class="mui-btn mui-btn-red">移除</button>
+			</div>{{/if}}
+		</script>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/core.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/mui.pullToRefresh.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.pullToRefresh.material.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/event.js"></script>
+		<script src="../js/event-render.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/event-member.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

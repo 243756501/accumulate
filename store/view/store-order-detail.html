@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/icomoon.css" rel="stylesheet" />
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/store.js"></script>
+		<script src="../../js/mui.pullToRefresh.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js"></script>
+		<script src="../js/store-render.js"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<style>
+		.ma0 {
+			margin-bottom: 0px!important;
+		}
+		
+		.input-message {
+			font-size: 12px;
+			color: #8F8F94
+		}
+		
+		.maT10 {
+			margin-bottom: 10px!important;
+		}
+		
+		.mui-table-view:before {
+			background-color: #F0F0F0!important;
+		}
+		
+		.goods-list {
+			background-color: #F0F0F0!important;
+		}
+		
+		.goods {
+			height: 100px;
+			border: solid 1px #F3F3F3;
+			padding: 5px;
+			margin-bottom: 0.2em;
+			background-color: #FFFFFF;
+		}
+		
+		.goods img {
+			border-radius: 10px;
+			height: 90px;
+			width: 90px;
+			margin-right: 0.5em;
+		}
+		
+		.diy-bottom-box {
+			position: fixed;
+			width: 100%;
+			height: 50px;
+			min-height: 50px;
+			border-top: solid 1px #bbb;
+			left: 0px;
+			z-index: 1!important;
+			bottom: 0px;
+			overflow: hidden;
+			background-color: #fafafa;
+		}
+		
+		.diy-bottom {
+			position: absolute;
+			width: 100%;
+			height: 50px;
+			left: 0px;
+			bottom: 0px;
+			vertical-align: middle;
+		}
+		
+		.order {
+			background-color: #FFFFFF;
+			margin-bottom: 0.4em;
+		}
+		
+		.btn {
+			color: #FFFFFF;
+			background: #f50;
+			-webkit-box-pack: center;
+			justify-content: center;
+			-webkit-box-align: center;
+			align-items: center;
+			display: flex;
+			line-height: 50px;
+			text-align: center;
+		}
+		
+		p {
+			margin: 0;
+			padding: 0;
+			font-weight: 400
+		}
+		
+		.info-box {
+			background-color: #FFFFFF;
+			padding: 5px;
+			font-size: 15px;
+			font-family: "Helvetica Neue";
+		}
+		
+		.info .submsg {
+			display: block
+		}
+		
+		.info .cont {
+			display: block;
+			clear: both;
+		}
+		
+		.cont div {
+			display: inline-block;
+		}
+		
+		.order-btn {
+			font-size: 18px;
+			font-weight: 600;
+			line-height: 20px;
+			top: 10px;
+			margin-right: 10px;
+		}
+		
+		.pay-btn {
+			border-color: #FFA500;
+			color: #FFA500;
+		}
+	</style>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="mui-title">订单详情</h1>
+		</header>
+		<div class="mui-scroll-wrapper" style="padding:50px 0px;">
+			<div class="mui-scroll">
+
+				<div class="info-box">
+					<div class="info">
+						<div class="cont">
+							<div class="mui-text-left">收货人：<span id="r_name" ></span></div>
+							<div class="mui-pull-right">电话号码：<span id="r_phone"></span></div>
+						</div>
+						<div class="submsg">收货地址：<span id="r_place"></span></div>
+					</div>
+				</div>
+
+				<div>
+					<ul style="margin-top:10px;padding: 0px;">
+						<li id="order" class="order">
+							
+						</li>
+					</ul>
+				</div>
+				
+				<div class="" style="background:#FFFFFF;margin-bottom: 10px;">
+					<div style="line-height: 20px;text-align: right;padding:0.5em;border: none;">
+						<span>合计:¥</span><span id="total"></span>
+
+					</div>
+				</div>
+				<div class="" style="background:#FFFFFF;">
+					<div style="padding: 10px;">
+						<div class="order-box order-message">
+
+							<p class="">订单编号:<span id="order_id"></span></p>
+							<!--<p class="">创建时间:2015-11-24 08:03:18</p>
+							<p class="">付款时间:2015-11-24 08:03:25</p>
+							<p class="">发货时间:2015-11-25 11:29:05</p>-->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="diy-bottom-box" style="">
+			<div id="order_btn" class=" mui-clearfix diy-bottom ">
+				<!--<div class="mui-text-right" style="margin-right: 10px;">
+					<button class="order-btn">取消</button>
+
+					<button class="pay-btn order-btn">付款</button>
+
+					<!--<button class="pay-btn order-btn">确认收货</button>
+				</div>-->
+
+			</div>
+		</div>
+	</body>
+	<script>
+		mui.init();
+		var orderId = null;
+		mui('.mui-scroll-wrapper').scroll();
+		mui.plusReady(function(){
+			var thisWeb = plus.webview.currentWebview();
+			var detailInfo = thisWeb.detailInfo;
+			orderId = detailInfo.id;
+			document.getElementById('r_name').innerHTML = detailInfo.r_name;
+			document.getElementById('r_phone').innerHTML = detailInfo.r_phone;
+			document.getElementById('r_place').innerHTML = detailInfo.r_pos;
+			var html = order_list_render(detailInfo,order_detail);
+			document.getElementById('order').innerHTML = html;
+			document.getElementById('total').innerHTML = detailInfo.total_cny;
+			document.getElementById('order_id').innerHTML = detailInfo.id;
+			var btn = order_list_render(detailInfo,order_button);
+			document.getElementById('order_btn').innerHTML = btn;
+		})
+		mui('#order_btn').on('tap','.order-btn',function(){
+			var $this = this;
+			switch ($this.id){
+				case 'wait':
+					toast.info('等待卖家发货');
+					break;
+				case "pay":
+				
+					break;
+				case "reply":
+					mui.openWindow({
+						url: 'store-post-comment.html',
+						id: 'store-post-comment',
+						show: {
+							aniShow: 'pop-in' //页面显示动画，默认为”slide-in-right“；
+						},
+						extras: {
+							sendId:orderId
+						}
+					})
+					break;
+				case "confirm":
+					var btnArray = ['确定', '取消'];
+					mui.confirm('收到货了，确认？', '确认', btnArray, function(e) {
+						if (e.index == 0) {
+							store.confirmOrder(orderId,function(res){
+								console.log(orderId);
+								console.log(JSON.stringify(res));
+								if(res.code == 200){
+									toast.info('已确认收货');
+									var confirmOrder = plus.webview.getWebviewById('store-order-body');
+									mui.fire(confirmOrder, 'updateOrder', {
+										id: orderId
+									});
+									mui.back();
+								}else{
+									toast.info('操作失败！');
+								}
+							});
+						} else {
+							console.log('取消');
+						}
+					});
+					break;
+			}
+		});
+	</script>
+
+</html>

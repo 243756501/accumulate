@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/module.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/forum-index.css"/>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/forum.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/forum-render.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 id="title" class="mui-title">论坛</h1>
+			<i id="post" class="mui-icon mui-pull-right mui-icon-compose hu-hd-btn"></i>
+		</header>
+		<div id="loading_page" style="text-align: center;margin-top: 55%;">
+			<i class="mui-spinner"></i>
+		</div>
+		
+		<div id="pullrefresh" style="display: none;" class="mui-scroll-wrapper">
+			<div id="mui_scroll" class="mui-scroll">
+				<div id="module_list"></div>
+			</div>
+		</div>
+		
+		<!--板块容器模板-->
+		<script id="module_template" type="text/html">
+			<div class="mui-clearfix">
+				<div class="module-name">
+					<i class="mui-icon mui-icon-download"></i>
+					<span>{{title}}</span>
+				</div>
+				<ul id="{{id}}" class="mui-table-view mui-clearfix">
+				</ul>
+			</div>
+		</script>
+		
+		
+		<!--Li模板-->
+		<script id="forum_template" type="text/html">
+			<div class="next-li">
+				<img class="forum-header mui-pull-left" src="{{logo}}">
+				<div class="mui-media-body">
+					<div class="mui-ellipsis forum-title-one">{{title}}</div>
+					<p style="color: #6c6c6c;" class="mui-ellipsis">{{if description.length==0}}没有设置介绍内容！{{else}}{{description}}{{/if}}</p>
+					<div class="count-box">
+						<!--<span>主题</span><span>{{topic_count}}</span>-->
+						<span>帖子</span><span>{{total_count}}</span>
+					</div>
+				</div>
+			</div>
+		</script>
+	</body>
+	<script type="text/javascript" charset="utf-8">
+		mui.init({
+      		/*解决预载info父页面不自动关闭的bug*/
+      		beforeback: function(){
+      			plus.webview.currentWebview().hide('slide-out-right');
+				return false;
+			}
+		});
+		mui('#pullrefresh').scroll();
+		var infoHeadWeb = null;		//论坛信息头部web
+		var infoBodyWeb = null;		//论坛信息bodyweb
+		
+		mui.plusReady(function(){
+	
+			var moduleList = document.getElementById('module_list');
+			
+			forum.getForumModule(function(res){
+				if(res.code == 200){
+					for(index in res.data){
+						var div = document.createElement('div');
+						div.className = 'mui-clearfix';
+						div.innerHTML = template('module_template',res.data[index]);
+						moduleList.appendChild(div);
+					}
+					var forumList = document.getElementsByTagName('ul');
+					forum.getForumList({type_id:0},function (res2){
+						if(res.code == 200){
+							var forumArr = res2.data;
+							for(var i = 0;i < forumList.length;i++){
+								var modId = forumList[i].id;
+								for(index in forumArr){
+									var forum = forumArr[index];
+									if(forum.type_id == modId){
+						                var li = get_forum_li(forum);
+						                forumList[i].appendChild(li);
+									}
+								}
+							}
+						}
+						thisChangePage(false);
+					});
+				}else{
+					toast.info('获取论坛信息失败');
+				}
+			});
+			
+			infoHeadWeb = mui.preload({
+				url:'forum-info-head.html',
+				id:'forum-info-head'
+			})
+			
+		});
+		
+		
+		/*获取单个论坛LI*/
+		var get_forum_li = function (forum){
+		    var li = document.createElement('li');
+		    li.className = 'mui-table-view-cell two-view mui-clearfix';
+		    li.forum_info = forum;
+		    var html = template('forum_template',forum);
+		    li.innerHTML = html;
+		    return li;
+		};
+		
+		/*列表项点击事件*/
+		mui('#module_list').on('tap','li',function(){
+			var forumInfo = this.forum_info;
+			if(!infoHeadWeb){
+				infoHeadWeb = plus.webview.getWebviewById('forum-info-head');
+			}
+			infoBodyWeb = plus.webview.getWebviewById('forum-info-body');
+			mui.fire(infoBodyWeb,'forumChange',{forumInfo:forumInfo});
+			infoHeadWeb.show('pop-in');
+		});
+		
+		/*回顶操作*/
+  		document.getElementById('title').addEventListener('tap',function(e){
+  			goTop(plus.webview.currentWebview());
+  		});
+  		
+  		/*发布帖子*/
+		document.getElementById('post').addEventListener('tap',function(e){
+			if(is_login()){
+				mui.openWindow({
+				url:'forum-send-post.html',
+				id:'forum-send-post'
+			})
+			}else{
+				toast.info("请登录后操作");
+			}
+		});
+	</script>
+</html>

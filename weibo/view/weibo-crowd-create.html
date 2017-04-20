@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css" />
+		<style type="text/css">
+			html,body,.mui-content {height: 100%;width: 100%;text-align: center;background: #FFF;overflow-x: hidden;}
+			.mui-table-view {background-color: #FFF !important;}
+			.mui-table-view-cell {border-left: 1px solid #eee;}
+			.base-input {border: 0 !important;border-radius: 0 !important;border-bottom: 1px #CCC solid !important;}
+			.cover {border: 1px dashed #EEE;width: 110px;height: 110px;}
+			.mui-input-row {margin-top: 10%;}
+			#main_page {display: none;margin: 30% 20%;}
+			#sub_btn {margin-top: 40%;}
+			.type-logo{width: 40px;height: 40px;}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 id="page_title" class="mui-title">选择圈子类型</h1>
+		</header>
+
+		<div class="mui-content">
+			<div id="type_page">
+				<ul id="type_list_view" class="mui-table-view mui-grid-view mui-grid-9"></ul>
+			</div>
+
+			<div id="main_page" class="base-fade-view">
+				<img id="cover_view" class="cover base-round" src="../../images/add.png" />
+				<div class="mui-input-row">
+					<input id="title_ipt" type="text" class="mui-input-clear base-input" placeholder="圈子标题（2-10字）">
+				</div>
+				<button id="sub_btn" type="button" class="mui-btn mui-btn-block mui-btn-green">创 建</button>
+			</div>
+		</div>
+		
+		<!--分类模板-->
+		<script id="type_tplt" type="text/html">
+			<a><img class="type-logo" src="../../images/icon/crowd.png"/>
+				<div class="mui-media-body mui-ellipsis">{{title}}</div></a>
+		</script>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/widget/widget.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/weibo.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/crowd.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init({
+				beforeback:function(){
+					if(mainPage.style.display == 'block'){
+						pageChange(true);
+						return false;
+					}
+				}
+			});
+
+			var pageTitle = document.getElementById("page_title");
+			var typePage = document.getElementById("type_page");
+			var mainPage = document.getElementById("main_page");
+			var typeListView = document.getElementById("type_list_view");
+			var coverView = document.getElementById("cover_view");
+			var titleIpt = document.getElementById("title_ipt");
+			var subBtn = document.getElementById("sub_btn");
+			var selfWeb,crowdIndexWeb,typeInfo,crowdInfo ={};
+			
+			var pageChange = function(flag){
+				changePage(typePage,mainPage,flag);
+				pageTitle.innerHTML = flag?'选择圈子类型':'创建圈子';
+			}
+			
+			mui.plusReady(function() {
+				selfWeb = plus.webview.currentWebview();
+				crowdIndexWeb = plus.webview.getWebviewById('weibo-crowd');
+				weibo.getCrowdType(function(res) {
+					plus.nativeUI.closeWaiting();
+					if(res.code == 200){
+						for(var i in res.data){
+							var info = res.data[i];
+							var item = app.createListItem(info,'mui-table-view-cell mui-media mui-col-xs-6');
+							item.innerHTML = template('type_tplt',info);
+							typeListView.appendChild(item);
+						}
+						selfWeb.show('slide-in-right',WEBTRANSTIME);
+					}else{
+						toast.info('圈子类型获取失败，功能无法使用');
+						selfWeb.close();
+					}
+				})
+			})
+			
+			/*提交圈子信息*/
+			var createSub = function(){{
+				document.activeElement.blur();
+				crowdInfo.type = typeInfo.id;
+				crowdInfo.title = titleIpt.value.trim();
+				if(!crowdInfo.type){
+					mui.alert('请选择圈子分类');
+					return;
+				}
+				if(crowdInfo.title.length<2 ||crowdInfo.title.length>10){
+					mui.alert('标题长度必须在2-10之间');
+					return;
+				}
+				mui(subBtn).button('loading');
+				weibo.createCrowd(crowdInfo,function(res){
+					toast.info(res.Info);
+					mui(subBtn).button('reset');
+					if(res.code == 200){
+						mui.fire(crowdIndexWeb,'crowdChange');
+						if(res.data){
+							crowd.openDtlWeb(res.data);
+						}
+						setTimeout(function(){
+							selfWeb.close();
+						},1500)
+					}
+				})
+			}}
+			
+			//创建圈子
+			apptools.lisEnter(createSub);
+			subBtn.addEventListener('tap', function(e) {
+				createSub();
+			});
+			
+			//添加封面
+			coverView.addEventListener('tap',function(e){
+				widget.imgClip(false,function(res){
+					coverView.src = res.imgStr;
+					crowdInfo.logo = res.id;
+				});
+			})
+			
+			//类型选择
+			mui('#type_list_view').on('tap','li',function(e){
+				pageChange(false);
+				typeInfo = this.detail_info;
+			})
+		</script>
+	</body>
+
+</html>

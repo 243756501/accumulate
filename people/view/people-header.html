@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/people-header.css"/>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<div id="neighborhood" class="mui-btn-link mui-btn-nav mui-pull-right">
+				<span class="mui-icon" style="font-size: 14px;">附近的人</span>
+			</div>
+			<h1 class="mui-title">找人</h1>
+		</header>
+
+		<div class="mui-content">
+			<div id="input_search" class="mui-input-row mui-search">
+				<input id="search_detail" type="text" class="diy-search-before" placeholder="搜索" onfocus="getFocus(this)" onblur="loseFocus(this)" />
+				<button id="search_btn" class="mui-btn mui-btn-link search-btn">
+					<span class="mui-icon mui-icon-search"></span>
+				</button>
+			</div>
+
+			<div id="slider" class="mui-slider bg">
+				<div id="people_top_nav" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+					<a data-id='0' class="mui-control-item mui-active">全部</a>
+				</div>
+			</div>
+		</div>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/core.js" type="text/javascript"></script>
+		<script src="../../js/app.js" type="text/javascript"></script>
+		<script src="../js/people.js" type="text/javascript"></script>
+		<script src="js/people-header.js"></script>
+	</body>
+</html>

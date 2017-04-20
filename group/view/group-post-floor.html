@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../forum/css/forum-post-detail.css" />
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../group/js/group.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/group-render.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/expression.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 id="title" class="mui-title"></h1>
+		</header>
+
+		<div id="loading_page" style="text-align: center;margin-top: 55%;">
+			<i class="mui-spinner"></i>
+		</div>
+		<div id="pullrefresh" style="display: none;">
+			<div id="scroll_wrapper" class="mui-scroll-wrapper">
+				<div class="mui-scroll mui-table-view">
+					<div id="floor_detail">
+					</div>
+				</div>
+			</div>
+
+			<!--快速回复栏-->
+			<div id="reply_box" class="diy-bottom-box">
+				<div class="mui-grid-view mui-clearfix diy-bottom">
+					<div class="mui-col-xs-9 mui-pull-left ">
+						<form style="background: #fafafa;border: none; ">
+							<div class="mui-input-row ">
+								<input id="reply_text" type="text" placeholder="回复楼层" class="noscrollbars"></input>
+							</div>
+						</form>
+					</div>
+					<div class="mui-col-xs-3 mui-pull-left">
+						<button id="send_btn" class="mui-btn mui-btn-blue" style="padding:9px 20px;width:80%">
+							发送</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" charset="utf-8">
+		mui.init();
+		mui('.mui-scroll-wrapper').scroll();
+		/*loading的加载和显示*/
+		var changePage = function(loading) {
+			if (loading) {
+				document.getElementById('loading_page').style.display = 'block';
+				document.getElementById('pullrefresh').style.display = 'none';
+			} else {
+				document.getElementById('loading_page').style.display = 'none';
+				document.getElementById('pullrefresh').style.display = 'block';
+			}
+		}
+		mui.plusReady(function() {
+			var floorWeb = plus.webview.currentWebview();
+			var title = document.getElementById('title');
+			var floorDetail = document.getElementById('floor_detail');
+			var replyText = document.getElementById('reply_text');
+			var sendBtn = document.getElementById('send_btn');
+			var floorCommentInfo = floorWeb.commentInfo;
+			var floorCommentId = floorCommentInfo.id;
+			var postId = floorCommentInfo.post_id;
+			title.innerText = floorCommentInfo.floor;
+			floorDetail.innerHTML = comment_detail_render(floorCommentInfo);
+			var moreDiv = document.getElementById('more_btn_' + floorCommentId);
+			var lzlCommentList = document.getElementById(floorCommentId);
+			document.getElementById('floor_reply_btn').style.display = 'none';
+			moreDiv.style.display = "block";
+			changePage(false);
+			var get_comment_li = function(commentInfo) {
+				var li = document.createElement('li');
+				li.className = 'lzl-comment';
+				li.comment_info = commentInfo;
+				li.innerHTML = post_lzl_render(commentInfo);
+				return li;
+			}
+			/*加载更多楼中楼回复*/
+			var lzlRestInfo = {
+				post_id: postId,
+				to_f_reply_id: floorCommentId,
+				page: 1
+			}
+			var fistCount = 0;
+			var secondCount = 0;
+			var block = true;
+			moreDiv.addEventListener('tap', function(event) {
+				if (block) {
+					block = false;
+					lzlRestInfo.page++;
+					group.getPostLzlComment(lzlRestInfo, function(res) {
+						if (res.code == 200) {
+							fistCount = typeof(res.data) == 'undefined' ? 0 : res.data.length;
+							for (var i = secondCount; i < fistCount; i++) {
+								var commentInfo = res.data[i];
+								lzlCommentList.appendChild(get_comment_li(commentInfo));
+							}
+							if (fistCount < 10) {
+								secondCount = fistCount;
+								lzlRestInfo.page--;
+								moreDiv.innerText = '暂无更多评论';
+							} else {
+								secondCount = 0;
+								moreDiv.innerText = '点击加载更多';
+							}
+						} else {
+							mui.toast(res.info);
+						}
+						block = true;
+					});
+				}
+			});
+			/*初始化回复列表*/
+			group.getPostLzlComment(lzlRestInfo, function(res) {
+				if (res.code == 200) {
+					for (index in res.data) {
+						var commentInfo = res.data[index];
+						var li = get_comment_li(commentInfo);
+						lzlCommentList.appendChild(li);
+					}
+					if (lzlCommentList.children.length == 0) {
+						lzlRestInfo.page--;
+						moreDiv.innerText = '暂无评论';
+					} else if (res.data.length < 10) {
+						secondCount = res.data.length;
+						lzlRestInfo.page--;
+						moreDiv.innerText = '暂无更多评论';
+					} else {
+						moreDiv.innerText = '点击加载更多';
+					}
+				} else {
+					toast.info(res.info);
+					return;
+				}
+			});
+			/*回复楼中楼*/
+			mui('#floor_detail').on('tap', '.lzl_content', function(e) {
+				var lzlLi = get_parent_node(this, '.lzl-comment');
+				var lzlCommentInfo = lzlLi.comment_info;
+				replyText.value = '回复@' + lzlCommentInfo.user.nickname + ' ：';
+				replyText.focus();
+			})
+			/*发表评论功能*/
+			sendBtn.addEventListener('tap', function(e) {
+				if (is_login()) {
+					var replyContent = replyText.value;
+					var replyRest = {
+						to_f_reply_id: floorCommentId,
+						content: replyContent
+					}
+					if (replyRest.to_f_reply_id != null && replyRest.content.length >= 2) {
+						plus.nativeUI.showWaiting();
+						group.replyToFloor(replyRest, function(res) {
+							if (res.code == 200) {
+								replyText.value = '';
+								toast.info('回复成功');
+							} else {
+								toast.info(res.info);
+							}
+							plus.nativeUI.closeWaiting();
+						})
+					} else {
+						toast.info('请提交有意义的评论');
+					}
+				} else {
+					toast.info('需要登陆后操作');
+				}
+			});
+			/*回顶操作*/
+			title.addEventListener('tap', function(e) {
+				goTop(floorWeb);
+			});
+		})
+	</script>
+
+</html>

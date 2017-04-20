@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/news-detail-page.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/icons-extra.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/previewimage.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/icomoon.css" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav base-header-background">
+			<i class="nd-back mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="nd-title mui-title">资讯详情</h1>
+		</header>
+		<div id="loading_page" style="text-align: center;margin-top: 55%;">
+			<i class="mui-spinner"></i>
+		</div>
+		<div id="news_mainpage" class="nd-content mui-scroll-wrapper mui-content" style="display:none">
+			<div class="nd-scroll mui-scroll">
+				<div id="news_detail_content">
+				</div>
+				<div id="news_comment" class="nd-bottom">
+					<ul id="news_commnet_ul" class="nd-bottom-ul mui-table-view mui-clearfix">
+						<!--<li class="nd-bottom-li mui-table-view-cell mui-clearfix">		
+						</li>-->
+					</ul>
+				</div>
+			</div>
+			<!--底部区域 评论 点赞-->
+			<footer class="mui-bar mui-bar-footer" id="show_foot" style="height: 50px;">
+				<i class="diy-icon icon-edit mui-pull-left" style="line-height: 50px;"></i>
+				<a id="show_hide" class="mui-btn mui-btn-link mui-pull-left" style="color: #C0C0C0;line-height: 50px;margin-left: 10px;">添加你的评论</a>
+				<div class="icon-box mui-pull-right">
+					<ul class="mui-text-center mui-table-view" style="margin: 0;padding: 0px;">
+						<li id="shares">
+							<div class="bottom-btn">
+								<i class="diy-icon icon-share" style="line-height: 50px;"></i>
+							</div>
+						</li>
+						<li id="sendcomment">
+							<div class="bottom-btn">
+								<i class="diy-icon icon-bubble2" style="line-height: 50px;"></i><span id="chat_icon"></span>
+							</div>
+						</li>
+						<li id="support" class="forum_support">
+							<div class="bottom-btn" id="support_btn">
+								<i class="diy-icon icon-eye" style="line-height: 50px;"></i><span id="view_num"></span>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</footer>
+			<div class="diy-bottom-box" style="display: none;height: 50px;" id="show_comment">
+				<div class="mui-grid-view mui-clearfix diy-bottom ">
+					<div class="mui-col-xs-9 mui-pull-left ">
+						<form style="background: #fafafa;border: none; ">
+							<div class="mui-input-row ">
+								<label style="border: none;width: 10%;padding: 7px 0px">
+									<i class="mui-icon mui-icon-compose "></i></label>
+								<input id="reply_text" type="text" class="noscrollbars"></input>
+							</div>
+						</form>
+					</div>
+					<div class="mui-col-xs-3 mui-pull-left">
+						<button id="send_btn" class="mui-btn mui-btn-positive" style="padding:9px 20px;width:80%">
+							发送</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script id="news_comment_script" type="text/html">
+			<div class="nd-bottom-li-top">
+				<div class="nd-bottom-li-top-left">
+					<img class="nd-comment-img" src="../../images/default_avatar.jpg" onload="load(this)" data-src="{{user.avatar128}}" />
+					<p class="nd-comment-author">{{user.nickname}}</p>
+				</div>
+				<div class="nd-bottom-li-top-right">
+					<p class="nd-bottom-li-top-right-date">{{create_time}}</p>
+				</div>
+			</div>
+			<div class="nd-bottom-li-middle">
+				<p class="nd-bottom-li-middle-comment">{{content}}</p>
+			</div>
+			<div class="nd-bottom-li-bottom">
+				<div class="nd-bottom-li-bottom-left">
+				</div>
+				<div class="nd-bottom-li-bottom-right">
+					<i id="reply_btn" class="mui-icon base-head-btn base-cancel-color mui-icon-chatbubble"></i>
+				</div>
+			</div>
+		</script>
+		<script id="news_detail_script" type="text/html">
+			<div class="nd-top">
+				<img onload="load(this)" class="nd-top-img" src="../../images/default_load_img.gif" data-src="{{cover_url.ori}}" data-preview-src="{{cover_url.ori}}" data-preview-group="{{id}}" />
+				<div class="nd-top-title">
+					<span>{{title}}</span>
+				</div>
+			</div>
+			<div class="nd-middle">
+				<div id="news_content" class="nd-middle-text">
+				</div>
+				<div class="nd-middle-info">
+					<div class="nd-middle-info-left mui-left">
+						<img class="nd-middle-info-left-img" onload="load(this)" src="../../images/default_avatar.jpg" data-src="{{user.avatar128}}" />
+						<p class="nd-middle-info-left-nickname">{{user.nickname}}</p>
+					</div>
+					<div class="nd-middle-info-right">
+						<p class="nd-middle-info-right-date">{{update_time}}</p>
+					</div>
+				</div>
+				<div class="nd-comment-split">评论列表</div>
+			</div>
+		</script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/news.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/loadingbBtn.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/share.js"></script>
+		<script src="../../js/apptools.js"></script>
+		<script src="../../js/mui.zoom.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.previewimage.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/news-detail.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

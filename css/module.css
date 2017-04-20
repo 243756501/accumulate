@@ -1,0 +1,13 @@
+.img-icon{
+	width: 55px;
+}
+.nav-right-btn{
+	line-height: 25px;
+	margin-right: -10px;
+}
+.hu-hd-btn{
+	padding: 10px 15px !important;
+}
+.hu-hd-btn:active{
+	background: #999;
+}

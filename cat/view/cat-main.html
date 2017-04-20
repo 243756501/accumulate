@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../../css/icomoon.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/cat.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/cat-list-body.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/module.css"/>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/cat.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/cat-render.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+    	.type-list-view{
+    		background-color: white !important;
+    	}
+	    .ad-text{
+    	    position: absolute;
+		    float: right;
+		    right: 5px;
+		    top: 5px;
+		    color: white;
+	    }
+	    .cat-type-img{
+	    	width: 3.5em;
+	    }
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<i id="send_btn" style="display: none;" class="hu-hd-btn mui-icon icon-edit mui-pull-left"></i>
+	    <h1 class="mui-title">分类信息</h1>
+	    <i id="cat_ucenter" class="mui-icon mui-pull-right mui-icon-contact hu-hd-btn"></i>
+	</header>
+	<div id="loading_page" style="text-align: center;margin-top: 55%;">
+		<i class="mui-spinner"></i>
+	</div>
+	<div id="scroll_wrapper" class="mui-scroll-wrapper" style="display: none;">
+		<div class="mui-scroll">
+			<!--广告或者特别推荐区域-->
+			<div class="" >
+				<img style="height: 10em;width: 100%" src="../../images/banan.jpg"/>
+				<div class="ad-text">首页置顶</div>
+			</div>
+			<div id="main_view">
+				<!--分类条目-->
+			    <ul id="type_list_view" class="mui-table-view mui-grid-view mui-grid-9 type-list-view"></ul> 
+				<div id="recom_box" style="margin-top: 20px;display: none;">
+					<div style="background: white;padding: 10px 5px;">热门推荐</div>
+					<ul id="recom_view" class="mui-table-view list-view"></ul>
+				</div>
+			</div>
+			<div id="null_data_view" style="background: #EFEFF4;padding: 50% 0;text-align: center;">没有分类信息!</div>
+		</div>
+	</div>
+	
+	<script id="type_tmplate" type="text/html">
+		<a href="javascript:void(0);">
+            <img onload="load(this)" src="../imges/yule.png" data-src="{{if app_icon}}{{app_icon}}{{else}}../imges/yule.png{{/if}}" class="cat-type-img"></img>
+            <div class="mui-media-body">{{alias}}</div>
+		</a>
+	</script>
+</body>
+    <script type="text/javascript" charset="UTF-8">
+      	mui.init();
+      	mui('.mui-scroll-wrapper').scroll();
+      	
+      	var typeId = 0;
+      	var selfWeb,listHeadWeb,listBodyWeb,catCenterWeb = null;		//本页面/列表父,子页面
+      	var loadPage = document.getElementById("loading_page");
+      	var mainPage = document.getElementById("scroll_wrapper");
+      	var typeListView = document.getElementById("type_list_view");
+      	var nullView = document.getElementById("null_data_view");
+      	var recomBox = document.getElementById("recom_box");
+      	var recomView = document.getElementById("recom_view");
+      	
+      	mui.plusReady(function(){
+      		
+      		selfWeb = plus.webview.currentWebview();
+      		CAT_TYPE_CACHE = myStorage.getItem('CAT_TYPE_CACHE');
+      		if(CAT_TYPE_CACHE){
+      			CAT_TYPE_CACHE = CAT_TYPE_CACHE.split(',');
+      			var typeLen = CAT_TYPE_CACHE.length;
+				Math.random()*typeLen;
+				var num = Math.random()*typeLen;
+				typeId = CAT_TYPE_CACHE[parseInt(num, 10)];
+      		}
+	      	/*获取分类信息类目*/
+	      	cat.getType({},function(res){
+	      		if(res.code == 200){
+	      			CAT_TYPE_CACHE = [];
+	      			for(var i in res.data){
+	      				var catType = res.data[i];
+	      				var li = document.createElement('li');
+	      				li.className = 'mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3';
+	      				li.id = catType.id;
+	      				li.type_info = catType;
+	      				li.innerHTML = template('type_tmplate',catType);
+	      				typeListView.appendChild(li);
+	      				changePage(nullView,typeListView,false);
+	      				CAT_TYPE_CACHE.push(catType.id);
+	      			}
+	      			myStorage.setItem('CAT_TYPE_CACHE',CAT_TYPE_CACHE.toString());
+	      		}else{
+	      			changePage(nullView,typeListView,true);
+	      			toast.info(res.info);
+	      		}
+	      		changePage(loadPage,mainPage,false);
+	      	})
+
+
+  			/*获取推荐信息数据*/
+  			cat.getRecomList({type:typeId},function(res){
+  				if(res.code == 200){
+  					for(var i in res.data){
+  						var catInfo = res.data[i]; 
+					    var li = document.createElement('li');
+					    li.className = 'mui-table-view-cell cat-list-item';
+					    li.catInfo = catInfo;
+					    li.id = catInfo.id;
+					    li.innerHTML = parse_cat_item(catInfo);
+					    recomView.appendChild(li);
+  					}
+  					recomBox.style.display = 'block';
+  				}
+  			})
+  			
+  			listHeadWeb = mui.preload({
+  				url:'cat-list-head.html',
+  				id:'cat-list-head'
+  			});
+      	})
+      	
+      	/*打开分类列表*/
+      	mui('#type_list_view').on('tap','li',function(e){
+      		var tmpInfo = this.type_info;
+      		if(!listBodyWeb){
+	      		listBodyWeb = plus.webview.getWebviewById('cat-list-body');
+      		}
+      		mui.fire(listBodyWeb,'catTypeChange',{data:tmpInfo});
+      		if(!listHeadWeb){
+      			listHeadWeb = plus.webview.getWebviewById('cat-list-head');
+      		}
+      		listHeadWeb.show('slide-in-right');
+      	})
+      	
+      	/*打开推荐信息*/
+      	mui('#recom_view').on('tap','.cat-list-item',function(e){
+      		var catId = this.id;
+      		var entityId = this.catInfo.entity_id;
+      		var entityView = document.getElementById(entityId);
+      		var readGid = entityView.type_info.can_read_gid;
+      		if(checkCatPms(readGid,'您没有阅读权限')){
+				openCatWeb(catId);
+      		}
+      	})
+      	
+      	/*分类信息个人中心*/
+      	document.getElementById("cat_ucenter").addEventListener('tap',function(e){
+      		if(is_login()){
+      			catCenterWeb = mui.preload({
+      				url:'cat-ucenter.html',
+      				id:'cat-ucenter'
+      			})
+      			catCenterWeb.show('slide-in-right');
+      		}else{
+      			toast.info('请登陆后操作');
+      		}
+      	});
+      	
+      	document.getElementById("send_btn").addEventListener('tap',function(e){
+      		if(is_login()){
+	      		mui.openWindow({
+	      			url:'cat-send.html',
+	      			id:'cat-send'
+	      		})
+      		}else{
+      			toast.info('请登录后操作');
+      		}
+      	})
+    </script>
+
+</html>

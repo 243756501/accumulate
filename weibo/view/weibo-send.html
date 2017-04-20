@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/icomoon.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/tools/img_uploader.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/weibo-send.css" />
+		<script src="../../js/mytools/body_before.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body class="base-white-color">
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon text-btn base-head-btn base-cancel-color">取消</i>
+			<i id="send_btn" class="mui-icon text-btn base-head-btn base-ok-color mui-pull-right">发布</i>
+		</header>
+		
+		<div class="mui-content base-white-color">
+			<div id="content_body" class="content-body">
+				<div id="long_view" class="base-info-view" style="display: none;">
+					<input id="long_title" class="lg-title" type="text" name="" value="" placeholder="标题"/>
+					<img id="long_cover" class="lg-cover" src="../../images/mediaImages/add_2.png"/>
+				</div>
+				<textarea id="weibo_detail" class="weibo-send-content" rows="5" onfocus="addself(this)" placeholder="分享新鲜事..."></textarea>
+				<p class="weibo-font-number" id="cost_tpl_title_length">还可以输入?字</p>
+			</div>
+			
+			<!--底部-->
+			<div id="sendfooter" class="send-footer">
+				<!--功能区-->
+				<div id="fun_view" class="base-white-color">
+					<div class="state-view">
+						<button id="crowd_choose_btn" class="weibo-all-btn mui-btn">选择圈子</button>
+						<div id="crowd_view" class="mui-ellipsis lable-view mui-icon mui-icon-clear mui-right"></div>
+					</div>
+					<hr class="announce-splitline" />
+					<div id="location_view" class="mui-table-view-cell mui-clearfix base-ok-color">
+						<i class="mui-icon mui-icon-location"></i>
+						<p class="location-text mui-ellipsis">分享所在的位置</p>
+						<i id="location_cls_icon" class="mui-icon mui-icon-close mui-pull-right mui-hidden"></i>
+					</div>
+				</div>
+				
+				<div id="toolview" class="tool-view">
+					<!--工具按钮-->
+					<nav id="tools_bar" class="mui-bar-tab">
+						<a class="mui-tab-item attach-bar" id="show_smile"><i class="icon-smile"></i></a>
+						<a class="mui-tab-item attach-bar" id="show_img">
+							<i class="icon-image"><span id="img_badge" class="mui-badge bar-tips">9</span></i>
+						</a>
+						<a class="mui-tab-item attach-bar" id="show_topic"><i class="icon-command"></i></a>
+						<a class="mui-tab-item attach-bar" id="show_record">
+							<i class="icon-mic"><span id="rec_badge" class="bar-tips null-badge"></span></i>
+						</a>
+						<a class="mui-tab-item attach-bar" id="show_friend"><i class="icon-at"></i></a>
+					</nav>
+					<!--附件栏-->
+					<div id="attach_view" class="attach-view">
+						<div id="smile_view" class="container"></div>
+						<div id="img_up_view" class="image-up-view container">
+							<p class="mui-text-center">还可以上传<strong id="img_num"></strong>张</p>
+							<span id="image_list" class="image-list"></span>
+							<img id="add_btn" class="add-btn" src="../../images/add.png"/>
+						</div>
+						<div id="topic_view" class="container">
+							<div id="topic_list_view" style="padding: 10px;">
+								<div id="topic_trigger" class="base-topic-label mui-ellipsis">##</div>
+							</div>
+						</div>
+						<div id="record_view" class="container">
+							<div class="mui-row">
+								<div class="mui-col-xs-4">
+									<div class="icon-line del-line">
+										<i id="record_del_btn" class="icon-bin record-btn"></i>
+									</div>
+								</div>
+								<div class="mui-col-xs-4 mui-text-center">
+									<h5 id="record_time" class="record-time">00:00</h5>
+									<div id="record_btn" class="cir-btn">
+										<i class="icon-mic cir-icon"></i>
+										<div class="circle-bom"></div>
+										<div class="circle-mid"></div>
+									</div>
+									<p id="record_text">点击开始录音</p>
+								</div>
+								<div class="mui-col-xs-4">
+									<div class="icon-line">
+										<i id="record_play_btn" class="icon-play3 record-btn"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/mui.enterfocus.js"></script>
+		<script src="../../js/core.js"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/weibo.js"></script>
+		<script src="../../js/expression.js"></script>
+		<script src="../../js/mytools/img_uploder.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/widget/widget.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/weibo-send.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

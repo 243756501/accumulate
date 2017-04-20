@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../../css/icomoon.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/module.css"/>
+    <script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/ucenter.js" type="text/javascript" charset="utf-8"></script>
+    <style>
+    	.mui-scroll-wrapper{
+			margin-top:50px;
+		}
+		li .mui-pull-right{
+			color: #999;
+			padding-top: 2px;
+		}
+    </style>
+    <script id="sc_tplt" type="text/html">
+		{{title}}<span id="nickname" class="mui-pull-right">{{score}}{{unit}}</span>
+	</script>
+<body>
+	<div id="userAllInfo">
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="mui-title">我的积分</h1>
+			<i id="recharge_btn" style="display: none;" class="mui-icon icon-coin-yen mui-pull-right hu-hd-btn"></i>
+		</header>
+		<div class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<ul id="score_list" class="mui-table-view"></ul>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+	mui.init();
+	var scoreList = document.getElementById('score_list');
+	var rechargeBtn = document.getElementById("recharge_btn");
+	var scoreTypes = [];	//积分类型
+	var rechargeConfig = null;		//充值配置信息
+	var uid = 0;
+	var scoreCache = null;
+	
+	mui.plusReady(function(){
+		
+		uid = is_login();
+		var systemCfg = app.getConfig('system');
+		scoreTypes = systemCfg.score_list;
+		app.getUserData(uid,function(res){
+			if(res.code == 200){
+				for(var i in scoreTypes){
+					var info = scoreTypes[i];
+					info.score = res.data['score'+info.id];
+					var li = document.createElement('li');
+					li.className = 'mui-table-view-cell';
+					li.score_info = info;
+					li.id = info.id;
+					li.innerHTML = template('sc_tplt',info);
+					scoreList.appendChild(li);
+				}
+			}else{
+				toast.info('积分信息获取失败');
+			}
+		})
+		
+		ucenter.checkRecharge(function(res){
+			if(res.code == 200 && res.data.exchange.length > 0){
+				rechargeBtn.style.display = 'block';
+				rechargeConfig = res.data;
+			}else{
+				console.log('网站充值功能未开启')
+			}
+		})
+	})
+	
+	rechargeBtn.addEventListener('tap',function(e){
+		mui.openWindow({
+			url:'recharge.html',
+			id:'recharge',
+			show:{autoShow:true,aniShow:'pop-in',duration:'200'},extras:{data:rechargeConfig}
+		})
+	})
+</script>
+
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/question.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/question-render.js" type="text/javascript" charset="utf-8"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../../css/question.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/icomoon.css"/>
+    <script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+    	.mui-scroll-wrapper{
+    		top: 45px;
+    		bottom: 40px;
+    	}
+    	.mui-scroll{
+    		padding: 5px;
+    		background: white;
+    	}
+    	.answer-content{
+    		color: black;
+    		font-size: 15px;
+    		padding-bottom: 10px;
+    		border-bottom: solid 1px #E4E3E6;
+    	}
+		.weibo-detail-foot {
+			text-align: center;
+		}
+		.weibo-detail-foot-box {
+			position: fixed;
+			width: 100%;
+			height: 40px;
+			min-height: 40px;
+			bottom: 0px;
+			overflow: hidden;
+			background-color: #fafafa;
+		}
+		.mui-col-xs-6{
+			font-size: 20px;
+		}
+		.news-content-img {
+			max-width: 100%;
+			height: auto;
+		}
+    </style>
+</head>
+<body>
+	<div id="loading_page" style="text-align: center;margin-top: 55%;">
+		<i class="mui-spinner"></i>
+	</div>
+	
+	<div id="pullrefresh" style="display: none;">
+		
+		<div class="weibo-detail-foot-box">
+			<div id="foot_btn" class="weibo-detail-foot mui-clearfix">
+				<span id="support_btn" class="mui-pull-left mui-col-xs-6 icon-point-up mui-table-view-cell">
+				</span>
+				<span id="oppose_btn" class="mui-pull-right mui-col-xs-6 icon-point-down mui-table-view-cell">
+				</span>
+			</div>
+		</div>
+		
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 id="questionTitle" class="mui-title"></h1>
+		</header>
+		<div class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<p id="answer_time"></p>
+				<p id="answer_content" class="answer-content"></p>
+				<div id="user_mod" class="user-mod mui-media"></div>
+			</div>
+		</div>
+	</div>
+
+</body>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+      	mui('.mui-scroll-wrapper').scroll();
+      	
+      	var userMod = document.getElementById('user_mod');
+      	var supportBtn = document.getElementById('support_btn');
+      	var opposeBtn = document.getElementById('oppose_btn');
+		var questionInfo,answerId;
+		
+      	/*loading的加载和显示*/
+		var changePage = function(loading){
+			document.getElementById('loading_page').style.display = loading?'block':'none';
+   			document.getElementById('pullrefresh').style.display = loading?'none':'block';
+		}
+		
+      	mui.plusReady(function(){
+      		var thisWeb = plus.webview.currentWebview();
+      		var tmpData = thisWeb.data;
+      		questionInfo = tmpData.info;
+      		answerId = tmpData.answerId;
+      		document.getElementById('questionTitle').innerText = questionInfo.title;
+      		question.getAnswerDetail(answerId,function(res){
+      			if(res.code == 200){
+	      			var answerInfo = res.data;
+	      			supportBtn.innerHTML =" " + answerInfo.support;
+	      			opposeBtn.innerHTML = " " + answerInfo.oppose;
+	      			userMod.innerHTML = render_html(answerInfo,'question_user');
+	      			document.getElementById('answer_time').innerHTML = apptools.fmtUnixTime(answerInfo.create_time,true);
+	      			document.getElementById('answer_content').innerHTML = imgTools.getDtlContent(answerInfo.content);
+      			}else{
+      				toast.info(res.info);
+      			}
+      			changePage(false);
+      		})
+      		
+      		
+      		/*顶&踩*/
+      		var restInfo = {
+      			answerId:answerId,
+      			eventType:1
+      		}
+      		mui('#foot_btn').on('tap','span',function(e){
+      			if(is_login()){
+	      			var btnId = this.id;
+	      			var count =  Number(this.innerHTML);
+	      			switch(btnId){
+	      				case 'support_btn':
+	      					restInfo.eventType = 1;
+	      					question.answerEvaluate(restInfo,function(res){
+	      						if(res.code == 200){
+	      							count ++;
+	      							supportBtn.innerHTML = " " + count;
+	      							toast.info('感谢支持！');
+	      						}else{
+	      							toast.info(res.info);
+	      						}
+	      					})
+	      					break;
+	      				case 'oppose_btn':
+	      					restInfo.eventType = 0;
+	      					question.answerEvaluate(restInfo,function(res){
+	      						if(res.code == 200){
+	      							count ++;
+	      							opposeBtn.innerText = " " + count;
+	      							toast.info('谢谢评价！');
+	      						}else{
+	      							toast.info(res.info);
+	      						}
+	      					})
+	      					break;
+	      				default:
+	      					break;
+	      			}
+      			}else{
+      				toast.info('请登陆后操作')
+      			}
+      		})
+      	})
+      	//点击头像进入个人主页
+		app.userListener();
+    </script>
+</html>

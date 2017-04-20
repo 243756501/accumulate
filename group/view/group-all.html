@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<script src="../../js/mui.min.js"></script>
+		<script src="../js/shop.js"></script>
+		<script src="../../js/core.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/mui.pullToRefresh.js"></script>
+		<script src="../../js/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/template.js"></script>
+		<script src="../js/group.js"></script>
+		<script src="../js/group-render.js"></script>
+		<script src="../../news/js/news.js"></script>
+		<link href="../css/group.css" rel="stylesheet" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/iconfont.css" rel="stylesheet" />
+		<link href="../../css/icomoon.css" rel="stylesheet" />
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.mui-pull-top-pocket {
+				top: 85px !important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--侧滑菜单容器-->
+		<div id="offCanvasWrapper" class="mui-off-canvas-wrap mui-draggable">
+			<!--菜单部分-->
+			<aside id="offCanvasSide" class="mui-off-canvas-right">
+				<div id="offCanvasSideScroll" class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<!--<div class="title">群组分类</div>-->
+						<ul id="group_menu" class="mui-table-view mui-table-view-chevron mui-table-view-inverted">
+
+						</ul>
+					</div>
+				</div>
+			</aside>
+			<div class="mui-inner-wrap">
+				<header class="mui-bar mui-bar-nav">
+					<i class="mui-action-back mui-icon mui-icon-back mui-pull-left"></i>
+					<a id="offCanvasBtn" href="#offCanvasSide" class="mui-icon mui-action-menu mui-icon-bars mui-pull-right"></a>
+					<h1 id="title" class="mui-title">全部群组</h1>
+				</header>
+
+				<div id="offCanvasContentScroll" class="mui-content mui-scroll-wrapper">
+					<div id="mui-scroll" class="mui-scroll">
+						<div id="loading_page" style="text-align: center;margin-top: 30%;display: none;">
+							<i class="mui-spinner"></i>
+						</div>
+						<div id="mui-content" class="mui-content" style="padding: 8px;">
+							<ul id="group_0" class="mui-table-view" style="background: none;display: block;" page="1">
+
+							</ul>
+						</div>
+
+					</div>
+				</div>
+				<!-- off-canvas backdrop -->
+				<div class="mui-off-canvas-backdrop"></div>
+			</div>
+		</div>
+	</body>
+	<script>
+		mui.init();
+		//主界面和侧滑菜单界面均支持区域滚动；
+		mui('#offCanvasSideScroll').scroll();
+		mui('#offCanvasContentScroll').scroll();
+		var info = {
+				page: 1
+			}
+			//当前ul对象
+		var flagDiv = '';
+		//上一个ul对象
+		var previousDiv = '0';
+		var mTitle = document.getElementById('title');
+		var loadPages = document.getElementById('loading_page');
+		var lists = document.getElementById('mui-content');
+		var mGroupMenu = document.getElementById('group_menu');
+		//侧滑容器父节点
+		var offCanvasWrapper = mui('#offCanvasWrapper');
+		//主界面容器
+		var offCanvasInner = offCanvasWrapper[0].querySelector('.mui-inner-wrap');
+		//菜单容器
+		var offCanvasSide = document.getElementById("offCanvasSide");
+
+		var loadPage = function(flag) {
+				if (flag) {
+					lists.style.display = 'block';
+					loadPages.style.display = 'none';
+				} else {
+					lists.style.display = 'none';
+					loadPages.style.display = 'block';
+				}
+			}
+			/**
+			 * 新的上拉加载更多
+			 */
+		function new_pullup() {
+			mui('#mui-scroll').pullToRefresh({
+				up: {
+					callback: function() {
+						var thisView = this;
+						//获取当前下拉刷新的ul标识
+						var tempUl = flagDiv;
+						var temp_page = parseInt(tempUl.getAttribute('page'));
+						setTimeout(function() {
+							info.page = temp_page + 1;
+							group.getAllGroup(info, function(res) {
+								loadPage(true);
+								if (res.code == 200 && res.data != null) {
+									tempUl.setAttribute('page', info.page);
+									for (var index in res.data) {
+										var li = get_group_li(res.data[index]);
+										tempUl.appendChild(li);
+									}
+								} else {
+									toast.info('没有更多了');
+								}
+							})
+							thisView.endPullUpToRefresh();
+						}, 1000);
+					}
+				}
+			});
+		}
+		var getList = function(info) {
+				var tempDiv = flagDiv;
+				group.getAllGroup(info, function(res) {
+					loadPage(true);
+					if (res.code == 200 && res.data != null) {
+						for (var index in res.data) {
+							var li = get_group_li(res.data[index]);
+							tempDiv.appendChild(li);
+						}
+					} else {
+						toast.info('该分类下无群组');
+					}
+				})
+			}
+			/*获取单个item LI*/
+		var get_group_li = function(groupMsg) {
+			var li = document.createElement('li');
+			li.className = 'mui-table-view-cell item-shadow';
+			li.group_info = groupMsg;
+			var html = parse_group_html(my_group, groupMsg);
+			li.innerHTML = html;
+			return li;
+		};
+		mui.plusReady(function() {
+				group.getGroupTypes(function(res) {
+					mGroupMenu.innerHTML = parse_group_html(menu, res);
+					for (var index in res.data) {
+						var groupInfo = res.data[index];
+						var ul = document.createElement('ul');
+						ul.className = 'mui-table-view';
+						ul.id = 'group_' + groupInfo.id;
+						ul.style.display = 'none';
+						ul.style.background = 'none';
+						ul.setAttribute('page', '1');
+						document.getElementById('mui-content').appendChild(ul);
+						if (groupInfo.GroupSecond != null) {
+							for (var index in groupInfo.GroupSecond) {
+								var ul = document.createElement('ul');
+								ul.className = 'mui-table-view';
+								// TODO
+								ul.id = 'group_' + groupInfo.GroupSecond[index].id;
+								ul.setAttribute('page', '1');
+								ul.style.display = 'none';
+								ul.style.background = 'none';
+								document.getElementById('mui-content').appendChild(ul);
+							}
+						}
+					}
+					flagDiv = document.getElementById('group_0');
+					previousDiv = document.getElementById('group_0');
+					loadPage(false);
+					getList(info);
+					new_pullup();
+				});
+				/*列表项点击事件，链接群组帖子*/
+				mui('#offCanvasContentScroll').on('tap', 'li', function(e) {
+					var $this = this;
+					mui.openWindow({
+						url: 'group-item-head.html',
+						id: 'group-item-head',
+						extras: {
+							group_info: $this.group_info
+						}
+					})
+					e.stopPropagation();
+				})
+			})
+			/**
+			 * 侧滑菜单栏点击事件
+			 */
+		mui('#group_menu').on('tap', '.mui-table-view-cell', function(e) {
+			previousDiv.style.display = 'none';
+			var $this = this;
+			mTitle.innerHTML = $this.innerText;
+			info = {
+				page: 1,
+				type_id: $this.id
+			}
+			mui('#offCanvasContentScroll').scroll().scrollTo(0, 0);
+			flagDiv = document.getElementById('group_' + $this.id);
+			flagDiv.style.display = 'block';
+			//当前ul正在请求时，切换到已经请求好的ul
+			if (flagDiv.innerHTML != '') {
+				loadPage(true);
+			}
+			previousDiv = document.getElementById('group_' + $this.id);
+			if (flagDiv.innerHTML == '') {
+				loadPage(false);
+				getList(info);
+			}
+			offCanvasWrapper.offCanvas('close');
+		})
+	</script>
+
+</html>

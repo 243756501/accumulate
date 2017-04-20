@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<script src="../../js/app.js"></script>
+		<script src="../../js/core.js"></script>
+		<script src="../js/weibo.js"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/weibo-render.js"></script>
+	</head>
+	<style>
+		.is-repost-box {
+			font-size: 14px;
+			position: relative;
+			color: #577b9e;
+			padding: 0 15px 0 8px;
+		}
+		#setforward {
+			position: relative;
+			display: inline-block;
+			top: 5px;
+			margin: 0;
+			border: none;
+			padding: 0;
+			width: 19px;
+			height: 19px;
+		}
+		.source {
+			padding: 10px!important;
+			border: 1px solid #C0C0C0
+		}
+	</style>
+
+	<body>
+		<div class="mui-navbar-inner mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="mui-center mui-title">转发</h1>
+			<button id="send_btn" class="mui-btn mui-btn-green mui-pull-right">发布</button>
+		</div>
+		<div class="mui-content" style="margin: 10px 5px;">
+			<form>
+				<div class="mui-input-row">
+					<textarea id="content" style="height: 150px;margin: 0px;" placeholder="输入内容"></textarea>
+				</div>
+
+				<div id="show_source" class="mui-table-view-cell source" style="background-color: #FFFFFF;">
+
+				</div>
+
+			</form>
+			<div class="is-repost-box" style="margin-bottom:10px ;">
+				<div class="is-repost">
+					<input checked type="checkbox" id="becomment" value="1">
+					<label for="becomment">同时评论</label>
+				</div>
+			</div>
+		</div>
+
+	</body>
+	<script>
+		mui.plusReady(function() {
+			var selfWeb = plus.webview.currentWebview();
+			var weibo_content = selfWeb.data;
+			var source;
+		
+			if (weibo_content.type == 'repost') {
+				source = weibo_content.sourceWeibo;
+			} else {
+				source = weibo_content;
+			}
+			template.config('escape', false)
+			var render = template.compile(repost_view);
+			var html = render(source);
+			document.getElementById('show_source').innerHTML = html;
+			if (weibo_content.id != source.id) {
+				var $content = document.getElementById('content');
+				$content.value = '//@' + weibo_content.user.nickname + ' ：'+ weibo_content.content;
+				$content.focus();
+			}
+			//绑定发送按钮事件
+			document.getElementById('send_btn').addEventListener('tap', function() {
+				if (is_login()) {
+					var content = document.getElementById('content').value;
+					if (content == '') {
+						toast.info("发布内容不能为空。");
+						return;
+					}
+					toast.showLoading('发表中');
+					var sendInfo = {
+						content: content,
+						from: get_from(),
+						source_id: source.id,
+						weibo_id: weibo_content.id,
+						becomment: document.getElementById('becomment').checked ? 1 : 0
+					};
+					weibo.sendRepost(sendInfo, function(res) {
+						if (typeof(res) == 'object') {
+							if (res.code == 200) {
+								toast.info('发布成功');
+								
+								mui.back();
+							} else {
+								toast.info(res.info);
+							}
+						} else {
+							toast.info(res.info);
+						}
+						toast.hideLoading();
+					})
+				} else {
+					mui.toast("未登录");
+				}
+			}, false);
+		});
+	</script>
+
+</html>

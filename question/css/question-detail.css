@@ -1,0 +1,70 @@
+.mui-scroll-wrapper{
+	top: 45px;
+	background: white;
+}
+.mui-scroll{
+	padding: 5px 5px 0 5px;
+}
+.title{
+	color: black;
+	font-size: 18px;
+	padding: 10px 5px;
+	border-bottom: solid 1px #E4E3E6;
+}
+.user-mod{
+	position: relative;
+	padding: 5px 0;
+	min-height: 45px;
+}
+.reward-tip{
+	width: 25px;
+	margin: -10px;
+}
+.reward-num{
+	margin: 5px 0 0 0;
+}
+.content-view{
+	padding: 5px;
+}
+.answer-item{
+	padding-bottom: 0;
+}
+.answer-time{
+	color: #888;
+	font-size: 12px;
+}
+.answer-time .mui-btn{
+	border: white;
+	padding: 3px 8px;
+}
+.question-detail{
+	padding-top: 5px;
+	font-size: 15px;
+}
+.news-content-img {
+	max-width: 100%;
+	height: auto;
+}
+.mui-ellipsis-2{
+	margin-bottom: 0px;
+}
+.answer-title{
+	padding: 5px 0px;
+}
+.answer-btn{
+	border-radius: 10px;
+	padding: 20px;
+	background-color: honeydew;
+	background-image: url(../../images/icon/question-answer.png);
+	background-size: 100%;
+	z-index: 999;
+	position: absolute;
+	right: 20px;
+	bottom: 20px;
+}
+.icon-share{
+    opacity: 0.7;
+}
+.mui-col-xs-8 div{
+	min-height: 20px;
+}

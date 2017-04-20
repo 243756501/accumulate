@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta charset="UTF-8">
+	    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	    <title></title>
+	    <script src="../../js/mui.min.js"></script>
+	    <link href="../../css/mui.min.css" rel="stylesheet"/>
+	    <link rel="stylesheet" type="text/css" href="../css/cat.css"/>
+	    <link rel="stylesheet" type="text/css" href="../../css/icomoon.css"/>
+	    <link rel="stylesheet" type="text/css" href="../css/cat-detail.css"/>
+	    <link href="../../css/previewimage.css" rel="stylesheet" />
+	    <script src="../../js/mui.zoom.js"></script>
+		<script src="../../js/mui.previewimage.js"></script>
+	    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+	    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+	    <script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+	    <script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+	    <script src="../js/cat.js" type="text/javascript" charset="utf-8"></script>
+	    <script src="../../js/share.js" type="text/javascript" charset="utf-8"></script>
+	    <script src="../../js/loadingbBtn.js" type="text/javascript" charset="utf-8"></script>
+	    <script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <i id="back" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+		    <h1 id="type_title" class="mui-title"></h1>
+		</header>
+		
+		<div id="loading_page" style="text-align: center;margin-top: 55%;">
+			<i class="mui-spinner"></i>
+		</div>
+
+		<div id="pullrefresh" style="display: none;">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<!--目标交互信息-->
+					<div id="top_info_view" class="detail-view"></div>
+					<!--目标基本信息-->
+					<div id="center_info_view" class="detail-view"></div>
+					
+					<!--详情描述-->
+					<div class="detail-view">
+						<div style="margin-bottom: 10px;">详细描述</div>
+						<div id="cat_desb_info"></div>
+					</div>
+					
+					<!--评论展示-->
+					<div id="comm_box" class="comment-view">
+						<div style="margin: 0 0 10px 10px;">网友评论</div>
+						<ul id="comm_list" class="mui-table-view"></ul>
+					</div>
+				</div>
+			</div>
+			
+			<!--快速回复栏-->
+			<div id="reply_box" class="diy-bottom-box" style="display: none;">
+				<div class="reply-box-item" style="width: 10%;">
+					<i class="mui-icon mui-icon mui-icon-compose"></i>
+				</div>
+				<div class="reply-box-item" style="width: 70%;">
+					<input id="reply_input" type="text" placeholder="添加评论"></input>
+				</div>
+				<div class="reply-box-item" style="width: 20%;margin-right: -10px;">
+					<button id="send_btn" class="mui-btn mui-btn-blue send-btn">发送</button>
+				</div>
+			</div>
+			
+			<!--底部功能栏-->
+			<div id="btm_view" class="diy-bottom-box">
+				<div class="botm-btn left-one">
+					<span class="icon-edit"></span>
+					<input id="btm_reply_input" class="btm-reply-btn" type="text" placeholder="添加你的评论"/>
+				</div>
+				<div class="botm-btn">
+					<i class="icon-bubble2"></i>
+					<span id="comm_count">99</span>
+				</div>
+				<div id="shares" class="botm-btn">
+					<i class="icon-share"></i>
+				</div>
+				<div id="fav_btn" class="botm-btn">
+					<i class="icon-star-full"></i>
+				</div>
+			</div>
+		</div>
+
+		<!--顶部统一模板(公用)-->
+		<script id="top_info_tmptale" type="text/html">
+			<div>{{title}}</div>
+			<div class="count-info-view">
+				<span>浏览量：{{read}}</span>
+				<span class="count-info-right">评分：{{rate}}</span>
+			</div>
+			<h5>
+				<span>发布日期：{{create_time}}</span>
+				<span class="march-state">【进行中】</span>
+				<span id="report_btn" class="report-btn">举报</span>
+			</h5>
+		</script>
+		
+		<!--岗位用基本信息模板(私用)-->
+		<script id="center_work_info_tmptale" type="text/html">
+			<div>{{detail_data.company.value}}</div>
+			<h5 class="basis-info">岗位：{{detail_data.j_name.value}}</h5>
+			<h5 class="basis-info">招聘人数：{{detail_data.num.value}}人</h5>
+			<h5 class="basis-info">薪酬：{{detail_data.reward.value}}</h5>
+			<h5 class="basis-info">工作地点：{{detail_data.place.value}}</h5>
+			<i id="call_phone" class="icon-phone"></i>
+			<h5 class="basis-info">联系电话：{{detail_data.phone.value}}</h5>
+			<h5 class="basis-info">QQ：{{detail_data.qq?detail_data.qq.value:''}}</h5>
+			<h5 class="basis-info">邮箱：{{detail_data.email.value}}</h5>
+		</script>
+		<!--房产用基本信息模板(私用)-->
+		<script id="center_house_info_tmptale" type="text/html">
+			<h4 style="color: red;margin-bottom: 10px;">{{detail_data.zujin.value}}</h4>
+			<div class="house-info-view">
+				<div><span>类型：</span><p class="house-info">{{detail_data.leixing?detail_data.leixing.value:无}}</p></div>
+				<div><span>户型：</span><p class="house-info">{{detail_data.shi.value}}室{{detail_data.ting.value}}厅{{detail_data.wei.value}}卫</p></div>
+				<div><span>装修：</span><p class="house-info">{{detail_data.zhuangxiu.value}}</p></div>
+				<div><span>楼层：</span><p class="house-info">{{detail_data.louceng.value}}</p></div>
+			</div>
+			<div class="house-info-view">
+				<div><span>方式：</span><p class="house-info">{{detail_data.fangshi.value}}</p></div>
+				<div><span>面积：</span><p class="house-info">{{detail_data.daxiao.value}}</p></div>
+				<div><span>朝向：</span><p class="house-info">{{detail_data.chaoxiang.value}}</p></div>
+				<div><span>媒介：</span><p class="house-info">{{detail_data.shenfen.value}}</p></div>
+			</div>
+		</script>
+		
+		<!--评论item模板-->
+		<script id="cat_comm_tmplate" type="text/html">
+			<img class="avatar-img mui-pull-left" onload="load(this)" src="../../images/default_avatar.jpg" data-src="{{user.avatar128}}">
+			<span style="float: right;margin-right: 5px;" class="mui-icon mui-icon-chatbubble"></span>
+			<span class="comm-reply-view">
+				<input class="reply_fl_btn" type="text" style="margin: 0;"></input>
+			</span>
+			<div class="mui-media-body">
+				<div style="color: black;">{{user.nickname||'游客'}}</div>
+				<p>{{create_time}}</p>
+				<p class="comment-content" style="min-height: 13px;">{{content}}</p>
+			</div>
+		</script>
+		
+	</body>
+	
+	<script type="text/javascript">
+		mui.init({
+			gestureConfig:{
+			    tap: true, //默认为true
+			    longtap: true, //默认为false
+		  }
+		});
+		mui('.mui-scroll-wrapper').scroll();
+		mui.previewImage();
+		
+		var catInfo = '';
+		var catId = 0;
+		var restInfo = {id:0};		//详情请求
+		var requstInfo = {};		//评论请求
+		var loadView = document.getElementById("loading_page");
+		var mainView = document.getElementById("pullrefresh");
+		var typeTitle = document.getElementById("type_title");
+		var topView = document.getElementById("top_info_view");
+		var centerWiew = document.getElementById("center_info_view");
+		var catDesView = document.getElementById("cat_desb_info");
+		var commBox = document.getElementById("comm_box");
+		var commList = document.getElementById("comm_list");
+		
+		var btmView = document.getElementById("btm_view");		//底部功能栏
+		var replyBox = document.getElementById("reply_box");	//快速回复栏
+		var replyInput = document.getElementById("reply_input");
+		var btmReplyInput = document.getElementById("btm_reply_input");
+		var sendBtn = document.getElementById("send_btn");
+		
+		var commCount = document.getElementById("comm_count");
+		var favBtn = document.getElementById("fav_btn");
+		var coletCount = 0;		//记录收藏操作的次数
+		
+		var loadBar = loadBtn();
+		var fistCount,secondCount,block;
+		
+		//item
+		var get_comm_item = function(commentInfo) {
+			var li = document.createElement('li');
+			li.className = 'comment-item';
+			li.commentInfo = commentInfo;
+			li.innerHTML = template('cat_comm_tmplate', commentInfo);
+			return li;
+		}
+		
+		/*监听分类信息的改变事件*/
+		window.addEventListener('catChange',function(event){
+			var tmpId = event.detail.data;
+			if(!catId || tmpId != catId){
+				mui('.mui-scroll-wrapper').scroll().scrollTo(0,0);	//首先自动滚到最顶部
+				centerWiew.style.display = 'block';
+				catId = tmpId;
+				restInfo.id = catId;
+				cat.getCatDetail(restInfo,function(res){
+					if(res.code == 200){
+						catInfo = res.data;
+						typeTitle.innerHTML = catInfo.entity_name;
+						if(catInfo.entity_id == 1){
+							centerWiew.innerHTML = template('center_work_info_tmptale',catInfo);
+						}else if(catInfo.entity_id == 2){
+							centerWiew.innerHTML = template('center_house_info_tmptale',catInfo);
+						}else{
+							centerWiew.style.display = 'none';
+						}
+						app.shareHref(catInfo.share_url,catInfo.title,catInfo.content||'');		//分享
+						catInfo.create_time = catInfo.create_time.substring(0,catInfo.create_time.lastIndexOf(' '));
+						topView.innerHTML = template('top_info_tmptale',catInfo);
+						favBtn.style.color = catInfo.is_fav?'red':'black';
+						catDesView.innerHTML = catInfo.detail_data.des?imgTools.getDtlContent(catInfo.detail_data.des.value):'';
+						commCount.innerText = catInfo.reply_count;
+						changePage(loadView,mainView,false);
+						//拨号
+						var callBtn = document.getElementById("call_phone");
+						if(callBtn){
+							callBtn.addEventListener('tap',function(e){
+								plus.device.dial(catInfo.detail_data.phone.value,true);
+							})
+						}
+						//举报
+						document.getElementById("report_btn").addEventListener('tap',function(event){
+							app.openReportWeb('cat',catInfo);
+						});
+					}else{
+						toast.info('获取数据失败!');
+					}
+				})
+				
+				//获取评论
+				fistCount = 0;
+				secondCount = 0;
+				block = true;
+				requstInfo = {id: catId,page: 1,method:'get'};
+				initComm();
+			}else{
+				changePage(loadView,mainView,false);
+			}
+		});
+		
+		mui.plusReady(function(){
+			share = new share();
+			var catWeb = plus.webview.currentWebview();
+				catWeb.setStyle({
+					'softinputMode': 'adjustResize'
+			});
+			catWeb.addEventListener('hide',function(){
+				changePage(loadView,mainView,true);
+			})
+			
+			var back=document.getElementById('back');
+			back.addEventListener('tap', function() {
+				if (mui.os.ios) {
+					document.activeElement.blur();
+				}
+			}, false);
+		})
+		
+		/*每条评论后面的回复按钮*/
+		mui('#comm_box').on('tap','.reply_fl_btn',function(e){
+			var userName = get_parent_node(this,'.comment-item').commentInfo.user.nickname||'游客';
+			replyInput.value = '回复 @'+ userName +' ：';
+			changePage(btmView,replyBox,false);
+			setTimeout(function(){
+				replyInput.focus();
+			},500)
+		})
+		
+		/*底部功能栏里面的回复按钮*/
+		btmReplyInput.addEventListener('tap',function(e){
+			replyInput.value = '';
+			changePage(btmView,replyBox,false);
+			setTimeout(function(){
+				replyInput.focus();
+			},500)
+		})
+
+		/*回复框失焦事件*/
+		replyInput.addEventListener('blur',function(e){
+			changePage(btmView,replyBox,true);
+		})
+		
+		
+		/*初始化评论数据*/
+		var initComm = function(){
+			commList.innerHTML = '';
+			cat.getCatComm(requstInfo, function(res) {
+			    if (res.code == 200) {
+			    	for (index in res.data) {
+			    		var commInfo = res.data[index];
+			    		var li = get_comm_item(commInfo);
+			    		commList.appendChild(li);
+			    	}
+					if (commList.children.length == 0) {
+					    requstInfo.page--;
+					    loadBar.innerText = '暂无评论';
+				    } else if (res.data.length < 10) {
+				        secondCount = res.data.length;
+				        requstInfo.page--;
+				        loadBar.innerText = '暂无更多评论';
+				    } else {
+				        	loadBar.innerText = '点击加载更多';
+			        }
+			   		commBox.appendChild(loadBar);
+			    } else {
+			        mui.toast(res.info);
+			    }
+			});
+		}
+		
+		//加载更多评论按钮
+		loadBar.addEventListener('tap', function() {
+			requstInfo.method = 'get';
+			if(block){
+			    requstInfo.page++;
+			    cat.getCatComm(requstInfo, function(res) {
+			    if (res.code == 200) {
+				    fistCount = typeof(res.data) == 'undefined' ? 0 : res.data.length;
+				    for (var i = secondCount; i < fistCount; i++) {
+					    var commentInfo = res.data[i];
+					    var li = get_comm_item(commentInfo);
+					    commList.appendChild(li);
+				    }
+					if (fistCount < 10) {
+					    secondCount = fistCount;
+					    requstInfo.page--;
+					    loadBar.innerText = '暂无更多评论';
+				    } else {
+					    secondCount = 0;
+					    loadBar.innerText = '点击加载更多';
+				    }
+				} else {
+				    mui.toast(res.info);
+			    }
+					block = true;
+				});
+			}
+		});
+		
+		/*评论操作*/
+		sendBtn.addEventListener('tap',function(e){
+			if(is_login()){
+				var replyContent = replyInput.value;
+				if(replyContent.trim() != ''){
+					plus.nativeUI.showWaiting('发布中...');
+					requstInfo.content = replyContent;
+					requstInfo.method = 'post';
+					cat.getCatComm(requstInfo,function(res){
+						plus.nativeUI.closeWaiting();
+						if(res.code == 200){
+							toast.info('发布成功!');
+							replyInput.value = '';
+						}
+					})
+				}else{
+					toast.info('请发表有意义的评论!');
+				}
+			}else{
+				toast.info('请登录后操作!')
+			}
+		})
+		
+		/*收藏操作*/
+		favBtn.addEventListener('tap',function(e){
+			if (is_login()) {
+				coletCount++;
+				var iconColor = favBtn.style.color;
+				if (coletCount < 5) {
+					plus.nativeUI.showWaiting();
+					if (iconColor == 'red') {
+						restInfo.method = 'delete';
+						cat.favCat(restInfo, function(res) {
+							plus.nativeUI.closeWaiting();
+							if (res.code == 200) {
+								toast.info('取消收藏');
+								favBtn.style.color = 'black';
+							} else {
+								toast.info('取消收藏失败');
+							}
+						})
+					} else {
+						restInfo.method = 'post';
+						cat.favCat(restInfo, function(res) {
+							plus.nativeUI.closeWaiting();
+							if (res.code == 200) {
+								toast.info('收藏成功');
+								favBtn.style.color = 'red';
+							} else {
+								toast.info('收藏失败');
+							}
+						})
+					}
+				} else {
+					toast.info('请停止无意义的操作');
+				}
+			} else {
+				toast.info('请登录后操作');
+			}
+		})
+		
+		/*打开举报*/
+		mui('#comm_box').on('longtap', '.mui-media-body', function(e) {
+			var thisLi = get_parent_node(this,'.comment-item');
+			var bts=[{title:"举报"}];
+			plus.nativeUI.actionSheet({cancel:"取消",buttons:bts},
+				function(e){
+					if(e.index == 1){
+						app.openReportWeb('cat',thisLi.commentInfo);
+					}
+				}
+			);
+		})
+		
+	</script>
+	
+</html>

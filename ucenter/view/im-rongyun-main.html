@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../../css/pull-top-tips.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/module.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/im-rongyun-main.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/app/base.css"/>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+    <script>window["SCHEMETYPE"] = 'http';window["WEB_XHR_POLLING"] = true; </script>
+    <script src="../../libs/rongyunIM/RongIMLib-2.1.3.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/rongyunIm.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav base-header-background">
+	    <h1 class="mui-title">会话</h1>
+	    <i id="friend_btn" class="mui-icon mui-icon-person mui-pull-right hu-hd-btn"></i>
+	</header>
+	
+	<div id="loading_page" style="text-align: center;margin-top: 30%;">
+	    <p>未登录</p>
+	</div>
+	
+	<div id="scroll_wrapper" class="mui-content mui-scroll-wrapper" style="display: none;">
+	    <div class="mui-scroll" style="min-height: 50%;">
+	
+	        <div class="">
+	            <!--列表容器-->
+	            <ul id="im_list" class="mui-table-view mui-clearfix"></ul>
+	        </div>
+	    </div>
+	</div>
+	
+	<script id="im_tplte" type="text/html">
+	    <div class="mui-slider-right mui-disabled">
+	        <a class="top-event mui-btn mui-btn-grey">置顶</a>
+	        <a class="unread-event mui-btn mui-btn-yellow">已读</a>
+	        <a class="del-event mui-btn mui-btn-red">删除</a>
+	    </div>
+	    <div class="mui-slider-handle">
+	        <div class="mui-table-cell">
+	            <img class="im-img mui-pull-left" onload="load(this)" src="../../images/default_avatar.jpg" data-src="{{user.head}}">
+                <span id="unread_{{targetId}}" style="{{if unreadMessageCount<1}}display: none;{{/if}}" class="unread-count mui-badge mui-badge-danger">{{if unreadMessageCount>0}}{{unreadMessageCount}}{{/if}}</span>
+	            <div class="mui-media-body">
+	                <div class="">
+	                    <span class="mui-ellipsis">{{user.name}}</span>
+	                </div>	                
+	                <p id="content_{{targetId}}" class='item-text2 mui-ellipsis'>{{if latestMessage.content.messageName=="TextMessage"}}{{latestMessage.content.content}}{{/if}}{{if latestMessage.content.messageName=="ImageMessage"}}[图片消息]{{/if}}{{if latestMessage.content.messageName=='VoiceMessage'}}[语音消息]{{/if}}{{if latestMessage.content.messageName=="LocationMessage"}}[位置消息]{{/if}}</p>              
+	            </div>
+	        </div>
+	    </div>
+	</script>
+    <script src="../../js/mui.pullToRefresh.js"></script>
+    <script src="../../js/mui.pullToRefresh.material.js"></script>
+</body>
+    <script type="text/javascript" charset="UTF-8">
+      	mui.init();
+      	
+      	        //阻尼系数
+        var deceleration = mui.os.ios ? 0.003 : 0.0009;
+        mui('.mui-scroll-wrapper').scroll({
+            bounce: false,
+            indicators: true, //是否显示滚动条
+            deceleration: deceleration
+        });
+        
+      	var friendBtn = document.getElementById('friend_btn');
+      	var loadView = document.getElementById('loading_page');
+		var mainView = document.getElementById('scroll_wrapper');
+		var imListView = document.getElementById('im_list');
+		var ucenterWeb,mainWeb,friendWeb,imChatWeb = null;
+		var ryToken,app_key = null;
+		var userInfo = null;
+		var uid = '';
+		
+		var imBlock = false;
+		var actConversation = null;		//chat页面正在渲染的会话
+		var hasMsg = true;
+		var newConUser = null;		//临时记录创建会话的对象的用户信息
+		var tempCon = null;			//临时记录新创建的会话对象
+		var ryStatus = 0;		//融云状态 0未登陆，1登陆成功，2掉线
+		var conversationTypeLib = {};
+		var messageAlarm=function(){
+			var messageAlarm=plus.audio.createPlayer('../../video/messageVoice.wav');
+			messageAlarm.play();
+		}
+		/*控制IM消息的未读状态true表示有未读,反之顺理..*/
+		var togImUnTip = function(toggle){
+			toggle = toggle?'inline-block':'none';
+			modBotmWeb.evalJS('document.getElementById("im_bdg").style.display = "'+toggle+'";')
+		}
+		/**获取历史消息，如 APP 没有开启消息漫游则执行 onError 方法。
+		 * 历史消息云存储暂不支持聊天室消息漫游，拉去历史消息最多一次行拉取 20 条消息。
+		 * 拉取顺序按时间倒序拉取，如果本地不存在历史消息，SDK 会自动向服务器拉取。
+		 * 拉取历史消息为循环拉取，举例：
+		 * 条件：历史记录为 45 条，每次拉取 20 条。
+		 * 第一次拉取 list 长度为 20，hasMsg 为 true。
+		 * 第二次拉取 list 长度为 20，hasMsg 为 true。
+		 * 第三次拉取 list 长度为 5，hasMsg 为 false。
+		 * 第四次拉取 list 长度为 0，hasMsg 为 false。
+		 * 第四次拉取：重复第一次拉取，以此循环
+		 */
+		/**
+		 * @param {int} convsType 	会话类型
+		 * @param {String} convsId		用户Id
+		 * @param {int} startTime	拉取历史消息起始位置(格式为毫秒数)，可以为null
+		 * @param {int} msgCount		历史消息数量
+		 */
+		var getMsgList = function(convsInfo,downMsg,changed,startTime,msgCount){
+			var convsType = convsInfo.conversationType;
+			var convsId = convsInfo.targetId;
+			downMsg = downMsg || false;
+			changed = changed || true;
+			startTime = startTime || null;
+			msgCount = msgCount || 20;
+			if(!actConversation || convsId != actConversation.targetId){
+				startTime = 0;
+				hasMsg = true;
+			}
+			if(hasMsg){
+				RongIMClient.getInstance().getHistoryMessages(convsType, convsId, startTime, msgCount, {
+					onSuccess: function(msgList, has) {
+						hasMsg = has;
+					    // hasMsg为boolean值，如果为true则表示还有剩余历史消息可拉取，为false的话表示没有剩余历史消息可供拉取。
+					    // msgList 为拉取到的历史消息列表
+			            mui.fire(imChatWeb,'con_change',{
+			            	data:{
+					            isdownMsg:downMsg,		//判断是否是拉取的历史记录
+					            ischange:changed,			//判断是否需要重置信息窗口
+					            convs:convsInfo,
+					            msgList:msgList,
+					            tgUser:convsInfo.user
+			           	 	}
+				        });
+					},
+					onError: function(error) {
+					    // APP未开启消息漫游或处理异常
+					    RYConnect(ryToken);
+					    console.log(JSON.stringify(error));
+				  	}
+				});
+			}
+		};
+		
+		/*供chat页面下拉历史信息*/
+		var getHisMsg = function(msgId){
+			getMsgList(actConversation,true,false);
+		}
+		
+		/*把网站用户信息封装成一个会话用户信息*/
+		var get_convs_user = function(userInfo){
+			var convsUser = {uid:userInfo.uid,name:userInfo.nickname,head:userInfo.avatar128};
+			return convsUser;
+		};
+		
+		/*创建会话*/
+		var creat_convs = function(userInfo){
+			var convsView = document.getElementById(userInfo.uid);
+			if(!convsView){
+				var tmpUser = get_convs_user(userInfo);
+				if(!imChatWeb){
+				    imChatWeb = plus.webview.getWebviewById('im-rongyun-chat');
+				}
+	            mui.fire(imChatWeb,'con_change',{
+	            	data:{
+			            isdownMsg:false,		//判断是否是拉取的历史记录
+			            ischange:true,			//判断是否需要重置信息窗口
+			            convs:{conversationType:1,targetId:tmpUser.uid},
+			            msgList:[],
+			            tgUser:tmpUser
+	           	 	}
+		        });
+				imChatWeb.show('slide-in-right',300);
+			}else{
+				mui.trigger(convsView,'tap');
+			}
+		};
+		
+		/*发送消息*/
+		var send_msg = function(sendMsg){
+		 	// 定义消息类型,文字消息使用 RongIMLib.TextMessage
+		 	var msg = null;
+		 	var targetId = sendMsg.targetId; 		// 消息目标 Id
+			var conversationtype = conversationTypeLib[sendMsg.conversationType]; // 会话类型Number型
+		 	switch(sendMsg.messageType){
+		 		case 'TextMessage':
+				 	//或者使用RongIMLib.TextMessage.obtain方法:var msg = RongIMLib.TextMessage.obtain("hello");
+				 	msg = new RongIMLib.TextMessage({content:sendMsg.content});
+		 			break;
+		 		case 'ImageMessage':
+		 		    msg =new RongIMLib.ImageMessage({content:sendMsg.content,imageUri:sendMsg.imageUri});
+		 		    break;
+		 		case 'VoiceMessage':
+		 		    msg =new RongIMLib.VoiceMessage({content:sendMsg.content,duration:sendMsg.duration,extra:sendMsg.extra});
+		 		    break;
+		 		case 'LocationMessage':
+		 		    msg =new RongIMLib.LocationMessage({content:sendMsg.content,latitude:sendMsg.latitude,longitude:sendMsg.longitude,poi:sendMsg.poi,extra:sendMsg.extra});
+		 		    break;
+		 		default :
+		 			break;
+		 	}
+			RongIMClient.getInstance().sendMessage(conversationtype, targetId, msg, {
+	            // 发送消息成功
+	            onSuccess: function (message) {
+	                //message 为发送的消息对象并且包含服务器返回的消息唯一Id和发送消息时间戳
+	                rec_new_msg(message,true);
+	            },
+	            onError: function (errorCode,message) {
+	                var info = '';
+	                switch (errorCode) {
+	                    case RongIMLib.ErrorCode.TIMEOUT:
+	                        info = '超时';
+	                        break;
+	                    case RongIMLib.ErrorCode.UNKNOWN_ERROR:
+	                        info = '未知错误';
+	                        break;
+	                    case RongIMLib.ErrorCode.REJECTED_BY_BLACKLIST:
+	                        info = '在黑名单中，无法向对方发送消息';
+	                        break;
+	                    case RongIMLib.ErrorCode.NOT_IN_DISCUSSION:
+	                        info = '不在讨论组中';
+	                        break;
+	                    case RongIMLib.ErrorCode.NOT_IN_GROUP:
+	                        info = '不在群组中';
+	                        break;
+	                    case RongIMLib.ErrorCode.NOT_IN_CHATROOM:
+	                        info = '不在聊天室中';
+	                        break;
+	                    default :
+	                        info = '莫名错误';
+	                        break;
+	                }
+	                console.log('发送失败:' + info);
+	            }
+	       });
+		};
+		
+		/*处理新消息*/
+		var rec_new_msg = function(message,isSelf){
+			if(imListView.getElementsByTagName('li').length == 0){
+				imListView.innerHTML = '';
+			}
+	    	if(ryStatus == 1){			//融云状态
+                // 发送的消息内容将会被打印,每一条消息都会触发一次
+                var tmpConverId = message.targetId;
+                var tmpConvsView = document.getElementById(tmpConverId);
+                if(tmpConvsView){		//会话已存在
+                	tmpConvsView.convs_info.latestMessage = message;
+                	var tmpCountView = document.getElementById('unread_' + tmpConverId);
+                	 if(!imChatWeb || !imChatWeb.isVisible() || tmpConverId != actConversation.targetId){
+		                tmpCountView.style.display = 'block';
+	                	tmpCountView.innerText ++;
+		                togImUnTip(true);
+		            }else{
+		            	read_msg(actConversation);
+		            }
+                	var tmpContentView = document.getElementById('content_' + tmpConverId);
+                	if(message.content.messageName=="TextMessage")
+                	{
+                	tmpContentView.innerText = message.content.content;	
+                	}
+                	else if(message.content.messageName=="ImageMessage")
+                	{
+                	tmpContentView.innerText = '[图片消息]';		
+                	}
+                	else if(message.content.messageName=="VoiceMessage")
+                	{
+                    tmpContentView.innerHTML = '[语音消息]';
+                	}
+                	else if(message.content.messageName=="LocationMessage")
+                	{
+                	tmpContentView.innerHTML = '[位置消息]';	
+                	}
+                	if(actConversation && actConversation.targetId == tmpConverId){
+                		 mui.fire(imChatWeb,'con_change',{
+			            	data:{
+					            isdownMsg:false,		//判断是否是拉取的历史记录
+					            ischange:false,			//判断是否需要重置信息窗口
+					            convs:actConversation,
+					            msgList:[message],
+					            tgUser:null
+			           	 	}
+				        });
+                	}
+                }else{					//会话还未存在
+                	RongIMClient.getInstance().getConversation(message.conversationType, tmpConverId, {
+					    onSuccess: function(conver) {
+					     	add_convs([conver]);
+					     	if(isSelf){
+					     		actConversation = conver;
+		     		            mui.fire(imChatWeb,'con_change',{
+					            	data:{
+							            isdownMsg:false,		//判断是否是拉取的历史记录
+							            ischange:false,			//判断是否需要重置信息窗口
+							            convs:conver,
+							            msgList:[message],
+							            tgUser:null
+					           	 	}
+						        });
+					     	}
+					    },onError: function(error) {}
+					});
+                }
+	    	}
+	        // 判断消息类型
+	        switch(message.messageType){
+	            case RongIMClient.MessageType.TextMessage:
+	            		//文本消息
+	                break;
+	                //....还有其他12种消息暂时不做开发，未来需要时查看官方API
+	            default:
+	                // 自定义消息
+	                break;
+	        }
+		};
+		
+		/*标记信息已读*/
+		var read_msg = function(convsInfo){
+			convsInfo = convsInfo || actConversation;
+			if(convsInfo){
+			    var conversationType = convsInfo.conversationType;
+				var targetId = convsInfo.targetId;
+		        var tempCountView = document.getElementById('unread_'+targetId);
+				RongIMClient.getInstance().clearUnreadCount(conversationType,targetId,{
+				    onSuccess:function(){
+					    tempCountView.style.display = 'none';
+					    tempCountView.innerText = 0;
+				    },
+				    onError:function(error){
+				        console.log('设置已读失败');
+				    }
+				});
+			}
+		};
+		
+		/*获取所有会话未读消息总数*/
+		var getUnreadCount = function(){
+	        RongIMClient.getInstance().getTotalUnreadCount({
+				onSuccess:function(count){		// count => 所有会话总未读数。
+				    togImUnTip(count);
+				},
+				onError:function(error){}		// error => 获取总未读数错误码。
+			});
+		}
+		
+		/*从服务器获取token*/
+		var init_token = function(){
+			rongyunIm.getIMToken(function(res){
+				if(res.code == 200 && res.data.code == 200){
+					myStorage.setItem('ryim_token',JSON.stringify(res.data));
+					ryToken = res.data.token;
+					RYConnect(ryToken);
+				}else{
+					if(res.data){
+						toast.info(res.data.errorMessage);
+					}else{
+						toast.info('融云IM初始化失败');
+					}
+				}
+			});
+		}
+		/*连接融云服务器*/
+		var RYConnect = function(token){
+			RongIMClient.connect(token, {
+			    onSuccess: function(userId) {
+			    	imBlock = true;
+//			        console.log(userId+'登陆融云服务器成功!');
+			        pullrefresh();
+			    },
+			    onTokenIncorrect: function() {
+			        console.log('token无效');
+			    	init_token();
+			    },
+			    onError:function(errorCode){
+			        var info = '';
+			        switch (errorCode) {
+				        case RongIMLib.ErrorCode.TIMEOUT:
+				            info = '超时';
+				            break;
+				        case RongIMLib.ErrorCode.UNKNOWN_ERROR:
+				            info = '未知错误';
+				            break;
+				        case RongIMLib.ErrorCode.UNACCEPTABLE_PaROTOCOL_VERSION:
+				            info = '不可接受的协议版本';
+				            break;
+				        case RongIMLib.ErrorCode.IDENTIFIER_REJECTED:
+				            info = 'appkey不正确';
+				            break;
+				        case RongIMLib.ErrorCode.SERVER_UNAVAILABLE:
+				            info = '服务器不可用';
+				            break;
+				    }
+			    	toast.info(info);
+			    }
+			});
+		};
+      	
+      	/*会话item*/
+      	var get_convs_item = function(conversion){
+		    var li = document.createElement('li');
+		    li.className = 'im-item mui-table-view-cell';
+		    li.convs_info = conversion;
+		    li.id = conversion.targetId;
+		    li.innerHTML = template('im_tplte',conversion);
+		    return li;
+		};
+      	
+      	/*渲染会话*/
+      	var add_convs = function(convsList,pullView){
+			var tgUidArr = [];		//所有会话目标用户id集合
+	        for(var i in convsList){
+	        	var convs = convsList[i];
+	        	tgUidArr.push(convs.targetId);
+	        }
+        	if(tgUidArr.length > 0){
+	  		   	rongyunIm.getUserInfos(tgUidArr,function(res){
+		        	var userInfos = res.data;
+			        for(var x in userInfos){
+			        	for(var y in convsList){
+			        		var mConvs = convsList[y];
+			        		if(userInfos[x].uid == mConvs.targetId){
+			        			mConvs.user = get_convs_user(userInfos[x]);
+					        	var item = get_convs_item(mConvs);
+					        	if(convsList.length == 1){
+						        	imListView.insertBefore(item,imListView.childNodes[0]);
+					        	}else{
+						        	imListView.appendChild(item);
+					        	}
+			        			break;
+			        		}
+			        	}
+			        }
+			        changePage(loadView,mainView,false);
+					if(pullView){
+		                pullView.endPullDownToRefresh();
+					}
+		        })
+  		   	}else{
+        		imListView.innerHTML = '<div style="text-align: center;font-size: 18px;color: #AAA;margin-top: 10%;background: #EFEFF4;">还没有会话</div>';
+        		changePage(loadView,mainView,false);
+        		if(pullView){
+	                pullView.endPullDownToRefresh();
+				}
+        	}
+      	};
+      	
+      	/*获取会话列表*/
+     	var pullrefresh = function(pullView){
+	        //获取会话列表
+	        RongIMClient.getInstance().getConversationList({
+		        onSuccess: function(convsList) {
+					imListView.innerHTML = '';
+		        	add_convs(convsList,pullView);
+					getUnreadCount();
+			        setTimeout(function(){
+				        ryStatus = 1;
+			        },1000)
+			    },
+			    onError: function(error) {
+			        console.log('会话列表获取失败');
+		   		}
+		    },null);
+     	};
+      	
+      	//用户更改事件
+      	window.addEventListener('userChange',function(e){
+      		mainWeb.reload();
+      	})
+      	
+      	/*H5+准备完毕*/
+		mui.plusReady(function(){
+		    mainWeb = plus.webview.currentWebview();
+		    modBotmWeb = plus.webview.getWebviewById('module-bottom');
+		    appConfig = JSON.parse(myStorage.getItem('app_config'));
+		    imConfig = appConfig.plus.im;
+		    if(!is_login()){
+		    	return;
+		    }
+		   	if(!imConfig ||!imConfig.rongyun || imConfig.rongyun.open == 0){
+		   		toast.info('网站未开启IM功能！');
+		   		return;
+		   	}
+			app_key = imConfig.rongyun.app_key;
+			RongIMClient.init(app_key);		//初始化融云,位置必须在最前面
+			conversationTypeLib = {								//融云会话类型
+				1:RongIMLib.ConversationType.PRIVATE,				//二人私聊会话类型，枚举值为 1 
+				2:RongIMLib.ConversationType.DISCUSSION,			//讨论组会话类型，枚举值为 2 。
+				3:RongIMLib.ConversationType.GROUP,					//群组会话类型，枚举值为 3。
+				4:RongIMLib.ConversationType.CHATROOM,				//聊天室会话类型，枚举值为 4 。
+				5:RongIMLib.ConversationType.CUSTOMER_SERVICE,		//客服会话类型，枚举值为 5 。
+				6:RongIMLib.ConversationType.SYSTEM,				//系统消息类型，枚举值为 6 。
+				7:RongIMLib.ConversationType.APP_PUBLIC_SERVICE,	//公众账号（默认关注）会话类型，枚举值为 7 。
+				8:RongIMLib.ConversationType.PUBLIC_SERVICE,		//公众账号 (手动关注) 会话类型，枚举值为 8 。
+			};
+	      	
+	      	 // 设置连接监听状态 （ status 标识当前连接状态）
+			 // 连接状态监听器
+			RongIMClient.setConnectionStatusListener({
+			    onChanged: function (status) {
+			        switch (status) {
+			            //链接成功
+			            case RongIMLib.ConnectionStatus.CONNECTED:
+	//		                console.log('链接成功');
+			                break;
+			            //正在链接
+			            case RongIMLib.ConnectionStatus.CONNECTING:
+	//		                console.log('正在链接');
+			                break;
+			            //重新链接
+			            case RongIMLib.ConnectionStatus.DISCONNECTED:
+			                console.log('断开连接');
+			                break;
+			            //其他设备登陆
+			            case RongIMLib.ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT:
+			                mui.toast('账号在其他手机登陆');
+		                    /*如果当前页面可见，则自动挤下网页端的Im服务*/
+		                  	ryStatus = 2;
+		                  	var timeOut = null;
+						    if(mainWeb.isVisible() && !timeOut){
+						    	timeOut = setTimeout(function(){
+							        RYConnect(ryToken);
+							        timeOut = null;
+						    	},3000);
+						    }
+			                break;
+			              //网络不可用
+			            case RongIMLib.ConnectionStatus.NETWORK_UNAVAILABLE:
+			            	ryStatus = 2;
+			              	console.log('网络不可用');
+	              			/*监听手机网络状态的变化,网络连接后自动重连*/
+							document.addEventListener('netchange',function(e){
+								var nt = plus.networkinfo.getCurrentType();
+								if(nt > 1 && mainWeb.isVisible()){
+									RYConnect(ryToken);
+								}
+							})
+			              	break;
+			            }
+			    }
+		    });
+			
+			// 消息监听器
+			RongIMClient.setOnReceiveMessageListener({
+			    // 接收到的消息
+			    onReceived: function (message) {
+			    	togImUnTip(true);
+					rec_new_msg(message,false);
+					messageAlarm();
+					console.log('接收到消息'+JSON.stringify(message));
+			    }
+			});
+		    ucenterWeb = plus.webview.getWebviewById('nav_ucenter');
+		    userInfo = JSON.parse(myStorage.getItem('user_info'));
+		    uid = userInfo.uid;		//用户ID
+			/*获取本地存贮token*/
+			ryToken = JSON.parse(myStorage.getItem('ryim_token'));
+			if(!ryToken || ryToken.userId != uid){
+				init_token();
+			}else{
+				ryToken = ryToken.token;
+				RYConnect(ryToken);
+			}
+			
+			/*下拉刷新组件*/
+            mui('.mui-scroll').pullToRefresh({
+                down: {
+                    callback: function() {
+                    	pullrefresh(this);
+                    }
+                }
+            });	
+		
+			if(!plus.webview.getWebviewById('im-rongyun-chat')){
+				imChatWeb = mui.preload({
+		            url:'im-rongyun-chatting.html',
+		            id:'im-rongyun-chat'
+		        });
+			}
+			
+		    //监听父页面的显示事件，确认用户来到此页面，以便IM服务的开启标记
+		    mainWeb.addEventListener('show',function(e){
+		    	console.log('IMview show!');
+		    	ryStatus = 1;
+		    	friendWeb = mui.preload({
+		            url:'im-friend-list.html',
+		            id:'im-friend-list'
+		       });
+		        imChatWeb = mui.preload({
+		            url:'im-rongyun-chatting.html',
+		            id:'im-rongyun-chatting'
+		        });
+		        if(ryStatus == 2){		//当本页面打开后检查是否被网站端挤下，自动登录
+		            RYConnect(ryToken);
+		        }
+		    });
+		    
+		    //监听父页面的隐藏（退出）事件，确认用户关闭此页面计算未读数是否为0
+		    mainWeb.addEventListener('hide',function(e){
+		    	getUnreadCount();
+		    });
+		});
+      	
+      	
+      	/*列表item点击事件*/
+		mui('#im_list').on('tap','li',function(e){
+			var tmpConvsInfo = this.convs_info;
+			if(!actConversation || actConversation.targetId != tmpConvsInfo.targetId){
+				getMsgList(tmpConvsInfo);
+			}
+			actConversation = tmpConvsInfo;
+			if(!imChatWeb){
+			    imChatWeb = plus.webview.getWebviewById('im-rongyun-chatting');
+			}
+			imChatWeb.show('slide-in-right',300);
+		})
+		
+		
+		/*item删除事件*/
+		mui('#im_list').on('tap','.del-event',function(e){
+		    var li = get_parent_node(this,'.im-item');
+		    var convsInfo = li.convs_info;
+		    RongIMClient.getInstance().removeConversation(convsInfo.conversationType,convsInfo.targetId,{
+			    onSuccess:function(bool){
+			    	if(actConversation && actConversation.targetId == convsInfo.targetId){
+			    		actConversation = null;
+			    	}
+			    	console.log('删除会话成功');
+			    },
+			    onError:function(error){
+			    	console.log('删除会话失败');
+			    }
+			});
+		    imListView.removeChild(li);
+		})
+		
+		
+		/*item置顶事件*/
+		mui('#im_list').on('tap','.top-event',function(e){
+		    var li = get_parent_node(this,'.im-item');
+		    var convsInfo = li.convs_info;
+		    RongIMClient.getInstance().setConversationToTop(convsInfo.conversationType,convsInfo.targetId,{
+		    	onSuccess:function(bool){
+			    	console.log('会话置顶成功');
+			    },
+			    onError:function(error){
+			    	console.log('会话置顶失败');
+			    }
+		    })
+		    imListView.insertBefore(li,imListView.childNodes[0]);
+		    mui.swipeoutClose(li);
+		})
+		
+		
+		/*item标记已读事件*/
+		mui('#im_list').on('tap','.unread-event',function(e){
+		    var li = get_parent_node(this,'.im-item');
+		    var convsInfo = li.convs_info;
+			read_msg(convsInfo);
+		    mui.swipeoutClose(li);
+		})
+		
+      	/*打开好友列表*/
+      	friendBtn.addEventListener('tap',function(e){
+		   if(is_login() && imBlock){
+	      		mui.fire(friendWeb,'imChange',{data:'nav_im'});
+			    friendWeb.show("slide-in-right",WEBTRANSTIME);
+      		}
+      	});
+    </script>
+</html>

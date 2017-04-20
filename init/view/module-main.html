@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/app.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css"/>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/module.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/sortable.js"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<style>
+			.sortable_list{
+	        	margin-top: 45px;
+	        }
+	        .module-icon {
+	            height: 64px !important;
+	            max-width: 64px !important;
+	            display: inline-block;
+	            margin-right: 10px;
+	        }
+	        .module-center-view{
+        	    position: absolute;
+			    max-width: 55%;
+			    top: 25%;
+			    left: 25%;
+	        }
+	        .save-btn{
+	        	margin-top: 5px;
+	        }
+	        #change_sort_btn
+	        {
+	        	color: #1ABC9C;
+	        }
+	        #change_off_btn
+	        {
+	        	color: #1ABC9C;
+	        }
+		</style>
+
+	</head>
+
+	<body>
+
+		<!--头部-->
+		<header id="header" style="display: block;" class="mui-bar mui-bar-nav base-header-background">
+			<h1 class="mui-title">更多应用</h1>
+			<button id="change_sort_btn" type="1" class="save-btn">排序</button>
+			<button id="change_off_btn" style="display: none;" class="save-btn">保存</button>
+		</header>
+
+		<!--身体-->
+		<div id="scroll_wrapper" class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<ul id="multi" class="mui-table-view sortable_list"></ul>
+			</div>
+		</div>
+
+		<!--模板-->
+		<script id="app_list" type="text/html">
+			<div class="module-view" data-href="{{href}}" data-name="{{name}}" style="width: 75%">
+				<img class="module-icon" src="{{image}}">
+				<div class="module-center-view">{{title}}
+					<p class='mui-ellipsis-2'>{{des}}</p>
+				</div>
+			</div>
+			<div id="switch_{{name}}" class="mui-switch mui-switch-mini{{if open}} mui-active{{/if}}">
+				<div class="mui-switch-handle"></div>
+			</div>
+		</script>
+
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			var selfWeb = null;
+			mui.init({
+				beforeback: function() {
+					if (backColor == '#f3ffec') {
+						selfWeb.reload(false);
+						return false;
+					} else {
+						return true;
+					}
+				},
+				gestureConfig: {
+					tap: true, ///默认为true
+					doubletap: true, //默认为false
+					longtap: true, //默认为false
+					swipe: true, //默认为true
+					drag: true, //默认为true
+					hold: true, //默认为false，不监听
+					release: true //默认为false，不监听
+				}
+			});
+			mui('.mui-scroll-wrapper').scroll();
+			var change_sort_btn = document.getElementById('change_sort_btn');
+			var change_off_btn = document.getElementById('change_off_btn');
+			var modList = document.getElementById('multi');
+			var backColor = '';
+			var modCache = null;
+			mui.plusReady(function() {
+				var mainWeb = plus.webview.getWebviewById('module-bottom');
+				selfWeb = plus.webview.currentWebview();
+				modCache = JSON.parse(myStorage.getItem('nav_info'));
+				var navList = modCache.mod_list;
+				for (var index in navList) {
+					var navInfo = navList[index];
+					var modInfo = get_mod(navInfo);
+					var li = app.createListItem(modInfo,'module-drag mui-table-view-cell mui-media');
+					li.nav_info = navInfo;
+					li.innerHTML = template('app_list', modInfo);
+					modList.appendChild(li);
+				}
+				mui(".mui-switch").switch();
+				/*开关监听器*/
+				mui('#multi').on("toggle", '.mui-switch', function(event) {
+					change_color('#f3ffec');
+					change_sort_btn.style.display = 'none';
+					change_off_btn.style.display = 'block';
+					var navLi = get_parent_node(this, '.module-drag');
+					if (event.detail.isActive) {
+						navLi.nav_info.open = true;
+					} else {
+						navLi.nav_info.open = false;
+					}
+				})
+				var do_sortable = function() {
+					var config = {
+						animation: 150,
+						filter: '.js-remove',
+						onFilter: function(evt) {
+							evt.item.parentNode.removeChild(evt.item);
+						}
+					};
+					var container = document.getElementById("multi");
+					sort = new Sortable(container, config);
+			
+				};
+				/*开关模块*/
+				change_off_btn.addEventListener('tap', function() {
+					get_data_arr(modList, mainWeb);
+					change_color('#fff');
+					change_sort_btn.style.display = 'block';
+					change_off_btn.style.display = 'none';
+				})
+				/*排序*/
+				change_sort_btn.addEventListener('tap', function(e) {
+					var $this = this;
+					var type = $this.getAttribute("type");
+					if (type == 1) {
+						set_disabled();
+						change_color('#f3ffec');
+						$this.setAttribute('type', 0);
+						do_sortable();mui('.mui-scroll-wrapper').scroll().scrollTo(0,0);
+						$this.innerHTML = '保存';
+					} else {
+						remove_disabled();
+						change_color('#fff');
+						sort.destroy();
+						$this.setAttribute('type', 1);
+						$this.innerHTML = '排序';
+						//	                set_sort();
+						get_data_arr(modList, mainWeb);
+						return false;
+					}
+				});
+				var get_data_arr = function(modList, mainWeb) {
+					var modInfos = [];
+					for (var i = 0; i < modList.children.length; i++) {
+						modInfos.push(modList.children[i].nav_info);
+					}
+					modCache.mod_list = modInfos;
+					myStorage.setItem('nav_info', JSON.stringify(modCache));
+					/*触发导航栏重组事件*/
+					mui.fire(mainWeb, 'nav_change', {
+						change: true
+					});
+				}
+				/**
+				 *  禁用开关
+				 */
+				var set_disabled = function() {
+					var $class = document.getElementsByClassName('mui-switch');
+					for (var i = 0; i < $class.length; i++) {
+						$class[i].className += ' mui-disabled';
+					}
+				};
+				/**
+				 *  取消禁用开关
+				 */
+				var remove_disabled = function() {
+					var $class = document.getElementsByClassName('mui-switch');
+					var className = 'mui-disabled';
+					var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
+					for (var i = 0; i < $class.length; i++) {
+						$class[i].className = $class[i].className.replace(reg, ' ');
+					}
+				};
+				/**
+				 * 为li设置背景颜色
+				 * @param color
+				 */
+				var change_color = function(color) {
+					backColor = color;
+					var $class = document.getElementsByClassName('module-drag');
+					for (var i = 0; i < $class.length; i++) {
+						$class[i].style.background = color;
+					}
+				};
+				//todo 需要修改
+				mui("#multi").on('tap', '.module-view', function() {
+					var info = get_parent_node(this,'li').detail_info;
+					if(info.type == 'custom' && info.target == 1){
+						openOutWeb(info);
+					}else{
+						var webId = 'nav_' + info.name;
+						if (!is_create(webId)) {
+							var web = plus.webview.create(info.href, webId, {
+								top: '0px',
+								bottom: '50px'
+							},{data:info});
+							//通过本页面打开的模块随着隐藏自动关闭
+							web.addEventListener('hide',function(){
+								var webArr = plus.webview.all();
+								for(i in webArr){
+									if(~webArr[i].id.indexOf(info.name)){
+										webArr[i].close('none');
+									}
+								}
+							})
+							mainWeb.append(web);
+						}
+						mainWeb.evalJS('change_nav("' + webId + '")');
+					}
+				});
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js"></script>
+		<script src="../../js/app.js"></script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 id="title" class="mui-title"></h1>
+			<i id="post" class="mui-icon mui-icon-compose mui-pull-right" style="display: none;"></i>
+		</header>
+	</body>
+	<script type="text/javascript" charset="utf-8">
+		var group_id = '';
+		var group_info = '';
+		mui.plusReady(function() {
+			var thisHeadWeb = plus.webview.currentWebview();
+			var groupInfo = thisHeadWeb.group_info;
+			if (groupInfo.is_join == 1) {
+				document.getElementById('post').style.display = 'block';
+			}
+			mui.init({
+				subpages: [{
+					url: 'group-item-body.html', //子页面HTML地址，支持本地地址和网络地址
+					id: 'group-item-body', //子页面标志
+					styles: {
+						top: '45px',
+						bottom: '0px',
+					},
+					extras: {
+						groupInfo: groupInfo
+					}
+				}]
+			});
+			var title = document.getElementById('title');
+			title.innerText = groupInfo.title;
+			title.addEventListener('tap', function() {
+				goTop(thisHeadWeb);
+			})
+			document.getElementById('post').addEventListener('tap', function(e) {
+				if (is_login()) {
+					mui.openWindow({
+						url: 'group-send.html',
+						id: 'group-send',
+						extras: {
+							group_id: groupInfo.id,
+							title: groupInfo.title
+						}
+					})
+				} else {
+					toast.info('未登录');
+				}
+			});
+		});
+	</script>
+
+</html>

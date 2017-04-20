@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/previewimage.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/icomoon.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/question.css" />
+		<link rel="stylesheet" type="text/css" href="../css/question-detail.css" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 id="top_title" class="mui-title">问答</h1>
+			<i id="shares" class="mui-icon mui-pull-right icon-share base-head-btn"></i>
+		</header>
+
+		<div id="loading_page" style="text-align: center;margin-top: 55%;">
+			<i class="mui-spinner"></i>
+		</div>
+
+		<div id="main_view" class="base-fade-view">
+			<div id="answer_question" class="answer-btn"></div>
+			<div id="scroll_wrapper" class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div id="detail_info_view"></div>
+
+					<!--回答部分-->
+					<div id="answerDiv">
+						<div id="best_div" style="display: none;">
+							<div class="answer-title">最佳答案</div>
+							<ul id="best_answer" class="mui-table-view mui-clearfix" style="border: solid 1px green;"></ul>
+						</div>
+
+						<div class="answer-title">网友回答</div>
+						<div id="answer">
+							<ul id="answer_list" class="mui-table-view"></ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/question.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/question-render.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/loadingbBtn.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/share.js"></script>
+		<script src="../../js/mui.zoom.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.previewimage.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/question-detail.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

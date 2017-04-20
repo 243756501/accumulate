@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../../css/app-form.css"/>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/account.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+	    .sync-content{
+	    	background: #F7F7F7;
+	    	margin-top: 5px;
+	    }
+    	.ch-tab{
+    		width: 49%;
+    		display: inline-block;
+    		padding: 10px;
+    	}
+    	.inactive-bg{
+    		background: #EEE;
+    	}
+    	.input-row input{
+    		background: white !important;
+    	}
+    </style>
+</head>
+<body style="background: #F7F7F7;">
+	<header class="mui-bar mui-bar-nav">
+	    <i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+	    <h1 class="mui-title">同步绑定</h1>
+	</header>
+	
+	<div class="mui-content">
+	    <div class="sync-content">
+	    	<div style="text-align: center;" id="account_tab">
+	    		<div id="has" class="ch-tab">已有账号</div>
+	    		<div id="no_has" class="ch-tab inactive-bg">没有账号</div>
+	    	</div>
+	    	<div style="padding: 20px;">
+		    	<div id="has_view">
+			    	<div class="input-row">
+		                <label>用户名</label>
+		                <input id="yes_unm_input" name="username" type="text" placeholder="请输入用户名">
+		            </div>
+		            <div class="input-row">
+		                <label>密码</label>
+		                <input id="yes_psw_input" name="password" type="password" placeholder="请输入密码">
+		            </div>
+			    	<div style="text-align: right;">
+				    	<button id="sub_btn" class="mui-btn mui-btn-green">确认绑定</button>
+			    	</div>
+		    	</div>
+		    	
+		    	<div id="no_has_view" style="display: none;">
+		    		<div id="" style="text-align: center;">
+		    			<button id="go_reg_btn" type="button" style="font-size: 18px;margin-top: 40%;" class="mui-btn mui-btn-green">注册账号</button>
+		    		</div>
+		    	</div>
+	    	</div>
+	    </div>
+	</div>
+</body>
+
+    <script type="text/javascript" charset="UTF-8">
+      	mui.init();
+      	
+      	var selfWeb = null;
+      	var syncData = null;
+      	var tmpTarget = 'has';		//用于记录
+      	var hasTab = document.getElementById("has");
+      	var hasView = document.getElementById("has_view");
+      	var nohasView = document.getElementById("no_has_view");
+      	var yes_unm_input = document.getElementById("yes_unm_input");
+      	var yes_psw_input = document.getElementById("yes_psw_input");
+      	var subBtn = document.getElementById("sub_btn");
+      	var goRegBtn = document.getElementById("go_reg_btn");
+      	
+      	mui.plusReady(function(){
+      		selfWeb = plus.webview.currentWebview();
+      		loginWeb = plus.webview.getWebviewById('login');
+      		syncData = selfWeb.data;
+      	});
+      	
+      	/*监听需要绑定的新账号注册成功事件*/
+      	window.addEventListener('newAccount',function(e){
+      		myStorage.removeItem('is_sync');
+      		mui.trigger(hasTab,'tap');
+      	});
+      	
+      	/*确认绑定按钮*/
+      	subBtn.addEventListener('tap',function(e){
+      		var tmpUnm = yes_unm_input.value.trim();
+      		var tmpPsw = yes_psw_input.value.trim();
+      		if(!tmpUnm){
+      			toast.info('用户名不符合要求');
+      			return;
+      		}
+      		if(!tmpPsw){
+      			toast.info('密码不符合要求');
+      			return;
+      		}
+      		syncData.bind_info = 1;
+      		syncData.username = tmpUnm;
+      		syncData.password = tmpPsw;
+      		toast.showLoading('登录中..')
+  			account.sync(syncData, function(res) {
+				console.log(JSON.stringify(res));
+				toast.hideLoading()
+				if (res.code == 200) {
+					loginWeb.close('none');
+				    cacheUser(res);
+					goLg();
+					setTimeout(function(){
+						selfWeb.close('zoom-fade-in');
+					},100);
+				} else {
+					toast.info(res.info);
+				}
+			});
+      	})
+      	
+      	/*TAB栏切换*/
+      	mui('#account_tab').on('tap','div',function(e){
+      		if(tmpTarget != this.id){
+	      		tmpTarget = this.id;      			
+	      		var tabArr = document.getElementById("account_tab").children;
+	      		for(var i = 0; i < tabArr.length;i++){
+	      			tabArr[i].classList.toggle('inactive-bg');
+	      		}
+	      		hasView.style.display = nohasView.style.display;
+	      		nohasView.style.display = hasView.style.display == 'none'?'block':'none';
+      		}
+      	});
+      	
+      	/*打开注册页面，并传递所需数据*/
+      	goRegBtn.addEventListener('tap',function(e){
+      		myStorage.setItem('is_sync','1');
+      		mui.openWindow({
+				url: 'reg.html',
+				id: 'reg',
+				show: {
+					aniShow: 'zoom-fade-out'
+				},
+				waiting: {
+					autoShow: false
+				},
+				extras:{
+					data:'sync'
+				}
+			});
+      	});
+    </script>
+</html>

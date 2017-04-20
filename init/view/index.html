@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			html{
+				height: 100%;
+				background-image: url(../../images/start.png);
+				background-size: 100% 100%;
+			}
+			.mui-bar{
+				position: relative;
+			}
+			.net-dialog{
+				text-align: center;
+				vertical-align: middle;
+				margin: 50px 0;
+				font-size: 15px;padding: 20px;
+			}
+			body{
+				display: none;
+				height: 100%;
+			}
+		</style>
+	</head>
+
+	<body id="net_er_view">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 id="title" class="mui-title">网络错误</h1>
+		</header>
+
+		<div class="mui-content net-dialog">
+			亲,你的网络出问题啦,连接网络后我会自动消失的哟！
+		</div>
+	</body>
+	<script src="../../js/mui.min.js"></script>
+	<script src="../../js/core.js"></script>
+	<script src="../../js/mytools/net_tools.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		mui.init({
+			beforeback: function() {
+				selfWeb.hide();
+				return true;
+			}
+		});
+
+		var netView = document.getElementById("net_er_view");
+		var selfWeb, welWebView, botmWebView,baseInfo,oldVers,newVers = null;
+		mui.plusReady(function() {
+			selfWeb = plus.webview.currentWebview();
+			//获取手机网络连接状态	1:未连接网络 2:有线网络3:无线WIFI网络4:移动2G 5:移动3G 6:移动4G
+			var networkType = plus.networkinfo.getCurrentType();
+			if(networkType == 1) {
+				if(mui.os.ios) {
+					netView.style.display = 'block';
+				} else {
+					mui.toast('未连接网络，3秒后自动关闭程序!');
+					setTimeout(function() {
+						plus.runtime.quit();
+					}, 3000)
+				}
+			} else {
+				app_start(true);
+			}
+			
+			/*初始化APP*/
+			function app_start(is_int) {
+				if(is_int) {
+					oldVers = app.getVersion();	//上一次版本号
+					//获取更准确的版本号
+					plus.runtime.getProperty(plus.runtime.appid, function(info) {
+					    newVers = info.version;	//当前版本号
+						myStorage.setItem('app_version', newVers);
+						//获取客户端配置信息
+						app.getModConfig('', function(res){
+							if(res.data && res.data.base){
+								myStorage.setItem('app_config', JSON.stringify(res.data));
+								baseInfo = res.data.base;
+								if(baseInfo.update == 1){	//卸载安装升级
+									plus.nativeUI.alert('版本太旧，无法自动升级！请卸载旧版后下载最新客户端安装升级',function(){
+				                    	app.quit();
+					                });
+								}else if(baseInfo.update == 2 && mui.os.android && baseInfo.apk_link){	//覆盖安装升级
+									app.doUpdate(baseInfo.apk_link,function(state){
+										if(state!=1){
+											load_botm();
+										}
+									});
+								}else if(baseInfo.update == 3 && baseInfo.patch_link){	//差量补丁升级
+									app.doUpdate(baseInfo.patch_link,function(state){
+										if(state == 1){
+											mui.alert('需要重新启动！','成功提示',function(){
+												plus.runtime.restart();
+											})
+										}else{
+											load_botm();
+										}
+									})
+								}else{
+									load_botm();
+								}
+							}else{
+								toast.info('客户端配置信息获取失败，无法正常运行！');
+							}
+						})
+					})
+				}
+			};
+			
+			function load_botm(){
+				botmWebView = mui.preload({
+					url: "module-bottom.html",
+					id: "module-bottom"
+				});
+				if(newVers != oldVers) {
+					myStorage.removeItem('nav_info');
+					setTimeout(function(){
+						webtools.openSingleWeb('welcome','','fade-in',500);
+					},1000)
+				} else {
+					botmWebView.show('fade-in',WEBTRANSTIME,function(){
+						setTimeout(function() {
+							plus.navigator.closeSplashscreen();
+						}, 2000)
+					});
+				}
+			}
+			
+			/*监听手机网络状态的变化*/
+			document.addEventListener('netchange', function(e) {
+				var nt = plus.networkinfo.getCurrentType();
+				if(nt > 1) {
+					selfWeb.hide('zoom-fade-in');
+					app_start(!botmWebView);
+				} else {
+					netView.style.display = 'block';
+					selfWeb.show('zoom-fade-out');
+				}
+			})
+			//记录位置信息
+	    	plus.geolocation.getCurrentPosition(function(position){
+	    		myStorage.setItem('user_location',JSON.stringify(position));
+	    	}, function (e) {
+				console.log("获取定位位置信息失败："+e.message);
+			},{geocode:true,provider:'amap'});
+		});
+	</script>
+
+</html>

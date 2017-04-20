@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+	<!--关注-->
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/pull-top-tips.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css"/>
+		<style type="text/css">
+			.mui-scroll-wrapper{
+				top: 100px;
+			}
+			.search-view{
+				margin-top: 55px !important;
+				justify-content: space-around;
+				margin-top: 10px;
+			}
+			.mui-search input{
+				border-radius: 0;
+				background-color: #fafafa;
+			}
+			.search-btn{
+				padding: 6.5px 20px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav base-header-background">
+		    <i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+		    <h1 class="mui-title">好友</h1>
+		</header>
+
+		<!--搜索框-->
+		<div id="search_view" class="base-flex search-view">
+			<div class="mui-input-row mui-search">
+				<input id="search_ipt" type="search" class="mui-input-clear" placeholder="搜索">
+			</div>
+			<button id="search_btn" class="search-btn mui-btn mui-btn-success">搜索</button>
+		</div>
+		<!--搜索结果容器-->
+		<div id="search_container" style="display: none;">
+			<div id="search_cls_btn" class="mui-table-view-cell">搜索结果
+				<span id="search_count" style="color: green;">0</span>
+				<span style="float: right;" class="mui-icon mui-icon-closeempty"></span>
+			</div>
+			<ul id="temp_list" class="mui-table-view"></ul>
+		</div>
+		
+		<div id="pullrefresh" class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<ul id="friend_list" class="mui-table-view mui-clearfix"></ul>
+
+			</div>
+		</div>
+
+		<!--粉丝li模板-->
+		<script id="this_template" type="text/html">
+			<img onload="load(this)" src="../../images/default_avatar.jpg" data-src="{{avatar128}}" data-uid="{{uid}}" class="user-flag mui-pull-left base-img-small base-cir">
+			<div class="mui-media-body">
+				<div class="mui-ellipsis">{{nickname||'匿名'}}</div>
+				<div class="base-content-1 base-text-p">{{title}}</div>
+			</div>
+		</script>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.pullToRefresh.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.pullToRefresh.material.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/ucenter.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../people/js/people.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+	<script type="text/javascript">
+		mui.init();
+
+		mui('.mui-scroll-wrapper').scroll({
+			bounce:false
+		});
+		
+		var friendList = document.getElementById('friend_list');
+		var temp_list = document.getElementById('temp_list');
+		var closeBtn = document.getElementById('search_cls_btn');
+		var scrollView = document.getElementById('pullrefresh');
+		var sechBtn = document.getElementById('search_btn');
+		var sechContainer = document.getElementById('search_container');
+		var search_count = document.getElementById('search_count');
+		var sechIptView = document.getElementById('search_ipt');
+		var openerId,imMainWeb,selfWeb = null;
+		var restInfo = {type: 3,page:0};
+		
+		var init_web = function(){
+			restInfo.uid = is_login();
+			mui('.mui-scroll').pullToRefresh().pullDownLoading();
+		}
+		
+		var addView = function(datas,view){
+			for(var i in datas){
+				var tmpUser = datas[i];
+			 	var item = app.createListItem(tmpUser,'mui-table-view-cell');
+				item.id = tmpUser.uid;
+				item.innerHTML = template('this_template', tmpUser);
+				view.appendChild(item);
+			}
+		}
+		
+		//搜索功能
+		var seach_event = function(){
+			var sechValue = sechIptView.value.trim();
+			if (sechValue) {
+				temp_list.innerHTML = '';
+				people.getPeopleList({
+					peopleId: 0,
+					selectId: sechValue
+				}, function(res) {
+					if (res.code == 200) {
+						changePage(scrollView,sechContainer,false);
+						var userCount = res.data ? res.data.length : 0;
+						addView(res.data,temp_list);
+						search_count.innerHTML = userCount; //查询结果的总数
+					} else {
+						toast.info('查询失败!');
+						changePage(scrollView,sechContainer,true);
+					}
+				})
+			}
+		}
+		
+		/*上下拉*/
+		mui('.mui-scroll').pullToRefresh({
+			down: {
+				callback: function() {
+					restInfo.page = 1;
+					var selfPull = this;
+					ucenter.getUserList(restInfo, function(res) {
+						friendList.innerHTML = '';
+						addView(res.data,friendList);
+						//重置底部加载状态
+						selfPull.refresh(res.data&&res.data.length>=10);
+						selfPull.endPullDownToRefresh();
+					})
+				}
+			},
+			up: {
+				callback: function() {
+					restInfo.page ++;
+					var selfPull = this;
+					ucenter.getUserList(restInfo, function(res) {
+						addView(res.data,friendList);
+						selfPull.endPullUpToRefresh(!res.data||res.data.length<10);
+					});
+				}
+			}
+		})
+		mui.plusReady(function() {
+			selfWeb = plus.webview.currentWebview();
+		});
+		/*搜索按钮*/
+		sechBtn.addEventListener('tap', function(e) {
+			seach_event();
+		});
+		/*关闭搜索结果窗口*/
+		closeBtn.addEventListener('tap', function(e) {
+			temp_list.innerHTML = '';
+			changePage(scrollView,sechContainer,true);
+		});
+		
+		/*点击列表创建会话*/
+		mui('body').on('tap', 'li', function(e) {
+			if(e.target.tagName != "IMG"){
+				var userInfo = this.detail_info;
+				imMainWeb = plus.webview.getWebviewById(openerId);
+				selfWeb.hide();
+				imMainWeb.evalJS('creat_convs(' + JSON.stringify(userInfo) + ')');
+			}
+		}, false);
+		//点击头像进入个人主页。
+		app.userListener();
+		
+		/*自动隐藏软键盘*/
+		apptools.webBlur();
+		
+		window.addEventListener('imChange',function(e){
+			openerId = e.detail.data;
+			if(friendList.children.length == 0){
+				init_web();
+			}
+		})
+		
+		/*软键盘上的搜索按钮*/
+		window.addEventListener('keypress',function(event){
+			if(event.keyCode == 13){
+				seach_event();
+			}
+		})
+		
+		/*用户切换事件*/
+		window.addEventListener('userChange', function(event) {
+			if(event.detail.data) {
+				init_web();
+			}
+		});
+	</script>
+
+</html>

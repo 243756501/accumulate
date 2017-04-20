@@ -1,0 +1,5788 @@
+{
+	"@platforms": [
+		"android",
+		"iPhone",
+		"iPad"
+	],
+	"id": "H5319BC86",
+	"name": "OpenSNS测试",
+	"version": {
+		"name": "3.3.0",
+		"code": "83"
+	},
+	"description": "",
+	"icons": {
+		"72": "icon.png"
+	},
+	"launch_path": "init/view/index.html",
+	"developer": {
+		"name": "",
+		"email": "",
+		"url": "http://os.opensns.cn"
+	},
+	"permissions": {
+
+		"Audio": {
+			"description": "访问麦克风"
+		},
+		"Cache": {
+			"description": "管理应用缓存"
+		},
+		"Camera": {},
+		"Console": {
+			"description": "跟踪调试输出日志"
+		},
+		"Contacts": {
+			"description": "访问系统联系人信息"
+		},
+		"Device": {
+			"description": "访问设备信息"
+		},
+		"Downloader": {
+			"description": "文件下载管理"
+		},
+		"Events": {
+			"description": "应用扩展事件"
+		},
+		"File": {
+			"description": "访问本地文件系统"
+		},
+		"Gallery": {
+			"description": "访问系统相册"
+		},
+		"Geolocation": {},
+		"Invocation": {},
+
+
+
+
+		"Storage": {
+			"description": "管理应用本地数据"
+		},
+		"Uploader": {
+			"description": "管理文件上传任务"
+		},
+		"Runtime": {
+			"description": "访问运行期环境"
+		},
+		"XMLHttpRequest": {
+			"description": "跨域网络访问"
+		},
+
+
+
+
+
+
+
+
+		"Webview": {},
+		"NativeUI": {
+			"description": "原生UI控件"
+		},
+		"Navigator": {
+			"description": "浏览器信息"
+		},
+
+
+
+		"NativeObj": {},
+		"Push": {},
+		"Share": {},
+		"Zip": {},
+		"Payment": {},
+		"OAuth": {},
+		"Maps": {},
+		"Accelerometer": {}
+	},
+	"plus": {
+		"splashscreen": {
+			"autoclose": false,
+			"waiting": false,
+			"delay": "3000"
+		},
+		"runmode": "liberate",
+		"signature": "Sk9JTiBVUyBtYWlsdG86aHIyMDEzQGRjbG91ZC5pbw==",
+		"fullscreen": true,
+		"distribute": {
+			"plugins": {
+				"maps": {
+					"baidu": {
+						"appkey_ios": "tMsbOueFpPNWN31o5IxzbxCLR0aVunSI",
+						"appkey_android": "tMsbOueFpPNWN31o5IxzbxCLR0aVunSI",
+						"appkey": "",
+						"description": ""
+					}
+				},
+				"payment": {
+					"alipay": {
+						"description": "阿里支付",
+						"scheme": ""
+					}
+				},
+				"statics": {},
+				"push": {
+					"igexin": {
+						"appid": "AiIGPZcqGf6XtolUbhRgG4",
+						"appkey": "svyPa84q5m7uCVwvJpOvD1",
+						"appsecret": "Hz7CbqleQo6XlwNkNKFya3"
+					}
+				},
+				"oauth": {
+					"weixin": {
+						"appid": "wxb675ec47248f300d",
+						"appsecret": "b86a8ab94a7ee4c93582bcf5d1e4f281"
+					},
+					"qq": {
+						"appid": "1105361717"
+					},
+					"sina": {
+						"appkey": "3858212725",
+						"appsecret": "56c01b5fb3c50903b57f4964533aebf5",
+						"redirect_uri": "http://www.opensns.cn"
+					}
+				},
+				"share": {
+					"sina": {
+						"appkey": "3858212725",
+						"appsecret": "56c01b5fb3c50903b57f4964533aebf5",
+						"redirect_uri": "http://www.opensns.cn",
+						"description": "可选，新浪微博分享"
+					},
+
+					"tencent": {
+						"appkey": "101241201",
+						"appsecret": "e5a10e60b3bc7b40795cb04a7ce8d36f",
+						"redirect_uri": "http://www.opensns.cn",
+						"description": "可选，腾讯微博分享"
+					},
+					"weixin": {
+						"appid": "wxb675ec47248f300d",
+						"appsecret": "b86a8ab94a7ee4c93582bcf5d1e4f281",
+						"description": "可选，微信分享"
+					},
+					"qq": {
+						"appid": "1105361717",
+						"description": "QQ分享"
+					}
+				}
+			},
+			"apple": {
+				"appid": "",
+				"mobileprovision": "",
+				"password": "",
+				"p12": "",
+				"devices": "universal",
+				"frameworks": [],
+				"plistcmds": [
+					"Add :NSAppTransportSecurity:NSAllowsArbitraryLoads bool true"
+				]
+			},
+			"google": {
+				"packagename": "",
+				"keystore": "",
+				"password": "",
+				"aliasname": "",
+				"minSdkVersion": 14,
+				"HardwareAccelerated": true,
+				"permissions": [
+					"<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
+					"<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
+					"<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
+					"<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
+					"<uses-permission android:name=\"android.permission.READ_CONTACTS\"/>",
+					"<uses-permission android:name=\"android.permission.GET_TASKS\"/>",
+					"<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.VIBRATE\"/>",
+					"<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
+					"<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
+					"<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
+					"<uses-feature android:name=\"android.hardware.camera\"/>",
+					"<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
+					"<uses-permission android:name=\"android.permission.RECEIVE_USER_PRESENT\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_MOCK_LOCATION\"/>",
+					"<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>",
+					"<uses-permission android:name=\"android.permission.RECEIVE_BOOT_COMPLETED\"/>",
+					"<uses-permission android:name=\"android.permission.CAMERA\"/>"
+				]
+			},
+			"orientation": [
+				"portrait-primary",
+				"portrait-secondary"
+			],
+			"icons": {
+				"ios": {
+					"prerendered": true,
+					"auto": "",
+					"iphone": {
+						"normal": "unpackage/res/icons/57x57.png",
+						"retina": "unpackage/res/icons/114x114.png",
+						"retina7": "unpackage/res/icons/120x120.png",
+						"spotlight-normal": "unpackage/res/icons/29x29.png",
+						"spotlight-retina": "unpackage/res/icons/58x58.png",
+						"spotlight-retina7": "unpackage/res/icons/80x80.png",
+						"settings-normal": "unpackage/res/icons/29x29.png",
+						"settings-retina": "unpackage/res/icons/58x58.png",
+						"retina8": "unpackage/res/icons/180x180.png",
+						"settings-retina8": "unpackage/res/icons/87x87.png"
+					},
+					"ipad": {
+						"normal": "unpackage/res/icons/72x72.png",
+						"retina": "unpackage/res/icons/144x144.png",
+						"normal7": "unpackage/res/icons/76x76.png",
+						"retina7": "unpackage/res/icons/152x152.png",
+						"spotlight-normal": "unpackage/res/icons/50x50.png",
+						"spotlight-retina": "unpackage/res/icons/100x100.png",
+						"spotlight-normal7": "unpackage/res/icons/40x40.png",
+						"spotlight-retina7": "unpackage/res/icons/80x80.png",
+						"settings-normal": "unpackage/res/icons/29x29.png",
+						"settings-retina": "unpackage/res/icons/58x58.png"
+					}
+				},
+				"android": {
+					"mdpi": "unpackage/res/icons/48x48.png",
+					"ldpi": "unpackage/res/icons/48x48.png",
+					"hdpi": "unpackage/res/icons/72x72.png",
+					"xhdpi": "unpackage/res/icons/96x96.png",
+					"xxhdpi": "unpackage/res/icons/144x144.png"
+				}
+			},
+			"splashscreen": {
+				"ios": {
+					"iphone": {
+						"default": "images/start.png",
+						"retina55": "images/start.png",
+						"retina47": "images/start.png",
+						"retina40": "images/start.png",
+						"retina35": "images/start.png",
+						"retina55l": "images/start.png"
+					},
+					"ipad": {
+						"portrait": "images/start.png",
+						"portrait-retina": "images/start.png",
+						"landscape": "images/start.png",
+						"landscape-retina": "images/start.png",
+						"portrait7": "images/start.png",
+						"portrait-retina7": "images/start.png",
+						"landscape7": "images/start.png",
+						"landscape-retina7": "images/start.png"
+					}
+				},
+				"android": {
+					"hdpi": "images/start.png",
+					"ldpi": "images/start.png",
+					"mdpi": "images/start.png",
+					"xhdpi": "images/start.png",
+					"xxhdpi": "images/start.png"
+				}
+			},
+			"debug": true
+		}
+	},
+	"dependencies": {
+		"pages": {
+			"news/view/news-body.html": {
+				"resources": [
+					"js/mui.pullToRefresh.js",
+					"js/app.js",
+					"js/mui.pullToRefresh.material.js",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"config.js",
+					"images/refresh.png",
+					"js/mui.min.js",
+					"css/news.css",
+					"css/mui.min.css",
+					"news/js/news.js",
+					"js/core.js",
+					"js/template.js",
+					"news/css/news-body.css",
+					"images/topicavatar.png",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/banan.jpg",
+					"images/app-logo.png",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					null,
+					"news/js/news-render.js",
+					"js/mytools/my_storage.js",
+					"js/mytools/net_tools.js",
+					"images/mediaImages/df_big.png",
+					"/cat/imges/food.png"
+				],
+				"refer": [
+					"news/view/newsdetail.html",
+					"news/view/news-detail.html"
+				],
+				"priority": 0
+			},
+			"weibo/view/weibo-main.html": {
+				"resources": [
+					"js/expression.js",
+					"js/app.js",
+					"weibo/js/weibo-render.js",
+					"css/previewimage.css",
+					"css/icomoon.css",
+					"weibo/css/weibo.css",
+					"js/apptools.js",
+					"weibo/js/weibo.js",
+					"js/mui.zoom.js",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"js/support.js",
+					"css/mui.min.css",
+					"js/mui.previewimage.js",
+					"js/template.js",
+					"js/core.js",
+					"fonts/mui.ttf",
+					"fonts/icomoon.ttf",
+					"fonts/iconfont.ttf",
+					"config.js",
+					"images/expression/miniblog/cheer.gif",
+					"images/expression/miniblog/daku.gif",
+					"images/expression/miniblog/aoman.gif",
+					"images/expression/miniblog/bishi.gif",
+					"images/expression/miniblog/baiyan.gif",
+					"images/expression/miniblog/da.gif",
+					"images/expression/miniblog/dao.gif",
+					"images/expression/miniblog/kafei.gif",
+					"images/expression/miniblog/haqian.gif",
+					"images/expression/miniblog/meng.gif",
+					"images/expression/miniblog/gangga.gif",
+					"images/expression/miniblog/yinxian.gif",
+					"images/expression/miniblog/caidao.gif",
+					"images/expression/miniblog/ciya.gif",
+					"images/expression/miniblog/se.gif",
+					"images/expression/miniblog/fadai.gif",
+					"images/expression/miniblog/haha.gif",
+					"images/expression/miniblog/fendou.gif",
+					"images/expression/miniblog/guzhang.gif",
+					"images/expression/miniblog/huaixiao.gif",
+					"images/expression/miniblog/keai.gif",
+					"images/expression/miniblog/kun.gif",
+					"images/expression/miniblog/jidong.gif",
+					"images/expression/miniblog/kuaikule.gif",
+					"images/expression/miniblog/deyi.gif",
+					"images/expression/miniblog/zaijian.gif",
+					"images/expression/miniblog/zhadan.gif",
+					"images/expression/miniblog/ku.gif",
+					"images/expression/miniblog/wabi.gif",
+					"images/expression/miniblog/nanguo.gif",
+					"images/expression/miniblog/geili.gif",
+					"images/expression/miniblog/liuhan.gif",
+					"images/expression/miniblog/pizui.gif",
+					"images/expression/miniblog/kelian.gif",
+					"images/expression/miniblog/e.gif",
+					"images/expression/miniblog/qiang.gif",
+					"images/expression/miniblog/qiang.gif",
+					"images/expression/miniblog/dangao.gif",
+					"images/expression/miniblog/qinqin.gif",
+					"images/expression/miniblog/chong.gif",
+					"images/expression/miniblog/huishou.gif",
+					"images/expression/miniblog/bizui.gif",
+					"images/expression/miniblog/cahan.gif",
+					"images/expression/miniblog/zhuanquan.gif",
+					"images/expression/miniblog/liulei.gif",
+					"images/expression/miniblog/shuai.gif",
+					"images/expression/miniblog/peifu.gif",
+					"images/expression/miniblog/tiaowu.gif",
+					"images/expression/miniblog/yongbao.gif",
+					"images/expression/miniblog/gouyin.gif",
+					"images/expression/miniblog/haixiu.gif",
+					"images/mediaImages/play.png",
+					"images/mediaImages/pause.png",
+					"media/21212.mp3",
+					"images/mediaImages/pause_icon.png",
+					"images/mediaImages/play_icon.gif",
+					"images/expression/miniblog/dabian.gif",
+					"images/expression/miniblog/yueliang.gif",
+					"images/list_img.png",
+					"js/mui.lazyload.js",
+					"js/mui.lazyload.img.js",
+					"images/default_avatar.jpg",
+					"images/expression/miniblog/weixiao.gif",
+					"images/expression/miniblog/zhemo.gif",
+					"images/expression/miniblog/zhuakuang.gif",
+					"libs/imgtools/lazyImg.js",
+					"images/app-logo.png",
+					"images/expression/miniblog/love.gif",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"images/translate.png",
+					"images/expression/miniblog/touxiao.gif",
+					"images/default_load_img.gif",
+					"images/img_error.png",
+					"css/img.diy.css",
+					"images/expression/miniblog/jingya.gif",
+					"images/expression/miniblog/hufen.gif",
+					"images/expression/miniblog/ok.gif",
+					"images/expression/miniblog/hua.gif",
+					"images/expression/miniblog/weiqu.gif",
+					"images/expression/miniblog/wen.gif",
+					"images/expression/miniblog/quantou.gif",
+					"images/expression/miniblog/youhengheng.gif",
+					"images/expression/miniblog/liwu.gif",
+					"images/expression/miniblog/zuohengheng.gif",
+					"images/expression/miniblog/dabing.gif",
+					"images/expression/miniblog/xinsui.gif",
+					"images/expression/miniblog/diaoxie.gif",
+					"images/banan.jpg",
+					"images/about.png",
+					"images/start.png",
+					"images/topicavatar.png",
+					"images/mediaImages/xubox_loading2.gif",
+					"images/mediaImages/xubox_loading0.gif",
+					"images/mediaImages/xubox_loading1.gif",
+					"images/mediaImages/xubox_loading3.gif",
+					"images/mediaImages/xubox_loading7.gif",
+					"images/mediaImages/xubox_loading4.gif",
+					"images/mediaImages/xubox_loading5.gif",
+					"images/mediaImages/xubox_loading6.gif",
+					"images/iconfont-tianjia.png",
+					"images/mediaImages/iconfont-tianjia.jpg",
+					"images/mediaImages/xubox_loading6.jpg",
+					"images/mediaImages/xubox_loading4.png",
+					"images/mediaImages/weibo_df.png",
+					"images/expression/miniblog/xigua.gif",
+					"images/expression/miniblog/taiyang.gif",
+					"images/expression/miniblog/lanqiu.gif",
+					"images/expression/miniblog/qiu.gif",
+					"images/expression/miniblog/pingpang.gif",
+					"images/expression/miniblog/zuqiu.gif",
+					"images/expression/miniblog/tuzi.gif",
+					"images/expression/miniblog/tiaopi.gif",
+					"images/expression/miniblog/lenghan.gif",
+					"images/tips_icon/weibo_top.png",
+					"images/expression/miniblog/kulou.gif",
+					"libs/tools/my_storage.js",
+					"images/expression/miniblog/tiao.gif",
+					"images/expression/miniblog/qioudale.gif",
+					"images/expression/miniblog/fanu.gif",
+					"images/expression/miniblog/youtaiji.gif",
+					"libs/drag/TweenMax.min.js",
+					"css/app/base.css",
+					"account/css/animate.min.css",
+					"libs/drag/dragging-animation.js",
+					"images/weibo-send-btn-change.png",
+					"libs/drag/dragging.js",
+					"images/weibo-send-topic.png",
+					"images/weibo-send-article.png",
+					"js/mui.pullToRefresh.js",
+					"libs/drag/dragging.css",
+					"js/mui.pullToRefresh.material.js",
+					"images/weibo-send-btn.png",
+					"js/mytools/my_storage.js",
+					"css/pull-top-tips.css",
+					"libs/voice/voiceload.js",
+					"images/weibo-send-other.png",
+					"libs/cropper/jquery-2.1.0.js",
+					"weibo/view/js/weibo-main.js",
+					"js/mytools/my_storage.js",
+					"js/mytools/net_tools.js",
+					"images/first-send.png",
+					"images/expression/miniblog/jingkong.gif",
+					"images/voice-behind.png",
+					"images/voice-front.png",
+					"/cat/imges/food.png",
+					"images/mediaImages/df_big.png",
+					"css/detail.content.css",
+					"libs/imgtools/imgtools.js"
+				],
+				"refer": [
+					"ucenter/view/usercenter.html",
+					"weibo/view/weibo-detail.html",
+					"report.html",
+					"weibo/view/weibo-repost.html",
+					"news/view/news-detail.html",
+					"ucenter/view/usercenter-all.html",
+					"weibo/view/weibo-community.html",
+					"weibo/view/weibo-send.html",
+					"weibo/view/weibo-crowd-weibo.html",
+					"weibo/view/weibo-crowd.html"
+				],
+				"priority": 0
+			},
+			"news/view/news-head.html": {
+				"resources": [
+					"news/view/news-body.html",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"fonts/iconfont.ttf",
+					"js/mui.min.js",
+					"js/app.js",
+					"js/core.js",
+					"config.js",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"css/module.css",
+					"libs/tools/my_storage.js",
+					"js/apptools.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"news/view/send-news.html"
+				],
+				"priority": 0
+			},
+			"module-main.html": {
+				"resources": [
+					"js/apptools.js",
+					"js/sortable.js",
+					"css/app.css",
+					"js/template.js",
+					"js/core.js",
+					"js/module.js",
+					"images/qq.png",
+					"config.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"images/issue.png",
+					"images/forum.png",
+					"images/people.png",
+					"images/news.png",
+					"images/event.png",
+					"images/store.png",
+					"images/shop.png",
+					"images/weibo.png",
+					"images/question.png",
+					"images/group.png",
+					"images/cat.png"
+				],
+				"refer": [
+					"shop/view/shop-head.html",
+					"question/view/question-head.html",
+					"forum/view/forum-head.html",
+					"news/view/news-head.html",
+					"store/view/store-main-head.html",
+					"group/view/group-index-head.html",
+					"issue/view/issue-index-head.html",
+					"event/view/event-head.html",
+					"people/view/people-header.html",
+					"weibo/view/weibo-head.html",
+					"cat/view/cat-main.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/ucenter.html": {
+				"resources": [
+					"js/app.js",
+					"fonts/mui.ttf",
+					"fonts/icomoon.ttf",
+					"images/eye.png",
+					"css/icomoon.css",
+					"images/fans.png",
+					"images/friend.png",
+					"ucenter/css/ucenter.css",
+					"images/sign.png",
+					"images/default_avatar.jpg",
+					"js/mui.min.js",
+					"images/message.png",
+					"images/about.png",
+					"css/mui.min.css",
+					"images/id.png",
+					"js/core.js",
+					"js/template.js",
+					"config.js",
+					"images/score.png",
+					"images/im.png",
+					"images/push.png",
+					"ucenter/js/wkIm.js",
+					"libs/wukongIM/WKim-3.2.5.js",
+					"libs/cropper/cropper.min.js",
+					"libs/easymob-webim-sdk/jquery-2.1.4.min.js",
+					"ucenter/js/change-head.js",
+					"libs/cropper/cropper.min.css",
+					"ucenter/js/ucenter.js",
+					"libs/imgtools/imgload.js",
+					"css/detail.content.css",
+					"libs/imgtools/md5.min.js",
+					"libs/imgtools/imgtools.js",
+					"js/module.js",
+					"js/apptools.js",
+					"libs/cropper/jquery-2.1.0.js",
+					"cat/imges/food.png",
+					"images/sync.png",
+					"libs/tools/my_storage.js",
+					"account/js/account.js",
+					"plus/js/change-head.js",
+					"cat/imges/House.png",
+					"cat/imges/lvyou.png",
+					"cat/imges/Job.png",
+					"ucenter/css/usercenter-page.css",
+					"ucenter/view/js/usercenter-page.js",
+					"cat/imges/jianli.png",
+					"cat/imges/yule.png",
+					"ucenter/css/usercenter.css",
+					"ucenter/view/js/ucenter.js",
+					"images/ucenter-person.png",
+					"images/ucenter-fans.png",
+					"images/ucenter-message.png",
+					"images/ucenter-info.png",
+					"images/ucenter-lock.png",
+					"images/ucenter-about.png",
+					"images/ucenter-score.png",
+					"js/mytools/my_storage.js",
+					"css/app/base.css",
+					"js/mytools/net_tools.js",
+					"css/icons-extra.css",
+					"fonts/mui-icons-extra.ttf"
+				],
+				"refer": [
+					"login.html",
+					"ucenter/view/follow-head.html",
+					"people/view/people-header.html",
+					"ucenter/view/about.html",
+					"ucenter/view/fans-head.html",
+					"ucenter/view/push-test.html",
+					"ucenter/view/score.html",
+					"ucenter/view/message-head.html",
+					"im-chat.html",
+					"ucenter/view/friend-head.html",
+					"ucenter/view/sign-in-head.html",
+					"ucenter/view/im-index-head.html",
+					"ucenter/view/userinfo.html",
+					"ucenter/view/usercenter.html",
+					"reg.html",
+					"ucenter/view/social-head.html",
+					"account/view/login.html",
+					"account/view/reg.html",
+					"ucenter/view/im-rongyun-main.html",
+					"ucenter/view/account-bind.html",
+					"weibo/view/weibo-detail.html",
+					"test.html",
+					"ucenter/view/message-center.html",
+					"ucenter/view/rank-main.html"
+				],
+				"priority": 0
+			},
+			"forum/view/forum-head.html": {
+				"resources": [
+					"js/apptools.js",
+					"css/iconfont.css",
+					"fonts/icomoon.ttf",
+					"forum/view/forum-body.html",
+					"css/icomoon.css",
+					"css/mui.min.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/module.css"
+				],
+				"refer": [
+					"forum/view/forum-index-head.html",
+					"forum/view/forum-index.html"
+				],
+				"priority": 0
+			},
+			"event/view/event-body.html": {
+				"resources": [
+					"js/mui.pullToRefresh.js",
+					"js/app.js",
+					"event/js/event-render.js",
+					"js/mui.min.js",
+					"event/view/js/event-body.js",
+					"js/mui.pullToRefresh.material.js",
+					"css/mui.min.css",
+					"js/template.js",
+					"js/core.js",
+					"event/js/event.js",
+					"event/css/event.css",
+					"config.js",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/img_error.png",
+					"js/apptools.js",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [
+					"event/view/event-detail.html",
+					"event/view/join-event.html",
+					"ucenter/view/usercenter.html"
+				],
+				"priority": 0
+			},
+			"module-bottom.html": {
+				"resources": [
+					"js/app.js",
+					"news/view/news-head.html",
+					"ucenter/view/ucenter.html",
+					"fonts/mui.ttf",
+					"forum/view/forum-head.html",
+					"js/module.js",
+					"event/view/event-head.html",
+					"config.js",
+					"js/apptools.js",
+					"js/mui.min.js",
+					"module-main.html",
+					"css/mui.min.css",
+					"js/core.js",
+					"js/template.js",
+					"weibo/view/weibo-head.html",
+					"shop/view/shop-head.html",
+					"store/view/store-main-head.html",
+					"question/view/question-head.html",
+					"issue/view/issue-index-head.html",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"people/view/people-header.html",
+					"group/view/group-index-head.html",
+					"cat/view/cat-main.html",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [
+					"undefined.html",
+					"neterror.html",
+					"ucenter/view/im-rongyun-main.html"
+				],
+				"priority": 0
+			},
+			"event/view/event-head.html": {
+				"resources": [
+					"js/mui.pullToRefresh.js",
+					"event/view/js/event-head.js",
+					"js/mui.pullToRefresh.material.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"event/view/event-body.html",
+					"fonts/iconfont.ttf",
+					"js/core.js",
+					"event/js/event.js",
+					"config.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"js/apptools.js",
+					"css/module.css",
+					"libs/tools/my_storage.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"event/view/send-event.html",
+					"event/view/event-my-head.html"
+				],
+				"priority": 0
+			},
+			"forum/view/forum-body.html": {
+				"resources": [
+					"js/app.js",
+					"forum/js/forum-render.js",
+					"js/mui.min.js",
+					"forum/css/forum.css",
+					"fonts/mui.ttf",
+					"forum/js/forum.js",
+					"css/mui.min.css",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"forum/css/forum-info-body.css",
+					"js/mui.lazyload.js",
+					"js/mui.lazyload.img.js",
+					"js/mui.zoom.js",
+					"js/mui.previewimage.js",
+					"images/default_load_img.gif",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/iconfont-tianjia.png",
+					"images/img_error.png",
+					"images/default_avatar.jpg",
+					"libs/tools/my_storage.js",
+					"js/apptools.js"
+				],
+				"refer": [
+					"forum/view/forum-post-detail.html"
+				],
+				"priority": 0
+			},
+			"weibo/view/weibo-head.html": {
+				"resources": [
+					"js/apptools.js",
+					"weibo/view/weibo-main.html",
+					"css/icomoon.css",
+					"weibo/view/js/weibo-head.js",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"fonts/iconfont.ttf",
+					"fonts/mui.ttf",
+					null,
+					"js/app.js",
+					"js/core.js",
+					"config.js",
+					"fonts/icomoon.ttf",
+					"css/module.css",
+					"libs/tools/my_storage.js",
+					"weibo/js/weibo-render.js",
+					"css/previewimage.css",
+					"weibo/css/weibo.css",
+					"js/mui.zoom.js",
+					"weibo/js/weibo.js",
+					"js/support.js",
+					"js/mui.previewimage.js",
+					"images/app-logo.png",
+					"libs/imgtools/imgload.js",
+					"images/expression/miniblog/hua.gif",
+					"libs/imgtools/md5.min.js",
+					"images/expression/miniblog/huaixiao.gif",
+					"images/tips_icon/weibo_top.png",
+					"js/expression.js",
+					"js/template.js"
+				],
+				"refer": [
+					"weibo/view/sendweibo.html",
+					"weibo/view/hot.html",
+					"weibo/view/weibo-send.html",
+					"weibo/view/weibo-community.html",
+					"weibo/view/weibo-announce.html"
+				],
+				"priority": 0
+			},
+			"store/view/store-search.html": {
+				"resources": [
+					"js/app.js",
+					"store/js/store-public.js",
+					"js/mui.min.js",
+					"store/css/store-goods-list.css",
+					"fonts/mui.ttf",
+					"store/js/store.js",
+					"css/mui.min.css",
+					"js/template.js",
+					"js/core.js",
+					"store/css/store-main.css",
+					"store/js/store-render.js",
+					"config.js",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/store.png",
+					"js/mytools/net_tools.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"shop/view/shop-head.html": {
+				"resources": [
+					"images/order.png",
+					"shop/js/shop.js",
+					"js/mui.pullToRefresh.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"js/mui.pullToRefresh.material.js",
+					"shop/view/shop-body.html",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"css/module.css",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"shop/view/shop-order-head.html"
+				],
+				"priority": 0
+			},
+			"shop/view/shop-body.html": {
+				"resources": [
+					"shop/js/shop.js",
+					"js/mui.pullToRefresh.js",
+					"js/app.js",
+					"js/mui.pullToRefresh.material.js",
+					"css/mui.min.css",
+					"shop/js/shop-render.js",
+					"js/template.js",
+					"js/mui.lazyload.js",
+					"shop/css/shop.css",
+					"js/mui.lazyload.img.js",
+					"js/mui.min.js",
+					"js/core.js",
+					"config.js",
+					"images/goods_new.png",
+					"images/goods_hot.png",
+					"images/change.png",
+					"images/money.png",
+					"images/default_load_img.gif",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"shop/view/shop-detail.html",
+					"shop/view/change-shop.html"
+				],
+				"priority": 0
+			},
+			"store/view/store-main-head.html": {
+				"resources": [
+					"js/app.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"store/js/store.js",
+					"store/view/store-main-body.html",
+					"js/core.js",
+					"config.js",
+					"store/css/store-main.css",
+					"js/mui.min.js",
+					"css/module.css",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"store/view/store-search.html",
+					"store/view/store-goods-list-head.html",
+					"store/view/store-center.html",
+					"store/view/store-goods-class.html"
+				],
+				"priority": 0
+			},
+			"store/view/store-main-body.html": {
+				"resources": [
+					"js/apptools.js",
+					"js/app.js",
+					"store/js/store-public.js",
+					"store/js/store.js",
+					"css/mui.min.css",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"store/css/store-main.css",
+					"store/js/store-render.js",
+					"js/mui.min.js",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/default_load_img.gif",
+					"images/app-logo.png",
+					"images/store.png",
+					"fonts/mui.ttf",
+					"images/mediaImages/weibo_df.png",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"store/view/store-goods-detail.html",
+					"store/view/store-shop-head.html"
+				],
+				"priority": 0
+			},
+			"store/view/store-goods-list-head.html": {
+				"resources": [
+					"js/app.js",
+					"js/mui.min.js",
+					"store/css/store-goods-list.css",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js",
+					"store/css/store-main.css",
+					"fonts/mui.ttf",
+					"store/view/store-goods-list-body.html",
+					"css/module.css",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"store/view/store-center.html"
+				],
+				"priority": 0
+			},
+			"store/view/store-goods-list-body.html": {
+				"resources": [
+					"js/apptools.js",
+					"js/app.js",
+					"store/js/store-public.js",
+					"js/mui.min.js",
+					"store/css/store-goods-list.css",
+					"store/js/store.js",
+					"css/mui.min.css",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"store/js/store-render.js",
+					"fonts/mui.ttf",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"images/store.png",
+					"css/img.diy.css",
+					"libs/tools/my_storage.js",
+					"js/mytools/net_tools.js"
+				],
+				"refer": [
+					"store/view/store-goods-detail.html"
+				],
+				"priority": 0
+			},
+			"reg-mobile.html": {
+				"resources": [
+					"css/mui.listpicker.css",
+					"css/mui.min.css",
+					"css/mui.poppicker.css",
+					"js/app.js",
+					"js/cache.js",
+					"js/mui.min.js",
+					"js/mui.listpicker.js",
+					"js/mui.poppicker.js",
+					"fonts/mui.ttf",
+					"js/core.js",
+					"config.js",
+					"js/reg.js",
+					"js/mui.picker.min.js",
+					"css/mui.picker.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"login.html": {
+				"resources": [
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/style.css",
+					"js/core.js",
+					"js/mui.enterfocus.js",
+					"config.js",
+					"js/apptools.js",
+					"images/sinaweibo.png",
+					"images/weixin.png",
+					"images/qq.png",
+					"css/login.css"
+				],
+				"refer": [
+					"reg.html",
+					"people/view/people-header.html",
+					"forget_password.html",
+					"undefined.html",
+					"module-bottom.html",
+					"sync-login.html"
+				],
+				"priority": 0
+			},
+			"reg.html": {
+				"resources": [
+					"js/app.js",
+					"js/cache.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/style.css",
+					"js/core.js",
+					"css/feedback-page.css",
+					"config.js",
+					"js/apptools.js",
+					"js/reg.js"
+				],
+				"refer": [
+					"reg-mobile.html",
+					"reg-email.html",
+					"reg-username.html",
+					"reg-invite.html"
+				],
+				"priority": 0
+			},
+			"reg-email.html": {
+				"resources": [
+					"js/app.js",
+					"js/cache.js",
+					"js/mui.min.js",
+					"js/mui.listpicker.js",
+					"js/mui.poppicker.js",
+					"css/mui.listpicker.css",
+					"css/mui.min.css",
+					"js/core.js",
+					"css/mui.poppicker.css",
+					"js/reg.js",
+					"fonts/mui.ttf",
+					"config.js",
+					"js/mui.picker.min.js",
+					"css/mui.picker.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"reg-username.html": {
+				"resources": [
+					"js/app.js",
+					"js/cache.js",
+					"js/mui.listpicker.js",
+					"js/mui.poppicker.js",
+					"fonts/mui.ttf",
+					"js/core.js",
+					"config.js",
+					"js/reg.js",
+					"js/mui.min.js",
+					"css/mui.listpicker.css",
+					"css/mui.min.css",
+					"css/mui.poppicker.css",
+					"js/mui.picker.min.js",
+					"css/mui.picker.min.css"
+				],
+				"refer": [
+					"login.html"
+				],
+				"priority": 0
+			},
+			"people/view/people-header.html": {
+				"resources": [
+					"people/js/people.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/icomoon.css",
+					"js/template.js",
+					"js/core.js",
+					"people/view/people-list.html",
+					"config.js",
+					"people/view/js/people-header.js",
+					"people/css/people-header.css",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"people/view/people-neighborhood-head.html"
+				],
+				"priority": 0
+			},
+			"people/view/people-list.html": {
+				"resources": [
+					"people/js/people-render.js",
+					"ucenter/js/ucenter.js",
+					"people/js/people.js",
+					"js/app.js",
+					"people/view/js/people-list.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"css/icomoon.css",
+					"js/mui.lazyload.js",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"js/mui.lazyload.img.js",
+					"fonts/icomoon.ttf",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"libs/imgtools/imgtools.js",
+					"images/default_avatar.jpg",
+					"js/apptools.js",
+					"fonts/mui.ttf",
+					"people/css/people-list.css",
+					"libs/tools/my_storage.js",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"ucenter/view/usercenter.html"
+				],
+				"priority": 0
+			},
+			"weibo/view/sendweibo.html": {
+				"resources": [
+					"js/expression.js",
+					"js/app.js",
+					"css/previewimage.css",
+					"fonts/mui.ttf",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"js/mui.enterfocus.js",
+					"config.js",
+					"js/mui.zoom.js",
+					"js/uploader.js",
+					"weibo/js/weibo.js",
+					"weibo/view/js/sendweibo.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/mui.previewimage.js",
+					"js/core.js",
+					"images/resize.png",
+					"js/apptools.js",
+					"libs/exif.js",
+					"libs/exif/exif.js",
+					"libs/exif/ImageOrientationFix.js",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [
+					"weibo/view/weibo-atfriend.html",
+					"link-web.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/usercenter.html": {
+				"resources": [
+					"ucenter/js/ucenter.js",
+					"ucenter/css/ucenter.css",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/iscroll.js",
+					"css/icomoon.css",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"ucenter/view/usercenter_news.html",
+					"ucenter/view/usercenter_weibo.html",
+					"ucenter/view/usercenter_info.html",
+					"fonts/icomoon.ttf",
+					"images/banan.jpg",
+					"ucenter/view/usercenter_question.html",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"libs/cropper/jquery-2.1.0.js",
+					"images/mediaImages/xubox_loading2.gif",
+					"ucenter/view/usercenter-main.html",
+					"js/mui.pullToRefresh.js",
+					"weibo/js/weibo-render.js",
+					"js/mui.pullToRefresh.material.js",
+					"ucenter/js/usercenter-render.js",
+					"libs/tools/moment.js",
+					"question/js/question-render.js",
+					"ucenter/css/usercenter.css",
+					"question/js/question.js",
+					"css/question.css",
+					"weibo/css/weibo.css",
+					"css/pull-top-tips.css",
+					"weibo/js/weibo.js",
+					"css/news.css",
+					"ucenter/view/js/usercenter.js",
+					"css/iconfont.css",
+					"news/css/news-body.css",
+					"js/support.js",
+					"news/js/news.js",
+					"news/js/news-render.js",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"images/default_avatar.jpg",
+					"images/mediaImages/play.png",
+					"images/topicavatar.png",
+					"images/expression/miniblog/cahan.gif",
+					"images/app-logo.png",
+					"images/mediaImages/weibo_df.png",
+					"css/previewimage.css",
+					"js/mui.zoom.js",
+					"js/mui.previewimage.js",
+					"images/expression/miniblog/huaixiao.gif",
+					"images/expression/miniblog/love.gif",
+					"images/expression/miniblog/hua.gif",
+					"images/expression/miniblog/zhuakuang.gif",
+					"images/expression/miniblog/guzhang.gif",
+					"images/expression/miniblog/kuaikule.gif",
+					"images/expression/miniblog/ciya.gif",
+					"images/expression/miniblog/zhemo.gif",
+					"images/expression/miniblog/liulei.gif",
+					"images/expression/miniblog/se.gif",
+					"images/expression/miniblog/weixiao.gif",
+					"images/expression/miniblog/kun.gif",
+					"images/expression/miniblog/fadai.gif",
+					"images/expression/miniblog/xinsui.gif",
+					"images/expression/miniblog/youtaiji.gif",
+					"images/expression/miniblog/qioudale.gif",
+					"images/expression/miniblog/fendou.gif",
+					"plus/js/change-head.js",
+					"libs/cropper/cropper.min.js",
+					"libs/cropper/cropper.min.css",
+					"js/mytools/head_cut.js",
+					"images/expression/miniblog/dabian.gif",
+					"js/mytools/my_storage.js",
+					"images/expression/miniblog/shuijiao.gif",
+					"images/first-send.png",
+					"js/mytools/net_tools.js",
+					"images/expression/miniblog/cheer.gif",
+					"images/expression/miniblog/daku.gif",
+					"images/mediaImages/df_big.png"
+				],
+				"refer": [
+					"neterror.html",
+					"weibo/view/weibo-detail.html",
+					"question/view/question-detail.html",
+					"news/view/news-detail.html",
+					"weibo/view/weibo-repost.html"
+				],
+				"priority": 0
+			},
+			"weibo/view/weibo-detail.html": {
+				"resources": [
+					"js/expression.js",
+					"js/app.js",
+					"weibo/js/weibo-render.js",
+					"weibo/view/js/weibo-detail.js",
+					"css/previewimage.css",
+					"fonts/mui.ttf",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"weibo/css/weibo.css",
+					"config.js",
+					"weibo/js/weibo.js",
+					"js/mui.zoom.js",
+					"js/mui.min.js",
+					"js/support.js",
+					"css/mui.min.css",
+					"js/mui.previewimage.js",
+					"js/core.js",
+					"js/template.js",
+					"js/report.js",
+					"images/expression/miniblog/aoman.gif",
+					"images/expression/miniblog/cahan.gif",
+					"images/expression/miniblog/daku.gif",
+					"images/expression/miniblog/kuaikule.gif",
+					"images/expression/miniblog/caidao.gif",
+					"images/expression/miniblog/jingya.gif",
+					"images/mediaImages/play.png",
+					"images/mediaImages/pause.png",
+					null,
+					"images/expression/miniblog/touxiao.gif",
+					"js/mui.lazyload.js",
+					"js/mui.lazyload.img.js",
+					"images/default_avatar.jpg",
+					"libs/imgtools/lazyImg.js",
+					"images/app-logo.png",
+					"images/default_load_img.gif",
+					"images/img_error.png",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/expression/miniblog/chong.gif",
+					"images/mediaImages/weibo_df.png",
+					"images/expression/miniblog/love.gif",
+					"weibo/css/weibo-dertail.css",
+					"images/expression/miniblog/ciya.gif",
+					"images/banan.jpg",
+					"images/expression/miniblog/kelian.gif",
+					"libs/tools/my_storage.js",
+					"images/expression/miniblog/hua.gif",
+					"images/tips_icon/weibo_top.png",
+					"js/apptools.js",
+					"images/expression/miniblog/zaijian.gif",
+					"images/expression/miniblog/wen.gif",
+					"images/expression/miniblog/wabi.gif",
+					"rank/img/rank_background.jpg",
+					"images/voice-front.png",
+					"images/voice-behind.png",
+					"libs/voice/voiceload.js",
+					"images/expression/miniblog/hufen.gif",
+					"js/mytools/my_storage.js",
+					"images/first-send.png",
+					"images/expression/miniblog/tuzi.gif",
+					"js/mytools/net_tools.js",
+					"images/expression/miniblog/haqian.gif",
+					"images/expression/miniblog/haha.gif",
+					"css/detail.content.css",
+					"libs/imgtools/imgtools.js",
+					"images/mediaImages/df_big.png",
+					"css/icons-extra.css",
+					"fonts/mui-icons-extra.ttf",
+					"js/share.js"
+				],
+				"refer": [
+					"weibo/view/weibo-comment.html",
+					"ucenter/view/usercenter.html",
+					"weibo/view/weibo-repost.html",
+					"init/view/report.html",
+					"ucenter/view/usercenter-all.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/follow-head.html": {
+				"resources": [
+					"js/apptools.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"ucenter/view/follow-body.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/follow-body.html": {
+				"resources": [
+					"ucenter/js/ucenter.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/icomoon.ttf",
+					"css/mui.min.css",
+					"css/icomoon.css",
+					"js/mui.lazyload.js",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"images/default_load_img.gif",
+					"js/mui.lazyload.img.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"event/view/event-detail.html": {
+				"resources": [
+					"js/app.js",
+					"css/previewimage.css",
+					"fonts/mui.ttf",
+					"event/view/js/event-detail.js",
+					"js/mui.lazyload.js",
+					"event/js/event.js",
+					"event/css/event.css",
+					"config.js",
+					"js/mui.lazyload.img.js",
+					"event/js/event-render.js",
+					"js/mui.zoom.js",
+					"js/mui.min.js",
+					"js/loadingbBtn.js",
+					"css/mui.min.css",
+					"js/mui.previewimage.js",
+					"js/template.js",
+					"js/core.js",
+					"js/share.js",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"js/apptools.js",
+					"images/default_load_img.gif",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"images/default_avatar.jpg",
+					"css/img.diy.css",
+					"libs/imgtools/imgtools.js",
+					"css/detail.content.css",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [
+					"event/view/join-event.html",
+					"ucenter/view/usercenter.html"
+				],
+				"priority": 0
+			},
+			"news/view/send-news.html": {
+				"resources": [
+					"js/expression.js",
+					"js/app.js",
+					"js/mui.picker.min.js",
+					"fonts/mui.ttf",
+					"css/mui.listpicker.css",
+					"config.js",
+					"js/uploader.js",
+					"news/js/mui.dtpicker.js",
+					"news/css/mui.dtpicker.css",
+					"js/mui.min.js",
+					"js/mui.listpicker.js",
+					"js/mui.poppicker.js",
+					"css/mui.min.css",
+					"news/js/news.js",
+					"js/core.js",
+					"css/mui.picker.min.css",
+					"css/mui.poppicker.css",
+					"libs/tools/my_storage.js",
+					"images/add.png",
+					"js/apptools.js",
+					"css/app-form.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"news/view/newsdetail.html": {
+				"resources": [
+					"js/app.js",
+					"js/mui.min.js",
+					"js/loadingbBtn.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"news/js/news.js",
+					"js/mui.lazyload.js",
+					"js/core.js",
+					"js/template.js",
+					"config.js",
+					"images/default_load_img.gif",
+					"js/mui.lazyload.img.js",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"js/share.js",
+					"js/apptools.js",
+					"news/css/newsdetail.css"
+				],
+				"refer": [
+					"neterror.html"
+				],
+				"priority": 0
+			},
+			"shop/view/shop-order-head.html": {
+				"resources": [
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js",
+					"shop/view/shop-order-body.html",
+					"js/apptools.js",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"shop/view/shop-order-body.html": {
+				"resources": [
+					"shop/js/shop.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"shop/js/shop-render.js",
+					"js/mui.lazyload.js",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"images/money.png",
+					"shop/css/shop.css",
+					"js/mui.lazyload.img.js",
+					"images/default_load_img.gif",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css"
+				],
+				"refer": [
+					"shop/view/shop-detail.html"
+				],
+				"priority": 0
+			},
+			"shop/view/shop-detail.html": {
+				"resources": [
+					"shop/js/shop.js",
+					"js/app.js",
+					"css/previewimage.css",
+					"fonts/mui.ttf",
+					"js/mui.lazyload.js",
+					"config.js",
+					"shop/css/shop.css",
+					"js/mui.lazyload.img.js",
+					"images/default_avatar.jpg",
+					"js/mui.zoom.js",
+					"js/mui.min.js",
+					"js/loadingbBtn.js",
+					"css/mui.min.css",
+					"shop/js/shop-render.js",
+					"js/mui.previewimage.js",
+					"js/template.js",
+					"js/core.js",
+					"images/default_load_img.gif",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"js/share.js",
+					"js/apptools.js",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"css/detail.content.css",
+					"libs/imgtools/imgtools.js",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [
+					"shop/view/change-shop.html"
+				],
+				"priority": 0
+			},
+			"question/view/question-head.html": {
+				"resources": [
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"question/view/question-main.html",
+					"js/core.js",
+					"config.js",
+					"question/view/question-wait.html",
+					"question/js/question.js",
+					"css/module.css",
+					"libs/tools/my_storage.js",
+					"js/apptools.js",
+					"images/icon/question_send.png",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"question/view/question-send.html",
+					"question/view/question-hot.html",
+					"question/view/question.html",
+					"question/view/question-all.html"
+				],
+				"priority": 0
+			},
+			"question/view/question-main.html": {
+				"resources": [
+					"js/app.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"question/js/question.js",
+					"js/template.js",
+					"js/core.js",
+					"css/question.css",
+					"config.js",
+					"fonts/mui.ttf",
+					"libs/imgtools/imgtools.js",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"images/default_avatar.jpg",
+					"libs/tools/my_storage.js",
+					"js/apptools.js",
+					"libs/tools/moment.js",
+					"question/js/question-render.js",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"question/view/question-detail.html"
+				],
+				"priority": 0
+			},
+			"question/view/question-send.html": {
+				"resources": [
+					"js/app.js",
+					"js/mui.picker.js",
+					"css/previewimage.css",
+					"fonts/mui.ttf",
+					"question/js/question.js",
+					"config.js",
+					"js/uploader.js",
+					"js/mui.zoom.js",
+					"js/mui.min.js",
+					"css/app.css",
+					"js/mui.poppicker.js",
+					"css/mui.min.css",
+					"js/mui.previewimage.js",
+					"css/mui.picker.min.css",
+					"css/mui.poppicker.css",
+					"js/core.js",
+					"js/mui.picker.min.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"css/app-form.css",
+					"images/add.png",
+					"css/module.css",
+					"js/mytools/com_render.js",
+					"js/template.js",
+					"js/mytools/body_before.js",
+					"question/view/js/question-send.js",
+					"js/mytools/img_uploder.js",
+					"images/testimg/dul_head.png",
+					"account/img/account_unknown_img.png",
+					"css/tools/img_uploader.css",
+					"question/css/question-send.css",
+					"js/mytools/net_tools.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"index.html": {
+				"resources": [
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"config.js",
+					"libs/storge.js",
+					"libs/my_storage.js",
+					"libs/tools/my_storage.js",
+					"js/apptools.js",
+					"/config.js"
+				],
+				"refer": [
+					"module-bottom.html",
+					"welcome.html"
+				],
+				"priority": 0
+			},
+			"issue/view/issue-index-head.html": {
+				"resources": [
+					"issue/view/issue-index-body.html",
+					"issue/js/issue.js",
+					"config.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"fonts/mui.ttf",
+					"css/app.css",
+					"css/module.css",
+					"js/apptools.js",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [
+					"issue/view/issue-sendissue.html"
+				],
+				"priority": 0
+			},
+			"welcome.html": {
+				"resources": [
+					"images/slide-3-hide.png",
+					"images/slide-2.png",
+					"images/slide-1.png",
+					"images/slide-3.png",
+					"images/slide-1-hide.png",
+					"images/slide-2-hide.png",
+					"js/apptools.js",
+					"images/welcome02.png",
+					"images/welcome01.png",
+					"images/welcome03.png",
+					"images/welcome04.png",
+					"css/mui.min.css",
+					"css/welcome.css",
+					"config.js",
+					"images/wel_imag/welcome02.png",
+					"images/wel_imag/welcome01.png",
+					"js/mui.min.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"issue/view/issue-index-body.html": {
+				"resources": [
+					"issue/js/waterfall.js",
+					"issue/js/issue.js",
+					"js/mui.min.js",
+					"config.js",
+					"css/icomoon.css",
+					"js/template.js",
+					"js/app.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"fonts/icomoon.ttf",
+					"js/mui.lazyload.js",
+					"js/mui.lazyload.img.js",
+					"js/apptools.js",
+					"fonts/mui.ttf",
+					"images/iconfont-tianjia.png",
+					"css/img.diy.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"images/translate.png",
+					"images/img_error.png",
+					"images/mediaImages/weibo_df.png",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [
+					"issue/view/issue-detail.html"
+				],
+				"priority": 0
+			},
+			"group/view/group-post-detail.html": {
+				"resources": [
+					"js/apptools.js",
+					"forum/js/forum-render.js",
+					"js/loadingbBtn.js",
+					"group/js/group.js",
+					"js/support.js",
+					"forum/css/forum-post-detail.css",
+					"js/mui.lazyload.js",
+					"js/template.js",
+					"js/mui.lazyload.img.js",
+					"images/loading_image.gif",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"fonts/icomoon.ttf",
+					"js/app.js",
+					"css/icomoon.css",
+					"config.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"js/expression.js",
+					"group/js/group-render.js",
+					"images/expression/miniblog/geili.gif",
+					"js/share.js",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"css/previewimage.css",
+					"libs/imgtools/md5.min.js",
+					"libs/imgtools/imgtools.js",
+					"images/default_avatar.jpg",
+					"js/mui.previewimage.js",
+					"images/default_load_img.gif",
+					"js/mui.zoom.js",
+					"libs/tools/my_storage.js",
+					"images/mediaImages/df_big.png",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js",
+					"images/expression/miniblog/cahan.gif"
+				],
+				"refer": [
+					"group/view/group-post-floor.html",
+					"report.html",
+					"init/view/report.html"
+				],
+				"priority": 0
+			},
+			"group/view/group-index-head.html": {
+				"resources": [
+					"js/mui.pullToRefresh.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"js/mui.pullToRefresh.material.js",
+					"js/core.js",
+					"group/view/group-index-body.html",
+					"config.js",
+					"css/iconfont.css",
+					"fonts/icomoon.ttf",
+					"css/mui.min.css",
+					"css/icomoon.css",
+					"fonts/mui.ttf",
+					"css/module.css",
+					"js/apptools.js",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [
+					"group/view/group-all.html",
+					"group/view/group-collection-head.html"
+				],
+				"priority": 0
+			},
+			"group/view/group-index-body.html": {
+				"resources": [
+					"images/100x100.png",
+					"js/mui.min.js",
+					"js/mui.pullToRefresh.js",
+					"js/mui.pullToRefresh.material.js",
+					"css/iconfont.css",
+					"group/js/group.js",
+					"group/js/group-render.js",
+					"js/mui.lazyload.js",
+					"group/css/group.css",
+					"js/mui.lazyload.img.js",
+					"js/template.js",
+					"js/app.js",
+					"css/icomoon.css",
+					"config.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"images/icon.jpg",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [
+					"group/view/group-post-detail.html",
+					"group/view/group-item-head.html",
+					"login.html",
+					"account/view/login.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/fans-body.html": {
+				"resources": [
+					"ucenter/js/ucenter.js",
+					"js/app.js",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"js/mui.min.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/fans-head.html": {
+				"resources": [
+					"ucenter/view/fans-body.html",
+					"js/apptools.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"forum/view/forum-post-detail.html": {
+				"resources": [
+					"js/apptools.js",
+					"forum/js/forum-render.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"js/loadingbBtn.js",
+					"forum/js/forum.js",
+					"js/support.js",
+					"forum/css/forum-post-detail.css",
+					"js/mui.lazyload.js",
+					"js/core.js",
+					"js/template.js",
+					"config.js",
+					"js/mui.lazyload.img.js",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/share.js",
+					"js/mui.zoom.js",
+					"js/mui.previewimage.js",
+					"css/previewimage.css",
+					"images/default_avatar.jpg",
+					"images/iconfont-tianjia.png",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"libs/imgtools/imgtools.js",
+					"images/default_load_img.gif",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [
+					"forum/view/forum-floor-reply.html",
+					"report.html"
+				],
+				"priority": 0
+			},
+			"group/view/group-post-floor.html": {
+				"resources": [
+					"js/apptools.js",
+					"forum/js/forum-render.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"group/js/group.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"forum/css/forum-post-detail.css",
+					"js/mui.lazyload.js",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"js/mui.lazyload.img.js",
+					"js/expression.js",
+					"images/expression/miniblog/geili.gif",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"libs/imgtools/imgtools.js",
+					"images/default_avatar.jpg",
+					"group/js/group-render.js",
+					"images/default_load_img.gif"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"group/view/group-all.html": {
+				"resources": [
+					"news/js/news.js",
+					"js/mui.pullToRefresh.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"group/js/group.js",
+					"js/mui.pullToRefresh.material.js",
+					"group/js/group-render.js",
+					"js/mui.lazyload.js",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"js/mui.lazyload.img.js",
+					"fonts/mui.ttf",
+					"css/icomoon.css",
+					"group/css/group.css",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"images/icon.jpg",
+					"images/default_load_img.gif",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"group/view/group-item-head.html"
+				],
+				"priority": 0
+			},
+			"forum/view/forum-index-head.html": {
+				"resources": [
+					"forum/view/forum-index-body.html",
+					"js/apptools.js",
+					"js/mui.min.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"forum/view/forum-info-head.html": {
+				"resources": [
+					"forum/view/forum-info-body.html",
+					"js/apptools.js",
+					"js/mui.min.js",
+					"config.js",
+					"js/app.js",
+					"js/core.js",
+					"css/module.css",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [
+					"forum/view/forum-send-post.html"
+				],
+				"priority": 0
+			},
+			"forum/view/forum-index-body.html": {
+				"resources": [
+					"forum/js/forum-render.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"forum/js/forum.js",
+					"js/template.js",
+					"js/core.js",
+					"config.js"
+				],
+				"refer": [
+					"forum/view/forum-info-head.html"
+				],
+				"priority": 0
+			},
+			"forum/view/forum-info-body.html": {
+				"resources": [
+					"js/mui.previewimage.js",
+					"images/default_load_img.gif",
+					"css/previewimage.css",
+					"js/mui.min.js",
+					"forum/js/forum-render.js",
+					"js/app.js",
+					"js/mui.zoom.js",
+					"forum/js/forum.js",
+					"js/mui.lazyload.js",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"js/mui.lazyload.img.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"forum/css/forum-info-body.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/default_avatar.jpg",
+					"images/img_error.png",
+					"images/app-logo.png",
+					"js/apptools.js",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [
+					"forum/view/forum-post-detail.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/score.html": {
+				"resources": [
+					"libs/cropper/cropper.min.js",
+					"libs/easymob-webim-sdk/jquery-2.1.4.min.js",
+					"libs/cropper/cropper.min.css",
+					"css/mui.picker.min.css",
+					"ucenter/js/ucenter.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"css/icomoon.css",
+					"js/core.js",
+					"js/template.js",
+					"fonts/mui.ttf",
+					"config.js",
+					"fonts/icomoon.ttf",
+					"css/module.css",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"ucenter/view/recharge.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/message-main.html": {
+				"resources": [
+					"ucenter/js/ucenter.js",
+					"weibo/js/weibo.js",
+					"news/js/news.js",
+					"js/app.js",
+					"js/core.js",
+					"config.js",
+					"js/template.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"images/default_avatar.jpg",
+					"fonts/mui.ttf",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"libs/imgtools/imgtools.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [
+					"ucenter/view/usercenter.html",
+					"news/view/newsdetail.html",
+					"weibo/view/weibo-detail.html",
+					"ucenter/view/usercenter-all.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/message-head.html": {
+				"resources": [
+					"ucenter/view/message-main.html",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"im-chat.html": {
+				"resources": [
+					"images/100x100.png",
+					"js/mui.imageViewer.js",
+					"js/mui.min.js",
+					"ucenter/css/im-chat.css",
+					"images/banan.jpg",
+					"js/template.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/friend-head.html": {
+				"resources": [
+					"ucenter/view/friend-body.html",
+					"js/apptools.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/sign-in-head.html": {
+				"resources": [
+					"ucenter/view/sign-in-top.html",
+					"ucenter/view/sign-in-leiqian.html",
+					"ucenter/view/sign-in-lianqian.html",
+					"ucenter/js/ucenter.js",
+					"js/app.js",
+					"fonts/mui.ttf",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"config.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"js/template.js",
+					"ucenter/view/sign-in-body.html",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/sign-in-lianqian.html": {
+				"resources": [
+					"ucenter/js/sign-render.js",
+					"js/mui.lazyload.js",
+					"js/mui.lazyload.img.js",
+					"config.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/im-index-head.html": {
+				"resources": [
+					"ucenter/view/im-index-body.html",
+					"fonts/mui.ttf",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/app.js",
+					"ucenter/js/wkIm.js",
+					"libs/wukongIM/common.js",
+					"js/core.js",
+					"config.js",
+					"libs/wukongIM/WKim-3.2.5.js",
+					"css/module.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/im-index-body.html": {
+				"resources": [
+					"js/apptools.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"images/testimg/dul_head.png",
+					"fonts/mui.ttf",
+					"images/fans.png",
+					"ucenter/js/wkIm.js",
+					"libs/wukongIM/WKim-3.2.5.js",
+					"js/mui.lazyload.js",
+					"js/mui.lazyload.img.js",
+					"libs/imgtools/imgtools.js",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"images/default_avatar.jpg"
+				],
+				"refer": [
+					"ucenter/view/im-chat.html",
+					"ucenter/view/im-friend-list.html",
+					"ucenter/view/im-wk-chat.html"
+				],
+				"priority": 0
+			},
+			"store/view/store-center.html": {
+				"resources": [
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"store/css/store-center.css",
+					"js/app.js",
+					"store/js/store-public.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"store/js/store.js",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"images/default_avatar.jpg",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"images/store.png",
+					"css/img.diy.css",
+					"css/module.css",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js",
+					"js/apptools.js"
+				],
+				"refer": [
+					"store/view/store-order-head.html",
+					"store/view/store-car-head.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/im-chat.html": {
+				"resources": [
+					"js/mui.imageViewer.js",
+					"ucenter/css/im-chat.css",
+					"images/banan.jpg",
+					"css/mui.imageviewer.css",
+					"images/100x100.png",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/template.js",
+					"js/mui.lazyload.js",
+					"js/mui.lazyload.img.js",
+					"js/apptools.js",
+					"js/expression.js",
+					"js/core.js",
+					"config.js",
+					"images/expression/miniblog/fan.gif",
+					"images/expression/miniblog/quantou.gif",
+					"images/expression/miniblog/love.gif",
+					"images/expression/miniblog/fadou.gif",
+					"images/expression/miniblog/diaoxie.gif",
+					"images/expression/miniblog/woshou.gif",
+					"images/expression/miniblog/ma.gif",
+					"images/expression/miniblog/taiyang.gif",
+					"js/app.js",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"images/resize.png",
+					"images/expression/miniblog/bizui.gif",
+					"images/expression/miniblog/cahan.gif",
+					"images/expression/miniblog/chajin.gif",
+					"images/expression/miniblog/da.gif",
+					"images/expression/miniblog/dabian.gif",
+					"weibo/css/weibo.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"group/view/group-item-body.html": {
+				"resources": [
+					"forum/css/forum-post-detail.css",
+					"js/mui.zoom.js",
+					"css/previewimage.css",
+					"forum/css/forum.css",
+					"js/mui.previewimage.js",
+					"forum/css/forum-info-body.css",
+					"images/default_load_img.gif",
+					"js/app.js",
+					"js/mui.lazyload.js",
+					"config.js",
+					"group/css/group.css",
+					"js/mui.lazyload.img.js",
+					"group/js/group.js",
+					"group/js/group-render.js",
+					"js/core.js",
+					"js/template.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"fonts/mui.ttf",
+					"images/icon.jpg",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/img_error.png",
+					"images/default_avatar.jpg",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/mytools/net_tools.js"
+				],
+				"refer": [
+					"group/view/group-post-detail.html",
+					"ucenter/view/usercenter.html"
+				],
+				"priority": 0
+			},
+			"group/view/group-item-head.html": {
+				"resources": [
+					"group/view/group-item-body.html",
+					"js/apptools.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js",
+					"js/app.js",
+					"libs/tools/my_storage.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"group/view/group-send.html"
+				],
+				"priority": 0
+			},
+			"group/view/group-collection-head.html": {
+				"resources": [
+					"js/mui.pullToRefresh.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"js/mui.pullToRefresh.material.js",
+					"group/js/group.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"css/icomoon.css",
+					"js/core.js",
+					"config.js",
+					"group/view/group-collection-body.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"group/view/group-collection-body.html": {
+				"resources": [
+					"js/mui.zoom.js",
+					"css/previewimage.css",
+					"forum/css/forum.css",
+					"group/js/group-render.js",
+					"forum/css/forum-post-detail.css",
+					"js/mui.previewimage.js",
+					"forum/css/forum-info-body.css",
+					"js/template.js",
+					"js/mui.lazyload.js",
+					"group/css/group.css",
+					"js/mui.lazyload.img.js",
+					"js/app.js",
+					"fonts/mui.ttf",
+					"css/icomoon.css",
+					"config.js",
+					"js/mui.min.js",
+					"group/js/group.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/core.js",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css"
+				],
+				"refer": [
+					"group/view/group-post-detail.html"
+				],
+				"priority": 0
+			},
+			"report.html": {
+				"resources": [
+					"js/report.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/mui.lazyload.js",
+					"js/core.js",
+					"js/template.js",
+					"config.js",
+					"js/mui.lazyload.img.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"group/view/group-send.html": {
+				"resources": [
+					"js/expression.js",
+					"js/uploader.js",
+					"js/mui.picker.min.js",
+					"js/mui.listpicker.js",
+					"js/mui.poppicker.js",
+					"css/mui.listpicker.css",
+					"css/mui.poppicker.css",
+					"css/mui.picker.min.css",
+					"js/app.js",
+					"fonts/mui.ttf",
+					"config.js",
+					"js/mui.min.js",
+					"group/js/group.js",
+					"css/mui.min.css",
+					"js/core.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"issue/view/issue-detail.html": {
+				"resources": [
+					"js/loadingbBtn.js",
+					"issue/js/issue.js",
+					"issue/css/issue-detail.css",
+					"js/app.js",
+					"fonts/mui.ttf",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"config.js",
+					"js/mui.zoom.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/support.js",
+					"js/mui.previewimage.js",
+					"js/core.js",
+					"js/template.js",
+					"css/app.css",
+					"ucenter/js/ucenter.js",
+					"images/default_avatar.jpg",
+					"images/default_load_img.gif",
+					"js/share.js",
+					"js/mui.lazyload.js",
+					"js/mui.lazyload.img.js",
+					"css/previewimage.css",
+					"js/apptools.js",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"images/loading_image.gif",
+					"css/img.diy.css",
+					"css/detail.content.css",
+					"libs/imgtools/imgtools.js",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js",
+					"images/mediaImages/df_big.png"
+				],
+				"refer": [
+					"report.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/sign-in-top.html": {
+				"resources": [
+					"images/default_avatar.jpg",
+					"ucenter/js/sign-render.js",
+					"js/mui.lazyload.js",
+					"js/mui.lazyload.img.js",
+					"js/mui.min.js",
+					"config.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/usercenter_news.html": {
+				"resources": [
+					"js/mui.pullToRefresh.js",
+					"css/news.css",
+					"news/js/news.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/icomoon.ttf",
+					"css/mui.min.css",
+					"css/icomoon.css",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/app-logo.png",
+					"images/topicavatar.png",
+					"js/apptools.js",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [
+					"news/view/newsdetail.html",
+					"news/view/news-detail.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/usercenter_weibo.html": {
+				"resources": [
+					"weibo/js/weibo-render.js",
+					"weibo/js/weibo.js",
+					"css/iconfont.css",
+					"js/support.js",
+					"weibo/css/weibo.css",
+					"js/mui.zoom.js",
+					"css/previewimage.css",
+					"js/mui.previewimage.js",
+					"images/expression/miniblog/aoman.gif",
+					"images/expression/miniblog/deyi.gif",
+					"js/app.js",
+					"css/icomoon.css",
+					"config.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"js/template.js",
+					"fonts/mui.ttf",
+					"fonts/icomoon.ttf",
+					"images/expression/miniblog/chong.gif",
+					"images/expression/miniblog/ciya.gif",
+					"images/expression/miniblog/zhuanquan.gif",
+					"images/expression/miniblog/kafei.gif",
+					"images/expression/miniblog/cheer.gif",
+					"images/expression/miniblog/daku.gif",
+					"images/expression/miniblog/yueliang.gif",
+					"images/mediaImages/play.png",
+					"images/default_avatar.jpg",
+					"images/img_error.png",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/expression/miniblog/weiqu.gif",
+					"images/expression/miniblog/wen.gif",
+					"images/expression/miniblog/weixiao.gif",
+					"images/mediaImages/weibo_df.png",
+					"images/expression/miniblog/touxiao.gif",
+					"images/expression/miniblog/gangga.gif",
+					"images/expression/miniblog/haqian.gif",
+					"images/expression/miniblog/pizui.gif",
+					"images/expression/miniblog/yinxian.gif",
+					"images/expression/miniblog/huaixiao.gif",
+					"images/expression/miniblog/cahan.gif",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"images/tips_icon/weibo_top.png",
+					"images/app-logo.png",
+					"images/expression/miniblog/love.gif",
+					"images/expression/miniblog/zhuakuang.gif",
+					"images/expression/miniblog/guzhang.gif",
+					"images/expression/miniblog/kuaikule.gif",
+					"images/expression/miniblog/fendou.gif",
+					"images/expression/miniblog/bizui.gif",
+					"images/expression/miniblog/kelian.gif",
+					"images/expression/miniblog/peifu.gif",
+					"images/expression/miniblog/jingkong.gif",
+					"images/expression/miniblog/yongbao.gif",
+					"images/expression/miniblog/dabing.gif",
+					"images/expression/miniblog/zhemo.gif",
+					"images/expression/miniblog/dabian.gif",
+					"images/expression/miniblog/xinsui.gif"
+				],
+				"refer": [
+					"report.html",
+					"weibo/view/weibo-detail.html",
+					"weibo/view/weibo-repost.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/usercenter_question.html": {
+				"resources": [
+					"question/js/question.js",
+					"css/question.css",
+					"config.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/template.js",
+					"js/core.js",
+					"fonts/mui.ttf",
+					"libs/imgtools/imgtools.js",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"images/default_avatar.jpg",
+					"libs/tools/moment.js",
+					"question/js/question-render.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [
+					"question/view/question-detail.html",
+					"news/view/news-detail.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/userinfo.html": {
+				"resources": [
+					"ucenter/js/ucenter.js",
+					"libs/cropper/cropper.min.js",
+					"js/mui.picker.min.js",
+					"libs/easymob-webim-sdk/jquery-2.1.4.min.js",
+					"js/city.data.js",
+					"libs/cropper/cropper.min.css",
+					"css/mui.picker.min.css",
+					"js/city.data-3.js",
+					"js/app.js",
+					"fonts/mui.ttf",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"config.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/template.js",
+					"js/core.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"ucenter/js/usercenter-render.js",
+					"images/default_avatar.jpg",
+					"images/banan.jpg",
+					"ucenter/css/usercenter.css",
+					"js/mytools/head_cut.js",
+					"libs/cropper/jquery-2.1.0.js",
+					"js/mytools/my_storage.js",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"js/mytools/net_tools.js"
+				],
+				"refer": [
+					"ucenter/view/modify-email.html",
+					"ucenter/view/modify-mobile.html",
+					"ucenter/view/userinfo-modify.html"
+				],
+				"priority": 0
+			},
+			"people/view/people-neighborhood-body.html": {
+				"resources": [
+					"people/js/people-render.js",
+					"js/mui.lazyload.js",
+					"js/template.js",
+					"js/mui.lazyload.img.js",
+					"people/js/people.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js",
+					"libs/imgtools/imgtools.js",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js"
+				],
+				"refer": [
+					"login.html",
+					"ucenter/view/usercenter.html"
+				],
+				"priority": 0
+			},
+			"people/view/people-neighborhood-head.html": {
+				"resources": [
+					"people/js/people.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"people/view/people-neighborhood-body.html",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/about.html": {
+				"resources": [
+					"images/100x100.png",
+					"ucenter/js/ucenter.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"images/app-logo.png",
+					"libs/imgtools/md5.min.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"libs/imgtools/imgload.js",
+					"js/mytools/my_storage.js",
+					"js/mytools/net_tools.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/im-friend-list.html": {
+				"resources": [
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"ucenter/js/ucenter.js",
+					"js/app.js",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"js/mui.lazyload.js",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"images/default_load_img.gif",
+					"js/mui.lazyload.img.js",
+					"images/100x100.png",
+					"people/js/people.js",
+					"fonts/mui.ttf",
+					"js/apptools.js",
+					"images/default_avatar.jpg",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"libs/imgtools/imgtools.js",
+					"libs/tools/my_storage.js",
+					"js/mytools/my_storage.js",
+					"js/mytools/net_tools.js",
+					"js/mui.pullToRefresh.js",
+					"js/mui.pullToRefresh.material.js",
+					"css/pull-top-tips.css",
+					"css/app/base.css"
+				],
+				"refer": [
+					"ucenter/view/usercenter.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/sign-in-leiqian.html": {
+				"resources": [
+					"js/mui.lazyload.js",
+					"js/mui.lazyload.img.js",
+					"ucenter/js/sign-render.js",
+					"ucenter/js/ucenter.js",
+					"config.js",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/friend-body.html": {
+				"resources": [
+					"ucenter/js/ucenter.js",
+					"js/app.js",
+					"css/icomoon.css",
+					"js/template.js",
+					"js/core.js",
+					"config.js"
+				],
+				"refer": [
+					"ucenter/view/usercenter.html"
+				],
+				"priority": 0
+			},
+			"issue/view/issue-sendissue.html": {
+				"resources": [
+					"js/mui.picker.js",
+					"js/uploader.js",
+					"js/mui.zoom.js",
+					"css/previewimage.css",
+					"css/app.css",
+					"js/mui.poppicker.js",
+					"fonts/mui.ttf",
+					"js/mui.previewimage.js",
+					"css/mui.poppicker.css",
+					"css/mui.picker.min.css",
+					"js/app.js",
+					"issue/js/issue.js",
+					"config.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"js/mui.picker.min.js",
+					"js/mytools/my_storage.js",
+					"js/apptools.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"event/view/join-event.html": {
+				"resources": [
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"event/js/event.js",
+					"js/core.js",
+					"event/css/event.css",
+					"config.js",
+					"event/view/js/join-event.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"shop/view/change-shop.html": {
+				"resources": [
+					"fonts/mui.ttf",
+					"shop/js/shop.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js",
+					"shop/css/shop.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"weibo/view/weibo-atfriend.html": {
+				"resources": [
+					"ucenter/js/ucenter.js",
+					"js/template.js",
+					"css/mui.indexedlist.css",
+					"js/mui.indexedlist.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js",
+					"people/js/people.js",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"weibo/css/weibo-atfriend.css",
+					"images/about.png",
+					"js/mui.pullToRefresh.js",
+					"libs/imgtools/imgload.js",
+					"js/mui.pullToRefresh.material.js",
+					"libs/imgtools/md5.min.js",
+					"js/apptools.js",
+					"css/pull-top-tips.css",
+					"images/default_avatar.jpg",
+					"weibo/view/js/weibo-atfriend.js",
+					"libs/tools/my_storage.js",
+					"css/app/base.css",
+					"weibo/css/weibo-main.css",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"weibo/view/hot.html": {
+				"resources": [
+					"weibo/view/js/hot.js",
+					"js/mui.pullToRefresh.js",
+					"weibo/js/weibo.js",
+					"css/app.css",
+					"js/mui.pullToRefresh.material.js",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"js/app.js",
+					"fonts/mui.ttf",
+					"config.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"js/template.js",
+					"weibo/css/hot.css",
+					"images/topicavatar.png",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/module.css",
+					"cat/imges/food.png",
+					"js/apptools.js",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [
+					"weibo/view/weibo-topic-header.html",
+					"weibo/view/weibo_topic_body.html"
+				],
+				"priority": 0
+			},
+			"event/view/send-event.html": {
+				"resources": [
+					"js/expression.js",
+					"js/app.js",
+					"js/mui.picker.min.js",
+					"fonts/mui.ttf",
+					"css/mui.listpicker.css",
+					"event/js/event.js",
+					"config.js",
+					"event/view/js/send-event.js",
+					"js/uploader.js",
+					"news/js/mui.dtpicker.js",
+					"news/css/mui.dtpicker.css",
+					"js/mui.min.js",
+					"js/mui.listpicker.js",
+					"js/mui.poppicker.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"css/mui.picker.min.css",
+					"css/mui.poppicker.css",
+					"images/add.png",
+					"js/apptools.js",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"web.html": {
+				"resources": [
+					"js/apptools.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"neterror.html": {
+				"resources": [
+					"js/mui.min.js",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"store/view/store-order-head.html": {
+				"resources": [
+					"store/view/store-order-body.html",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"store/view/store-order-body.html": {
+				"resources": [
+					"js/mui.lazyload.js",
+					"store/css/store-order.css",
+					"js/mui.lazyload.img.js",
+					"store/js/store-render.js",
+					"js/app.js",
+					"store/js/store.js",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"fonts/mui.ttf",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/store.png",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"store/view/store-order-detail.html",
+					"store/view/store-order-okay.html"
+				],
+				"priority": 0
+			},
+			"weibo/view/weibo-topic-header.html": {
+				"resources": [
+					"weibo/view/weibo_topic_body.html",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"fonts/mui.ttf",
+					"weibo/view/weibo-topic-body.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"weibo/view/weibo_topic_body.html": {
+				"resources": [
+					"images/banan.jpg",
+					"weibo/view/js/weibo-topic-body.js",
+					"js/expression.js",
+					"weibo/js/weibo-render.js",
+					"js/mui.zoom.js",
+					"css/previewimage.css",
+					"js/support.js",
+					"js/mui.previewimage.js",
+					"js/mui.lazyload.js",
+					"weibo/css/weibo.css",
+					"js/mui.lazyload.img.js",
+					"js/app.js",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"config.js",
+					"weibo/js/weibo.js",
+					"js/core.js",
+					"js/template.js",
+					"js/mui.min.js",
+					"css/mui.min.css"
+				],
+				"refer": [
+					"weibo/view/weibo-detail.html"
+				],
+				"priority": 0
+			},
+			"weibo/view/weibo-topic-body.html": {
+				"resources": [
+					"js/expression.js",
+					"js/app.js",
+					"weibo/js/weibo-render.js",
+					"css/previewimage.css",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"js/mui.lazyload.js",
+					"weibo/css/weibo.css",
+					"config.js",
+					"js/mui.lazyload.img.js",
+					"weibo/js/weibo.js",
+					"js/mui.zoom.js",
+					"js/support.js",
+					"js/mui.previewimage.js",
+					"images/banan.jpg",
+					"js/core.js",
+					"js/template.js",
+					"weibo/view/js/weibo-topic-body.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"fonts/mui.ttf",
+					"images/100x100.png",
+					"images/expression/miniblog/guzhang.gif",
+					"images/topicavatar.png",
+					"images/default_avatar.jpg",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"images/img_error.png",
+					"images/expression/miniblog/yinxian.gif",
+					"images/mediaImages/play.png",
+					"images/mediaImages/weibo_df.png",
+					"images/app-logo.png",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [
+					"weibo/view/weibo-repost.html"
+				],
+				"priority": 0
+			},
+			"question/view/question-hot.html": {
+				"resources": [
+					"question/js/question.js",
+					"css/question.css",
+					"js/template.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js",
+					"fonts/mui.ttf",
+					"images/100x100.png"
+				],
+				"refer": [
+					"question/view/question-detail.html"
+				],
+				"priority": 0
+			},
+			"question/view/question.html": {
+				"resources": [
+					"question/view/question-all.html",
+					"question/js/question.js",
+					"js/apptools.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js",
+					"css/module.css",
+					"libs/tools/my_storage.js",
+					"images/icon/question_send.png",
+					"js/mui.pullToRefresh.js",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"js/mui.pullToRefresh.material.js",
+					"libs/tools/moment.js",
+					"question/js/question-render.js",
+					"libs/imgtools/md5.min.js",
+					"css/question.css",
+					"libs/imgtools/imgtools.js",
+					"js/template.js",
+					"css/pull-top-tips.css"
+				],
+				"refer": [
+					"question/view/question-send.html"
+				],
+				"priority": 0
+			},
+			"question/view/question-all.html": {
+				"resources": [
+					"js/mui.lazyload.js",
+					"js/mui.lazyload.img.js",
+					"css/question.css",
+					"js/template.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"question/js/question.js",
+					"js/core.js",
+					"config.js",
+					"fonts/mui.ttf",
+					"images/100x100.png",
+					"images/default_avatar.jpg",
+					"libs/imgtools/imgtools.js",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"question/js/question-render.js",
+					"libs/tools/moment.js",
+					"js/mui.pullToRefresh.js",
+					"images/icon/question_send.png",
+					"js/mui.pullToRefresh.material.js",
+					"css/pull-top-tips.css",
+					"css/module.css",
+					"news/view/js/question-all.js",
+					"question/view/js/question-all.js",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"question/view/question-detail.html",
+					"question/view/question-send.html"
+				],
+				"priority": 0
+			},
+			"question/view/question-wait.html": {
+				"resources": [
+					"question/js/question.js",
+					"css/question.css",
+					"js/template.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"js/app.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js"
+				],
+				"refer": [
+					"question/view/question-detail.html"
+				],
+				"priority": 0
+			},
+			"store/view/store-goods-detail.html": {
+				"resources": [
+					"js/mui.zoom.js",
+					"css/previewimage.css",
+					"images/loading_image.gif",
+					"fonts/icomoon.ttf",
+					"js/mui.previewimage.js",
+					"css/icomoon.css",
+					"js/mui.lazyload.js",
+					"store/css/store-goods-detail.css",
+					"js/mui.lazyload.img.js",
+					"js/app.js",
+					"fonts/mui.ttf",
+					"config.js",
+					"js/apptools.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"store/js/store.js",
+					"js/core.js",
+					"js/template.js",
+					"js/share.js",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/default_load_img.gif",
+					"css/detail.content.css",
+					"libs/imgtools/imgtools.js",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"store/view/store-comment-list.html",
+					"store/view/store-car-head.html",
+					"neterror.html"
+				],
+				"priority": 0
+			},
+			"store/view/store-comment-list.html": {
+				"resources": [
+					"store/js/store-render.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"store/js/store.js",
+					"js/template.js",
+					"js/core.js",
+					"config.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"store/view/store-shop-head.html": {
+				"resources": [
+					"js/mui.min.js",
+					"store/view/store-shop-body.html",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"store/view/store-shop-body.html": {
+				"resources": [
+					"js/apptools.js",
+					"js/app.js",
+					"store/js/store-public.js",
+					"store/css/store-goods-list.css",
+					"store/js/store.js",
+					"images/banan.jpg",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"store/js/store-render.js",
+					"js/mui.min.js",
+					"images/default_load_img.gif",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"images/app-logo.png",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"question/view/question-detail.html": {
+				"resources": [
+					"js/app.js",
+					"fonts/mui.ttf",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"css/question.css",
+					"question/js/question.js",
+					"js/mui.lazyload.js",
+					"config.js",
+					"js/mui.lazyload.img.js",
+					"images/100x100.png",
+					"js/apptools.js",
+					"js/mui.min.js",
+					"js/loadingbBtn.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"js/template.js",
+					"js/share.js",
+					"question/css/question-detail.css",
+					"images/default_load_img.gif",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"css/previewimage.css",
+					"libs/imgtools/md5.min.js",
+					"libs/imgtools/imgtools.js",
+					"js/mui.zoom.js",
+					"js/mui.previewimage.js",
+					"images/default_avatar.jpg",
+					"question/js/question-render.js",
+					"libs/tools/my_storage.js",
+					"libs/tools/moment.js",
+					"css/module.css",
+					"images/refresh.png",
+					"css/iconfont.css",
+					"images/icon/question-answer.png",
+					"images/icon/score-reward.png",
+					"css/app/base.css",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"question/view/question-answer.html",
+					"question/view/answer-detail.html"
+				],
+				"priority": 0
+			},
+			"question/view/question-answer.html": {
+				"resources": [
+					"js/uploader.js",
+					"js/mui.zoom.js",
+					"css/previewimage.css",
+					"js/mui.previewimage.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"question/js/question.js",
+					"js/core.js",
+					"config.js",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"fonts/mui.ttf",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"css/mui.min.css",
+					"js/mytools/img_uploder.js",
+					"images/add.png",
+					"css/tools/img_uploader.css",
+					"js/mytools/body_before.js",
+					"css/app-form.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"event/view/event-my-head.html": {
+				"resources": [
+					"js/app.js",
+					"event/view/js/event-my-head.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/core.js",
+					"event/js/event.js",
+					"config.js",
+					"event/view/event-my-body.html",
+					"js/apptools.js",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"event/view/event-my-body.html": {
+				"resources": [
+					"event/js/event-render.js",
+					"js/template.js",
+					"event/view/js/event-my-body.js",
+					"event/css/event.css",
+					"js/mui.min.js",
+					"js/app.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"event/js/event.js",
+					"config.js",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/img_error.png",
+					"js/apptools.js",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [
+					"event/view/event-detail.html"
+				],
+				"priority": 0
+			},
+			"store/view/store-car-body.html": {
+				"resources": [
+					"store/css/store-car-body.css",
+					"store/js/store.js",
+					"store/js/store-render.js",
+					"js/apptools.js",
+					"js/app.js",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/store.png",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"store/view/store-place-order.html": {
+				"resources": [
+					"store/css/store-place-order.css",
+					"js/apptools.js",
+					"js/app.js",
+					"store/js/store.js",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"store/js/store-render.js",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/store.png",
+					"libs/tools/my_storage.js",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"store/view/store-order-okay.html",
+					"store/view/store-trans-list.html",
+					"store/view/store-order-head.html"
+				],
+				"priority": 0
+			},
+			"store/view/store-car-head.html": {
+				"resources": [
+					"store/view/store-car-body.html",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [
+					"store/view/store-place-order.html"
+				],
+				"priority": 0
+			},
+			"store/view/store-goods-class.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"config.js",
+					"js/apptools.js",
+					"js/app.js",
+					"store/js/store.js",
+					"js/template.js",
+					"js/mytools/my_storage.js",
+					"js/core.js"
+				],
+				"refer": [
+					"store/view/store-goods-list-head.html"
+				],
+				"priority": 0
+			},
+			"forum/view/forum-floor-reply.html": {
+				"resources": [
+					"forum/js/forum-render.js",
+					"forum/js/forum.js",
+					"forum/css/forum-post-detail.css",
+					"js/apptools.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"js/mui.lazyload.js",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"js/mui.lazyload.img.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"libs/imgtools/imgtools.js",
+					"images/default_load_img.gif",
+					"images/default_avatar.jpg"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"link-web.html": {
+				"resources": [
+					"js/apptools.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"store/view/store-order-okay.html": {
+				"resources": [
+					"js/apptools.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"store/js/store.js",
+					"css/mui.min.css",
+					"css/icomoon.css",
+					"js/template.js",
+					"js/core.js",
+					"store/css/store-pay.css",
+					"config.js",
+					"libs/tools/my_storage.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"store/view/store-pay-choice.html",
+					"plus/view/pay-okay.html"
+				],
+				"priority": 0
+			},
+			"store/view/store-order-detail.html": {
+				"resources": [
+					"js/mui.pullToRefresh.js",
+					"js/app.js",
+					"fonts/mui.ttf",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"config.js",
+					"js/apptools.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"store/js/store.js",
+					"js/core.js",
+					"js/template.js",
+					"store/js/store-render.js",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/store.png"
+				],
+				"refer": [
+					"store/view/store-post-comment.html"
+				],
+				"priority": 0
+			},
+			"forum/view/forum-send-post.html": {
+				"resources": [
+					"js/uploader.js",
+					"js/mui.picker.min.js",
+					"js/mui.poppicker.js",
+					"js/mui.listpicker.js",
+					"css/mui.listpicker.css",
+					"css/mui.poppicker.css",
+					"css/mui.picker.min.css",
+					"js/app.js",
+					"js/mui.min.js",
+					"css/previewimage.css",
+					"fonts/mui.ttf",
+					"forum/js/forum.js",
+					"css/mui.min.css",
+					"js/mui.previewimage.js",
+					"js/core.js",
+					"config.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"forum/view/forum-index.html": {
+				"resources": [
+					"forum/css/forum-index.css",
+					"js/apptools.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"js/core.js",
+					"config.js",
+					"forum/js/forum-render.js",
+					"forum/js/forum.js",
+					"js/template.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/module.css"
+				],
+				"refer": [
+					"forum/view/forum-info-head.html",
+					"forum/view/forum-send-post.html"
+				],
+				"priority": 0
+			},
+			"cat/view/cat-main.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"cat/css/cat.css",
+					"js/app.js",
+					"cat/js/cat.js",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"js/apptools.js",
+					"images/banan.jpg",
+					"cat/js/cat-render.js",
+					"cat/css/cat-list-body.css",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"js/mui.lazyload.js",
+					"images/list_img.png",
+					"js/mui.lazyload.img.js",
+					"cat/imges/Job.png",
+					"cat/imges/House.png",
+					"cat/imges/jianli.png",
+					"cat/imges/food.png",
+					"cat/imges/PTJob.png",
+					"cat/imges/yule.png",
+					"images/img_error.png",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"images/default_avatar.jpg",
+					"css/module.css",
+					"libs/tools/my_storage.js",
+					"js/mytools/net_tools.js"
+				],
+				"refer": [
+					"cat/view/cat-list-head.html",
+					"cat/view/cat-ucenter.html",
+					"cat/view/cat-send.html"
+				],
+				"priority": 0
+			},
+			"cat/view/cat-list-head.html": {
+				"resources": [
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"cat/view/cat-list-body.html",
+					"fonts/mui.ttf"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"cat/view/cat-list-body.html": {
+				"resources": [
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"fonts/mui.ttf",
+					"images/app-logo.png",
+					"cat/js/cat-render.js",
+					"js/apptools.js",
+					"js/app.js",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"images/change.png",
+					"css/icomoon.css",
+					"fonts/icomoon.ttf",
+					"cat/js/cat.js",
+					"cat/css/cat-list-body.css",
+					"js/mui.lazyload.js",
+					"js/mui.lazyload.img.js",
+					"images/list_img.png",
+					"images/img_error.png",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/default_avatar.jpg",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"cat/view/cat-detail.html"
+				],
+				"priority": 0
+			},
+			"cat/view/cat-ucenter.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"cat/css/cat.css",
+					"images/cat.png",
+					"images/default_avatar.jpg",
+					"js/app.js",
+					"cat/js/cat.js",
+					"js/core.js",
+					"config.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [
+					"cat/view/cat-ucenter-list-head.html"
+				],
+				"priority": 0
+			},
+			"cat/view/cat-ucenter-list-head.html": {
+				"resources": [
+					"cat/view/cat-ucenter-list-body.html",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"cat/view/cat-ucenter-list-body.html": {
+				"resources": [
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"fonts/mui.ttf",
+					"js/app.js",
+					"cat/js/cat.js",
+					"js/core.js",
+					"js/template.js",
+					"config.js",
+					"js/apptools.js",
+					"libs/moment.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"cat/view/cat-detail.html": {
+				"resources": [
+					"fonts/mui.ttf",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"cat/css/cat.css",
+					"js/app.js",
+					"js/mui.zoom.js",
+					"js/mui.previewimage.js",
+					"cat/js/cat.js",
+					"js/core.js",
+					"js/mui.lazyload.js",
+					"config.js",
+					"js/mui.lazyload.img.js",
+					"js/template.js",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"js/share.js",
+					"cat/css/cat-detail.css",
+					"css/previewimage.css",
+					"images/loading_image.gif",
+					"js/apptools.js",
+					"images/app-logo.png",
+					"js/loadingbBtn.js",
+					null,
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"libs/imgtools/imgtools.js",
+					"images/default_load_img.gif",
+					"images/default_avatar.jpg",
+					"libs/tools/my_storage.js",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"report.html",
+					"init/view/report.html"
+				],
+				"priority": 0
+			},
+			"weibo/view/weibo-comment.html": {
+				"resources": [
+					"js/expression.js",
+					"weibo/view/js/weibo-comment.js",
+					"js/app.js",
+					"weibo/js/weibo.js",
+					"js/mui.min.js",
+					"js/core.js",
+					"config.js",
+					"fonts/mui.ttf",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"css/mui.min.css",
+					"images/resize.png",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/usercenter_info.html": {
+				"resources": [
+					"js/template.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"css/icomoon.css",
+					"images/mediaImages/xubox_loading2.gif"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"question/view/answer-detail.html": {
+				"resources": [
+					"js/app.js",
+					"css/icomoon.css",
+					"css/question.css",
+					"js/mui.lazyload.js",
+					"question/js/question.js",
+					"js/core.js",
+					"config.js",
+					"js/mui.lazyload.img.js",
+					"fonts/icomoon.ttf",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"libs/imgtools/imgtools.js",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"question/js/question-render.js",
+					"images/default_avatar.jpg",
+					"js/template.js",
+					"images/default_load_img.gif",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"libs/tools/moment.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"weibo/view/weibo-repost.html": {
+				"resources": [
+					"weibo/js/weibo-render.js",
+					"js/mui.min.js",
+					"js/template.js",
+					"js/app.js",
+					"weibo/js/weibo.js",
+					"js/core.js",
+					"config.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/icomoon.css",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"images/expression/miniblog/hua.gif",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"news/view/news-detail.html": {
+				"resources": [
+					"js/apptools.js",
+					"js/loadingbBtn.js",
+					"fonts/mui.ttf",
+					"js/share.js",
+					"js/mui.lazyload.js",
+					"js/mui.lazyload.img.js",
+					"images/default_load_img.gif",
+					"js/app.js",
+					"news/css/news-detail.css",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"config.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"news/js/news.js",
+					"js/template.js",
+					"js/core.js",
+					"css/previewimage.css",
+					"js/mui.zoom.js",
+					"js/mui.previewimage.js",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/banan.jpg",
+					"images/default_avatar.jpg",
+					"libs/imgtools/imgtools.js",
+					"css/detail.content.css",
+					"libs/tools/my_storage.js",
+					null,
+					"js/mytools/net_tools.js",
+					"css/app/base.css",
+					"news/css/news-detail-page.css",
+					"css/icons-extra.css",
+					"news/view/js/news-detail.js",
+					"js/mytools/my_storage.js",
+					"images/mediaImages/df_big.png"
+				],
+				"refer": [
+					"ucenter/view/usercenter.html"
+				],
+				"priority": 0
+			},
+			"store/view/store-pay-choice.html": {
+				"resources": [
+					"libs/pays/pingpp.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"store/js/store.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js"
+				],
+				"refer": [
+					"media/pingxx.html",
+					"plus/pingxx.html"
+				],
+				"priority": 0
+			},
+			"media/pingxx.html": {
+				"resources": [
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"fonts/mui.ttf"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"plus/pingxx.html": {
+				"resources": [
+					"js/mui.min.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"store/view/store-trans-list.html": {
+				"resources": [
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"fonts/mui.ttf",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"js/app.js",
+					"store/js/store.js",
+					"js/core.js",
+					"config.js",
+					"js/template.js",
+					"store/css/store-place-order.css",
+					"store/js/store-render.js",
+					"js/mui.pullToRefresh.js",
+					"js/mui.pullToRefresh.material.js",
+					"js/apptools.js",
+					"css/pull-top-tips.css"
+				],
+				"refer": [
+					"store/view/store-trans-create.html"
+				],
+				"priority": 0
+			},
+			"store/view/store-trans-create.html": {
+				"resources": [
+					"store/css/store-place-order.css",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"fonts/mui.ttf",
+					"js/app.js",
+					"store/js/store.js",
+					"js/core.js",
+					"config.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/recharge.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/app.js",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"ucenter/js/ucenter.js"
+				],
+				"refer": [
+					"store/view/store-pay-choice.html",
+					"plus/view/pay-okay.html"
+				],
+				"priority": 0
+			},
+			"plus/view/pay-okay.html": {
+				"resources": [
+					"plus/js/user-plus.js",
+					"js/mui.min.js",
+					"store/js/store.js",
+					"js/app.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js",
+					"plus/js/plus.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/social-body.html": {
+				"resources": [
+					"ucenter/js/ucenter.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"fonts/icomoon.ttf",
+					"css/mui.min.css",
+					"css/icomoon.css",
+					"js/apptools.js",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/img.diy.css",
+					"images/default_avatar.jpg",
+					"fonts/mui.ttf",
+					"people/js/people-render.js",
+					"people/css/people-list.css",
+					"libs/tools/my_storage.js",
+					"js/mytools/my_storage.js",
+					"js/mytools/net_tools.js"
+				],
+				"refer": [
+					"ucenter/view/usercenter.html",
+					"ucenter/view/usercenter-all.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/social-head.html": {
+				"resources": [
+					"js/apptools.js",
+					"ucenter/view/social-body.html",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/sign-in-body.html": {
+				"resources": [
+					"ucenter/js/ucenter.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"ucenter/js/sign-render.js",
+					"js/apptools.js",
+					"fonts/mui.ttf",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"libs/imgtools/imgtools.js",
+					"images/default_avatar.jpg",
+					"libs/tools/my_storage.js",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"ucenter/view/usercenter.html",
+					"ucenter/view/usercenter-all.html"
+				],
+				"priority": 0
+			},
+			"forget_password.html": {
+				"resources": [
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/style.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"sync-login.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/app.js",
+					"js/core.js",
+					"config.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"account/view/login.html": {
+				"resources": [
+					"account/css/login.css",
+					"js/mui.enterfocus.js",
+					"js/apptools.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js",
+					"images/sinaweibo.png",
+					"images/weixin.png",
+					"images/qq.png",
+					"account/js/account.js",
+					"images/push.png",
+					"images/icon/zhhu.png",
+					"images/icon/mima.png",
+					"css/iconfont.css",
+					"images/app-logo.png",
+					"images/banan.jpg",
+					"images/wel_imag/welcome02.png",
+					"images/start.png",
+					"libs/tools/my_storage.js",
+					"images/icon/mima_on.png",
+					null,
+					"cat/imges/food.png",
+					"account/img/login_background.jpg",
+					"account/css/login-page.css",
+					"account/view/js/login-page.js",
+					"account/img/login_background.png",
+					"images/app-logo-green.png",
+					"account/img/login_background2.png",
+					"js/mytools/my_storage.js",
+					"images/login_background.png"
+				],
+				"refer": [
+					"account/view/sync-login.html",
+					"people/view/people-header.html",
+					"account/view/reg.html",
+					"account/view/forget_password.html",
+					"account/view/forget-password.html"
+				],
+				"priority": 0
+			},
+			"account/view/sync-login.html": {
+				"resources": [
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"account/js/account.js",
+					"js/core.js",
+					"config.js",
+					"js/apptools.js"
+				],
+				"refer": [
+					"people/view/people-header.html",
+					"account/view/reg.html"
+				],
+				"priority": 0
+			},
+			"account/view/reg.html": {
+				"resources": [
+					"account/js/reg.js",
+					"js/cache.js",
+					"css/feedback-page.css",
+					"js/apptools.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js",
+					"account/css/reg.css",
+					"account/js/account.js",
+					"libs/tools/my_storage.js",
+					"js/mytools/my_storage.js",
+					"css/app/base.css"
+				],
+				"refer": [
+					"account/view/reg-email.html",
+					"account/view/reg-mobile.html",
+					"account/view/reg-username.html",
+					"account/view/reg-main.html",
+					"account/view/register-page.html"
+				],
+				"priority": 0
+			},
+			"account/view/forget_password.html": {
+				"resources": [
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"account/js/account.js",
+					"js/apptools.js",
+					"js/core.js",
+					"config.js",
+					"libs/tools/my_storage.js",
+					"images/icon/zhhu.png",
+					"js/mytools/body_before.js",
+					"css/app.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"account/view/reg-mobile.html": {
+				"resources": [
+					"css/mui.poppicker.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"account/view/reg-username.html": {
+				"resources": [
+					"js/mui.picker.min.js",
+					"account/js/account.js",
+					"css/mui.picker.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"account/view/reg-main.html": {
+				"resources": [
+					"js/app.js",
+					"account/js/reg.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"account/js/account.js",
+					"js/core.js",
+					"config.js",
+					"js/mui.picker.min.js",
+					"css/mui.picker.min.css",
+					"account/css/reg-main.css",
+					"js/cache.js",
+					"js/mui.picker.js",
+					"css/mui.poppicker.css",
+					"js/mui.poppicker.js",
+					"css/mui.listpicker.css",
+					"css/mui.picker.css",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"fonts/mui.ttf",
+					"account/css/forget-password.css",
+					"css/app-form.css",
+					"images/icon/zhhu.png",
+					"account/css/register-page.css",
+					"account/view/js/reg-main.js",
+					"images/icon/mima.png",
+					"images/register-background.jpg",
+					"images/icon/mima_on.png",
+					"images/icon/question-answer.png",
+					"js/mytools/my_storage.js",
+					"images/register-background.png",
+					"fonts/mui-icons-extra.ttf",
+					"css/icons-extra.css",
+					"css/app/base.css"
+				],
+				"refer": [
+					"account/view/login.html",
+					"account/view/reg-info-img.html",
+					"account/view/reg-info-enlarge.html"
+				],
+				"priority": 0
+			},
+			"account/view/reg-email.html": {
+				"resources": [
+					"js/app.js",
+					"account/js/reg.js",
+					"js/cache.js",
+					"js/mui.picker.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"account/js/account.js",
+					"js/core.js",
+					"css/mui.picker.min.css",
+					"config.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"cat/view/cat-send.html": {
+				"resources": [
+					"js/mui.zoom.js",
+					"js/mui.picker.min.js",
+					"css/previewimage.css",
+					"js/mui.previewimage.js",
+					"css/mui.picker.min.css",
+					"js/app.js",
+					"js/uploader.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"cat/js/cat.js",
+					"js/core.js",
+					"cat/css/cat.css",
+					"config.js",
+					"css/module.css",
+					"js/apptools.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/im-rongyun-chat.html": {
+				"resources": [
+					"js/expression.js",
+					"js/mui.imageViewer.js",
+					"ucenter/css/im-chat.css",
+					"css/mui.imageviewer.css",
+					"weibo/css/weibo.css",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"css/module.css",
+					"fonts/mui.ttf",
+					"js/core.js",
+					"js/app.js",
+					"css/detail.content.css",
+					"config.js",
+					"js/apptools.js",
+					"libs/imgtools/imgtools.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/template.js",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"images/resize.png",
+					"images/expression/miniblog/chong.gif",
+					"images/default_avatar.jpg",
+					"images/expression/miniblog/lenghan.gif",
+					"images/expression/miniblog/ciya.gif",
+					"images/expression/miniblog/yun.gif",
+					"images/expression/miniblog/zuohengheng.gif",
+					"images/expression/miniblog/da.gif",
+					"images/expression/miniblog/zuotaiji.gif",
+					"images/expression/miniblog/dabing.gif",
+					"libs/tools/my_storage.js",
+					"images/expression/miniblog/wen.gif",
+					"js/mytools/my_storage.js",
+					"images/expression/miniblog/deyi.gif",
+					"js/mytools/net_tools.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/im-rongyun-main.html": {
+				"resources": [
+					"ucenter/css/im-rongyun-main.css",
+					"js/mui.pullToRefresh.js",
+					"libs/rongyunIM/RongIMLib-2.1.3.min.js",
+					"js/mui.pullToRefresh.material.js",
+					"ucenter/js/rongyunIm.js",
+					"css/pull-top-tips.css",
+					"js/app.js",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"fonts/mui.ttf",
+					"libs/imgtools/md5.min.js",
+					"config.js",
+					"css/module.css",
+					"js/apptools.js",
+					"libs/imgtools/imgtools.js",
+					"images/default_avatar.jpg",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"js/template.js",
+					"libs/tools/my_storage.js",
+					"js/mytools/my_storage.js",
+					"js/mytools/net_tools.js",
+					"css/app/base.css"
+				],
+				"refer": [
+					"ucenter/view/im-rongyun-chat.html",
+					"ucenter/view/im-friend-list.html",
+					"ucenter/view/im-rongyun-chatting.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/im-wk-chat.html": {
+				"resources": [
+					"js/expression.js",
+					"js/mui.imageViewer.js",
+					"css/module.css",
+					"ucenter/css/im-chat.css",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"css/mui.imageviewer.css",
+					"weibo/css/weibo.css",
+					"js/apptools.js",
+					"libs/imgtools/imgtools.js",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/account-bind.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"images/qq.png",
+					"images/sinaweibo.png",
+					"images/weixin.png",
+					"libs/storage.js",
+					"js/core.js",
+					"config.js",
+					"libs/myStorage.js",
+					"ucenter/js/ucenter.js",
+					"js/app.js",
+					"css/module.css",
+					"ucenter/view/js/account-bind.js",
+					"ucenter/css/account-bind.css",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/modify-email.html": {
+				"resources": [
+					"js/cache.js",
+					"ucenter/js/ucenter.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js",
+					"account/css/forget-password.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/modify-mobile.html": {
+				"resources": [
+					"ucenter/js/ucenter.js",
+					"js/app.js",
+					"js/cache.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"init/view/index.html": {
+				"resources": [
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"config.js",
+					"js/app.js",
+					"js/core.js",
+					"js/mytools/my_storage.js",
+					"js/mytools/net_tools.js",
+					"fonts/mui.ttf",
+					"images/start.png"
+				],
+				"refer": [
+					"init/view/module-bottom.html",
+					"init/view/welcome.html"
+				],
+				"priority": 0
+			},
+			"init/view/module-main.html": {
+				"resources": [
+					"js/sortable.js",
+					"css/app.css",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/template.js",
+					"js/module.js",
+					"js/core.js",
+					"images/forum.png",
+					"images/news.png",
+					"images/group.png",
+					"images/shop.png",
+					"images/cat.png",
+					"images/weibo.png",
+					"images/question.png",
+					"images/issue.png",
+					"images/people.png",
+					"images/event.png",
+					"images/store.png",
+					"config.js",
+					"cat/imges/food.png",
+					"js/app.js",
+					"js/mytools/my_storage.js",
+					"images/custom.png",
+					"css/app/base.css"
+				],
+				"refer": [
+					"cat/view/cat-main.html",
+					"news/view/news-head.html",
+					"question/view/question-head.html",
+					"people/view/people-header.html",
+					"event/view/event-head.html",
+					"forum/view/forum-head.html",
+					"shop/view/shop-head.html",
+					"weibo/view/weibo-head.html",
+					"issue/view/issue-index-head.html",
+					"store/view/store-main-head.html",
+					"group/view/group-index-head.html",
+					"weibo/view/weibo-main.html",
+					"issue/view/issue-main.html",
+					"embed/view/embed-main.html",
+					"news/view/news-main.html"
+				],
+				"priority": 0
+			},
+			"init/view/module-bottom.html": {
+				"resources": [
+					"js/app.js",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"init/view/module-main.html",
+					"js/module.js",
+					"js/template.js",
+					"js/core.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"config.js",
+					"ucenter/view/im-rongyun-main.html",
+					"weibo/view/weibo-head.html",
+					"question/view/question-head.html",
+					"news/view/news-head.html",
+					"images/icon-file-text2.png",
+					"images/icon-user2.png",
+					"images/icon-leaf2.png",
+					"images/icon-bubbles.png",
+					"images/icon-paragraph-justify.png",
+					"images/icon-leaf2-pressed.png",
+					"images/icon-bubbles-pressed.png",
+					"images/icon-file-text2-pressed.png",
+					"images/icon-paragraph-justify-pressed.png",
+					"images/icon-user2-pressed.png",
+					"js/mytools/my_storage.js",
+					"images/icon-search2.png",
+					"images/icon-search2-pressed.png",
+					"images/icon-question2.png",
+					"images/icon-question2-pressed.png",
+					"images/icon-newspaper.png",
+					"images/icon-newspaper-pressed.png",
+					"images/icon-feed22-pressed.png",
+					"images/icon-flag2.png",
+					"images/icon-flag2-pressed.png",
+					"images/icon-feed22.png",
+					"images/icon-users.png",
+					"images/icon-cart.png",
+					"images/icon-cart-pressed.png",
+					"images/icon-users-pressed.png",
+					"images/icon-feed3.png",
+					"images/icon-gift2.png",
+					"images/icon-gift2-pressed.png",
+					"images/icon-feed3-pressed.png",
+					"weibo/view/weibo-main.html",
+					"embed/view/embed-main.html"
+				],
+				"refer": [
+					"ucenter/view/ucenter.html",
+					"cat/view/cat-main.html",
+					"people/view/people-header.html",
+					"issue/view/issue-index-head.html",
+					"event/view/event-head.html",
+					"forum/view/forum-head.html",
+					"shop/view/shop-head.html",
+					null,
+					"store/view/store-main-head.html",
+					"group/view/group-index-head.html",
+					"ucenter/view/usercenter-page.html",
+					"ucenter/view/usercenter.html",
+					"issue/view/issue-main.html",
+					"news/view/news-main.html"
+				],
+				"priority": 0
+			},
+			"init/view/welcome.html": {
+				"resources": [
+					"css/welcome.css",
+					"images/wel_imag/welcome02.png",
+					"images/wel_imag/welcome01.png",
+					"js/apptools.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"images/about.png"
+				],
+				"refer": [
+					"init/view/module-bottom.html"
+				],
+				"priority": 0
+			},
+			"init/view/report.html": {
+				"resources": [
+					"js/report.js",
+					"js/mui.lazyload.js",
+					"js/mui.lazyload.img.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/template.js",
+					"js/core.js",
+					"config.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"account/view/forget-password.html": {
+				"resources": [
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/app.js",
+					"account/css/forget-password.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"account/js/account.js",
+					"js/core.js",
+					"js/mytools/body_before.js",
+					"config.js",
+					"css/app-form.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/userinfo-modify.html": {
+				"resources": [
+					"js/app.js",
+					"js/cache.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js",
+					"account/css/forget-password.css",
+					"ucenter/js/ucenter.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"fonts/mui.ttf",
+					"css/app-form.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/usercenter-main.html": {
+				"resources": [
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/template.js",
+					"ucenter/js/usercenter-render.js",
+					"ucenter/css/usercenter-mian.css",
+					"ucenter/css/usercenter-main.css",
+					"account/img/account_unknown_img.png",
+					"news/js/news.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/usercenter-all.html": {
+				"resources": [
+					"ucenter/view/js/usercenter-all.js",
+					"ucenter/js/usercenter-render.js",
+					"js/mui.pullToRefresh.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"js/mui.pullToRefresh.material.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/core.js",
+					"config.js",
+					"js/template.js",
+					"images/banan.jpg",
+					"ucenter/css/ucenter.css",
+					"images/app-logo.png",
+					"css/pull-top-tips.css",
+					null,
+					"ucenter/css/usercenter-pullToRefresh.css",
+					"images/mediaImages/weibo_df.png",
+					"weibo/js/weibo-render.js",
+					"weibo/js/weibo.js",
+					"images/mediaImages/play.png",
+					"weibo/css/weibo.css",
+					"css/iconfont.css",
+					"js/support.js",
+					"css/icomoon.css",
+					"fonts/icomoon.ttf",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"images/expression/miniblog/zhemo.gif",
+					"images/expression/miniblog/liulei.gif",
+					"images/expression/miniblog/ciya.gif",
+					"images/expression/miniblog/se.gif",
+					"question/js/question.js",
+					"question/js/question-render.js",
+					"css/question.css",
+					"css/module.css",
+					"libs/tools/moment.js",
+					"images/topicavatar.png",
+					"news/js/news.js",
+					"css/news.css",
+					"images/expression/miniblog/love.gif",
+					"images/expression/miniblog/zhuakuang.gif",
+					"images/expression/miniblog/guzhang.gif",
+					"images/expression/miniblog/kuaikule.gif",
+					"images/expression/miniblog/zaijian.gif",
+					"images/expression/miniblog/haha.gif",
+					"images/expression/miniblog/touxiao.gif",
+					"images/expression/miniblog/fendou.gif",
+					"images/expression/miniblog/haixiu.gif",
+					"images/expression/miniblog/fadai.gif",
+					"images/expression/miniblog/kun.gif",
+					"images/expression/miniblog/qinqin.gif",
+					"images/expression/miniblog/deyi.gif",
+					"images/expression/miniblog/weixiao.gif",
+					"images/expression/miniblog/diaoxie.gif",
+					"images/expression/miniblog/aoman.gif",
+					"images/expression/miniblog/qiang.gif",
+					"images/expression/miniblog/cahan.gif",
+					"images/expression/miniblog/bizui.gif",
+					"images/mediaImages/xubox_loading2.gif",
+					"ucenter/js/ucenter.js",
+					"images/default_avatar.jpg",
+					"images/tips_icon/weibo_top.png",
+					"news/js/news-render.js",
+					"news/css/news-body.css",
+					"images/expression/miniblog/daku.gif",
+					"cat/imges/food.png",
+					"ucenter/css/usercenter-all.css"
+				],
+				"refer": [
+					"weibo/view/weibo-detail.html",
+					"weibo/view/weibo-repost.html",
+					"news/view/news-detail.html",
+					"question/view/question-detail.html"
+				],
+				"priority": 0
+			},
+			"test.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/apptools.js",
+					"account/img/login_background.jpg",
+					"cat/imges/food.png",
+					"libs/cropper/jquery-2.1.0.js",
+					"js/mytools/net_tools.js",
+					"js/shares.js",
+					"js/app.js",
+					"js/core.js",
+					"js/share.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"weibo/view/weibo-send.html": {
+				"resources": [
+					"js/expression.js",
+					"weibo/js/weibo.js",
+					"js/uploader.js",
+					"js/mui.zoom.js",
+					"weibo/view/js/sendweibo.js",
+					"css/previewimage.css",
+					"js/mui.previewimage.js",
+					"js/mui.enterfocus.js",
+					"js/app.js",
+					"fonts/mui.ttf",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"config.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"js/mytools/img_uploder.js",
+					"images/resize.png",
+					"css/tools/img_uploader.css",
+					"weibo/view/js/weibo-send.js",
+					"weibo/css/weibo-send.css",
+					"images/add.png",
+					"weibo/view/js/weibo-announce.js",
+					"css/app/base.css",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js",
+					"images/banan.jpg",
+					"images/mediaImages/add_2.png",
+					"js/mytools/body_before.js",
+					"libs/widget/widget.js"
+				],
+				"refer": [
+					"weibo/view/weibo-atfriend.html",
+					"weibo/view/weibo-community-choose.html",
+					"libs/widget/img-cut.html"
+				],
+				"priority": 0
+			},
+			"weibo/view/weibo-announce.html": {
+				"resources": [
+					"js/expression.js",
+					"js/app.js",
+					"css/previewimage.css",
+					"fonts/mui.ttf",
+					"css/icomoon.css",
+					"js/mui.enterfocus.js",
+					"config.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"weibo/js/weibo.js",
+					"js/mui.zoom.js",
+					"js/uploader.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"weibo/view/js/weibo-announce.js",
+					"js/mui.previewimage.js",
+					"weibo/css/weibo-announce.css",
+					"js/core.js",
+					"js/mytools/img_uploder.js",
+					"images/resize.png",
+					"css/tools/img_uploader.css",
+					"images/add.png",
+					"fonts/icomoon.ttf"
+				],
+				"refer": [
+					"weibo/view/weibo-atfriend.html"
+				],
+				"priority": 0
+			},
+			"weibo/view/weibo-choose.html": {
+				"resources": [
+					"cat/imges/House.png",
+					"js/mui.min.js",
+					"weibo/css/weibo-choose.css",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"weibo/view/js/weibo-choose.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"account/view/reg-info-img.html": {
+				"resources": [
+					"libs/cropper/cropper.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"libs/cropper/cropper.min.css",
+					"account/css/animate.min.css",
+					"account/img/account_unknown_img.png",
+					"libs/cropper/jquery-2.1.0.js",
+					"account/img/login_background.jpg",
+					"cat/imges/food.png",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"config.js",
+					"images/banan.jpg",
+					"ucenter/js/ucenter.js",
+					"js/app.js",
+					"js/core.js",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"js/mytools/head_cut.js",
+					"css/detail.content.css",
+					"account/js/reg_info.js"
+				],
+				"refer": [
+					"account/view/reg-info-enlarge.html",
+					"plus/view/head-cut.html"
+				],
+				"priority": 0
+			},
+			"rank/view/rank-list-body.html": {
+				"resources": [
+					"images/app-logo.png",
+					"rank/css/rank-list-body.css",
+					"rank/js/rank-list-body.js",
+					"account/img/account_unknown_img.png",
+					"js/mui.min.js",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"rank/view/rank-list-head.html": {
+				"resources": [
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"rank/view/rank-list-body.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"rank/view/rank-list-content-body.html": {
+				"resources": [
+					"rank/img/rank_background.jpg",
+					"cat/imges/lvyou.png",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"account/img/account_unknown_img.png",
+					"rank/css/rank-list-content-body.css",
+					"rank/css/rank-list-content-head.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"rank/view/rank-list-content-head.html": {
+				"resources": [
+					"rank/view/rank-list-content-body.html",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"account/img/account_unknown_img.png",
+					"rank/css/rank-list-content-body.css",
+					"rank/css/rank-list-content-head.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"account/view/login-page.html": {
+				"resources": [
+					"images/app-logo.png",
+					"account/img/login_background.jpg",
+					"js/mui.min.js",
+					"images/icon/zhhu.png",
+					"fonts/mui.ttf",
+					"images/sinaweibo.png",
+					"css/mui.min.css",
+					"images/weixin.png",
+					"images/icon/mima.png",
+					"images/qq.png",
+					"account/css/login-page.css",
+					"account/js/login-page.js",
+					"js/app.js",
+					"js/mui.enterfocus.js",
+					"config.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"account/view/js/login-page.js",
+					"account/js/account.js",
+					"js/core.js"
+				],
+				"refer": [
+					"account/view/reg.html",
+					"account/view/forget-password.html"
+				],
+				"priority": 0
+			},
+			"account/view/register-page.html": {
+				"resources": [
+					"js/mui.min.js",
+					"images/icon/zhhu.png",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"images/icon/mima.png",
+					"account/css/register-page.css",
+					"js/mui.picker.min.js",
+					"account/view/js/reg-main.js",
+					"css/mui.picker.min.css",
+					"css/app-form.css",
+					"js/app.js",
+					"config.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"account/js/account.js",
+					"js/core.js",
+					"images/icon/question-answer.png",
+					"images/icon/mima_on.png"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/usercenter-page.html": {
+				"resources": [
+					"account/img/login_background.jpg",
+					"cat/imges/lvyou.png",
+					"cat/imges/House.png",
+					"cat/imges/Job.png",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"cat/imges/jianli.png",
+					"css/mui.min.css",
+					"cat/imges/food.png",
+					"cat/imges/yule.png",
+					"ucenter/css/usercenter-page.css",
+					"ucenter/js/ucenter.js",
+					"libs/cropper/cropper.min.js",
+					"ucenter/view/js/usercenter-page.js",
+					"images/default_avatar.jpg",
+					"account/js/account.js",
+					"libs/cropper/cropper.min.css",
+					"libs/cropper/jquery-2.1.0.js",
+					"js/template.js",
+					"js/app.js",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"css/icomoon.css",
+					"js/module.js",
+					"config.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"libs/imgtools/imgtools.js",
+					"js/core.js",
+					"plus/js/change-head.js",
+					null
+				],
+				"refer": [
+					"ucenter/view/message-head.html",
+					"ucenter/view/social-head.html",
+					"ucenter/view/score.html",
+					"ucenter/view/account-bind.html",
+					"ucenter/view/about.html",
+					"ucenter/view/userinfo.html",
+					"account/view/login.html",
+					"account/view/reg.html",
+					"ucenter/view/sign-in-head.html",
+					"rank/view/rank-list-head.html",
+					"ucenter/view/usercenter.html",
+					"ucenter/view/message-center.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/message-center.html": {
+				"resources": [
+					"images/default_avatar.jpg",
+					"js/mui.min.js",
+					"images/about.png",
+					"css/mui.min.css",
+					"ucenter/css/message-center.css",
+					"ucenter/js/ucenter.js",
+					"js/app.js",
+					"js/core.js",
+					"config.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"fonts/mui.ttf",
+					"js/template.js",
+					"css/app/base.css",
+					"libs/imgtools/imgload.js",
+					"images/app-logo.png",
+					"libs/imgtools/md5.min.js",
+					"libs/tools/moment.js",
+					"css/pull-top-tips.css",
+					"js/mui.pullToRefresh.js",
+					"js/mui.pullToRefresh.material.js",
+					"js/mytools/my_storage.js",
+					"js/mytools/net_tools.js"
+				],
+				"refer": [
+					"ucenter/view/message-detail.html"
+				],
+				"priority": 0
+			},
+			"account/view/reg-info-enlarge.html": {
+				"resources": [
+					"js/mui.picker.min.js",
+					"css/mui.picker.min.css",
+					"account/css/reg-main.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"account/css/animate.min.css",
+					"account/js/reg_info.js",
+					"css/app-form.css"
+				],
+				"refer": [
+					"account/view/reg-info-tag.html"
+				],
+				"priority": 0
+			},
+			"account/view/reg-info-tag.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"account/css/animate.min.css",
+					"account/css/reg-main.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"plus/view/head-cut.html": {
+				"resources": [
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"css/icomoon.css",
+					"plus/js/change-head.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/app.js",
+					"js/core.js",
+					"config.js",
+					"fonts/icomoon.ttf",
+					"images/banan.jpg",
+					"images/app-logo.png",
+					"libs/cropper/cropper.min.js",
+					"libs/cropper/cropper.min.css",
+					"libs/cropper/jquery-2.1.0.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"weibo/view/weibo-community.html": {
+				"resources": [
+					"weibo/css/weibo-community.css",
+					"cat/imges/PTJob.png",
+					"account/img/account_unknown_img.png",
+					"weibo/js/weibo.js",
+					"js/mui.pullToRefresh.js",
+					"js/app.js",
+					"js/mui.pullToRefresh.material.js",
+					"config.js",
+					"css/pull-top-tips.css",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"images/default_avatar.jpg",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"js/template.js",
+					"css/app/base.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"images/app-logo.png",
+					"fonts/mui.ttf",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"js/mytools/my_storage.js",
+					"weibo/js/crowd.js",
+					"js/mytools/net_tools.js"
+				],
+				"refer": [
+					"account/view/login-page.html",
+					"weibo/view/weibo-crowd-weibo.html",
+					"weibo/view/weibo-crowd-manage.html",
+					"weibo/view/weibo-crowd-detail.html",
+					"weibo/view/weibo-create-crowd.html"
+				],
+				"priority": 0
+			},
+			"weibo/view/weibo-community-choose.html": {
+				"resources": [
+					"weibo/css/weibo-choose.css",
+					"weibo/view/js/weibo-community-choose.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/app.js",
+					"weibo/js/weibo.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/template.js",
+					"js/core.js",
+					"config.js",
+					"css/module.css",
+					"images/testimg/dul_head.png",
+					"css/app/base.css",
+					"account/img/login_background.jpg",
+					"images/app-logo.png",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"libs/imgtools/imgtools.js",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/message-detail.html": {
+				"resources": [
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"config.js",
+					"ucenter/js/message-render.js",
+					"css/app/base.css",
+					"images/banan.jpg",
+					"ucenter/js/ucenter.js",
+					"js/mui.pullToRefresh.js",
+					"libs/imgtools/imgload.js",
+					"js/mui.pullToRefresh.material.js",
+					"fonts/mui.ttf",
+					"libs/imgtools/md5.min.js",
+					"css/pull-top-tips.css",
+					"js/template.js",
+					"images/app-logo.png",
+					"images/default_avatar.jpg",
+					"ucenter/css/mssage-detail.css",
+					"images/mediaImages/weibo_df.png",
+					"images/mediaImages/df_big.png",
+					"js/mytools/my_storage.js",
+					"weibo/js/weibo.js",
+					"js/mytools/net_tools.js"
+				],
+				"refer": [
+					"ucenter/view/message-content.html",
+					"ucenter/view/message-announce.html",
+					"ucenter/view/usercenter.html",
+					"weibo/view/weibo-detail.html",
+					"weibo/view/weibo-comment.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/message-content.html": {
+				"resources": [
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"fonts/mui.ttf",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"libs/imgtools/imgtools.js",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"config.js",
+					"images/default_load_img.gif"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/message-announce.html": {
+				"resources": [
+					"libs/imgtools/imgtools.js",
+					"css/detail.content.css",
+					"images/default_load_img.gif",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"libs/imgtools/imgload.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"libs/imgtools/md5.min.js",
+					"config.js",
+					"js/mytools/my_storage.js",
+					"js/mytools/net_tools.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"weibo/view/weibo-crowd-weibo.html": {
+				"resources": [
+					"images/mediaImages/weibo_df.png",
+					"js/mui.pullToRefresh.js",
+					"js/app.js",
+					"weibo/js/weibo-render.js",
+					"libs/imgtools/imgload.js",
+					"css/previewimage.css",
+					"js/mui.pullToRefresh.material.js",
+					"fonts/mui.ttf",
+					"fonts/icomoon.ttf",
+					"libs/imgtools/md5.min.js",
+					"css/icomoon.css",
+					"config.js",
+					"css/pull-top-tips.css",
+					"css/app/base.css",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"weibo/js/weibo.js",
+					"js/mui.zoom.js",
+					"js/mui.min.js",
+					"js/support.js",
+					"css/mui.min.css",
+					"js/mui.previewimage.js",
+					"js/template.js",
+					"js/core.js",
+					"images/expression/miniblog/haha.gif",
+					"images/expression/miniblog/zaijian.gif",
+					"images/expression/miniblog/cheer.gif",
+					"images/expression/miniblog/love.gif",
+					"images/expression/miniblog/gouyin.gif",
+					"images/expression/miniblog/no.gif",
+					"images/expression/miniblog/guzhang.gif",
+					"images/expression/miniblog/yueliang.gif",
+					"images/expression/miniblog/bizui.gif",
+					"images/expression/miniblog/zuotaiji.gif",
+					"images/expression/miniblog/qioudale.gif",
+					"images/expression/miniblog/pizui.gif",
+					"images/expression/miniblog/nanguo.gif",
+					"images/expression/miniblog/dabing.gif",
+					"images/expression/miniblog/zuqiu.gif",
+					"images/expression/miniblog/shuijiao.gif",
+					"images/expression/miniblog/chong.gif",
+					"images/expression/miniblog/haixiu.gif",
+					"images/expression/miniblog/baiyan.gif",
+					"images/expression/miniblog/fadai.gif",
+					"images/expression/miniblog/tu.gif",
+					"images/expression/miniblog/zuohengheng.gif",
+					"images/expression/miniblog/bishi.gif",
+					"images/expression/miniblog/yun.gif",
+					"images/expression/miniblog/daku.gif",
+					"images/expression/miniblog/tuzi.gif",
+					"images/expression/miniblog/dajiao.gif",
+					"images/expression/miniblog/danu.gif",
+					"images/expression/miniblog/chajin.gif",
+					"images/expression/miniblog/aoman.gif",
+					"images/default_avatar.jpg",
+					"weibo/css/weibo.css",
+					"js/mytools/my_storage.js",
+					"weibo/js/crowd.js",
+					"js/mytools/net_tools.js"
+				],
+				"refer": [
+					"weibo/view/weibo-detail.html",
+					"weibo/view/weibo-send.html",
+					"init/view/report.html",
+					"weibo/view/weibo-repost.html",
+					"ucenter/view/usercenter.html",
+					"weibo/view/weibo-crowd-detail.html"
+				],
+				"priority": 0
+			},
+			"weibo/view/weibo-crowd-manage.html": {
+				"resources": [
+					"images/default_avatar.jpg",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/app/base.css",
+					"images/mediaImages/weibo_df.png",
+					"images/testimg/dul_head.png",
+					"js/app.js",
+					"weibo/js/weibo-render.js",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"config.js",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"weibo/js/weibo.js",
+					"js/support.js",
+					"js/core.js",
+					"js/template.js",
+					"js/mui/mui.view.js",
+					"css/app-form.css",
+					"css/mui/mui.view.css",
+					"weibo/css/weibo-crowd-detail.css",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"js/mui.pullToRefresh.js",
+					"js/mui.pullToRefresh.material.js",
+					"css/pull-top-tips.css",
+					"images/app-logo.png",
+					"ucenter/js/ucenter.js",
+					"js/mytools/img_uploder.js",
+					"libs/widget/widget.js",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js"
+				],
+				"refer": [
+					"ucenter/view/usercenter.html"
+				],
+				"priority": 0
+			},
+			"weibo/view/weibo-crowd-detail.html": {
+				"resources": [
+					"js/app.js",
+					"libs/imgtools/imgload.js",
+					"fonts/mui.ttf",
+					"libs/imgtools/md5.min.js",
+					"images/testimg/dul_head.png",
+					"config.js",
+					"css/app/base.css",
+					"js/apptools.js",
+					"libs/tools/my_storage.js",
+					"weibo/js/weibo.js",
+					"js/mui.min.js",
+					"images/mediaImages/weibo_df.png",
+					"css/mui.min.css",
+					"js/core.js",
+					"js/template.js",
+					"weibo/css/weibo-crowd-detail.css",
+					"js/mui.pullToRefresh.js",
+					"js/mui.pullToRefresh.material.js",
+					"css/pull-top-tips.css",
+					"js/mytools/my_storage.js",
+					"weibo/js/crowd.js",
+					"css/pull-top-tips.css",
+					"images/default_avatar.jpg",
+					"js/mytools/net_tools.js"
+				],
+				"refer": [
+					"weibo/view/weibo-crowd-manage.html",
+					"ucenter/view/usercenter.html"
+				],
+				"priority": 0
+			},
+			"libs/widget/img-cut.html": {
+				"resources": [
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"images/banan.jpg",
+					"fonts/mui.ttf",
+					"css/app/base.css",
+					"js/apptools.js",
+					"js/app.js",
+					"js/mytools/my_storage.js",
+					"js/core.js",
+					"config.js",
+					"cat/imges/Job.png",
+					"images/about.png",
+					"account/img/account_unknown_img.png"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"weibo/view/weibo-create-crowd.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"images/add.png",
+					"css/app/base.css",
+					"js/apptools.js",
+					"js/app.js",
+					"weibo/js/weibo.js",
+					"js/mytools/my_storage.js",
+					"js/core.js",
+					"config.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"issue/view/issue-main.html": {
+				"resources": [
+					"js/mui.pullToRefresh.js",
+					"js/app.js",
+					"js/mui.pullToRefresh.material.js",
+					"fonts/mui.ttf",
+					"js/mytools/my_storage.js",
+					"issue/js/issue.js",
+					"css/pull-top-tips.css",
+					"config.js",
+					"css/app/base.css",
+					"js/apptools.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"js/template.js",
+					"images/mediaImages/weibo_df.png",
+					"libs/imgtools/imgload.js",
+					"js/mytools/net_tools.js",
+					"libs/imgtools/md5.min.js",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"images/testimg/dul_head.png"
+				],
+				"refer": [
+					"issue/view/issue-detail.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/im-rongyun-chatting.html": {
+				"resources": [
+					"js/mytools/img_uploder.js",
+					"ucenter/css/im-rongyun-chat.css",
+					"account/css/animate.min.css",
+					"ucenter/view/js/im-rongyun-chatting.js",
+					"js/expression.js",
+					"fonts/icomoon.ttf",
+					"css/app/base.css",
+					"js/mui.zoom.js",
+					"js/mui.min.js",
+					"js/mui.previewimage.js",
+					"js/template.js",
+					"js/app.js",
+					"css/detail.content.css",
+					"libs/imgtools/imgload.js",
+					"css/previewimage.css",
+					"fonts/mui.ttf",
+					"css/icomoon.css",
+					"libs/imgtools/md5.min.js",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js",
+					"config.js",
+					"js/apptools.js",
+					"libs/imgtools/imgtools.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"images/icon/icon-im-location.png",
+					"libs/voice/voiceload.js",
+					"images/expression/miniblog/dajiao.gif",
+					"images/expression/miniblog/chajin.gif",
+					"images/expression/miniblog/qioudale.gif",
+					"images/icon/icon-im-voice.png",
+					"images/expression/miniblog/baiyan.gif",
+					"images/expression/miniblog/ciya.gif",
+					"images/icon/icon-im-location-thumb.png",
+					"images/expression/miniblog/cahan.gif",
+					"images/resize.png"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"weibo/view/weibo-crowd-create.html": {
+				"resources": [
+					"js/apptools.js",
+					"js/app.js",
+					"weibo/js/crowd.js",
+					"weibo/js/weibo.js",
+					"libs/widget/widget.js",
+					"images/add.png",
+					"js/mui.min.js",
+					"images/icon/crowd.png",
+					"css/mui.min.css",
+					"js/mytools/my_storage.js",
+					"js/core.js",
+					"js/template.js",
+					"config.js"
+				],
+				"refer": [
+					"libs/widget/img-cut.html",
+					"weibo/view/weibo-crowd-detail.html"
+				],
+				"priority": 0
+			},
+			"weibo/view/weibo-crowd.html": {
+				"resources": [
+					"weibo/css/weibo-community.css",
+					"weibo/js/crowd.js",
+					"weibo/js/weibo.js",
+					"js/mui.min.js",
+					"js/mytools/net_tools.js",
+					"account/img/account_unknown_img.png",
+					"images/app-logo.png"
+				],
+				"refer": [
+					"weibo/view/weibo-crowd-create.html",
+					"weibo/view/weibo-crowd-manage.html"
+				],
+				"priority": 0
+			},
+			"ucenter/view/rank-main.html": {
+				"resources": [
+					"ucenter/js/ucenter.js",
+					"images/bgm/rank_con_check.png",
+					"js/app.js",
+					"libs/imgtools/imgload.js",
+					"images/bgm/rank_total_check.png",
+					"fonts/mui.ttf",
+					"libs/imgtools/md5.min.js",
+					"js/mytools/net_tools.js",
+					"images/bgm/rank_fans.png",
+					"js/mytools/my_storage.js",
+					"config.js",
+					"css/app/base.css",
+					"js/apptools.js",
+					"images/bgm/rank_score1.png",
+					"images/default_avatar.jpg",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/template.js",
+					"js/core.js"
+				],
+				"refer": [
+					"ucenter/view/rank-detail.html"
+				],
+				"priority": 0
+			},
+			"news/view/news-main.html": {
+				"resources": [
+					"images/icon/icon-newswrite.png",
+					"images/icon/icon-shake.png",
+					"news/view/js/news-main.js",
+					"news/css/news-main.css",
+					"news/js/news.js",
+					"images/mediaImages/xubox_loading6.gif",
+					"news/js/news-render.js",
+					"images/app-logo.png",
+					"images/mediaImages/df_big.png",
+					"images/time-icon.png",
+					"libs/imgtools/imgload.js",
+					"js/mui.pullToRefresh.material.js",
+					"libs/imgtools/md5.min.js",
+					"account/css/animate.min.css",
+					"images/icon/icon-shake-end.png",
+					"js/mui.pullToRefresh.js",
+					"css/pull-top-tips.css",
+					"images/default_avatar.jpg",
+					"css/app/base.css"
+				],
+				"refer": [
+					"news/view/news-detail.html"
+				],
+				"priority": 0
+			},
+			"embed/view/embed-main.html": {
+				"resources": [
+					"fonts/mui.ttf",
+					"embed/css/embed-main.css",
+					"css/app/base.css",
+					"js/apptools.js",
+					"js/mui.min.js",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/im-rongyun-chat-map.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/mytools/my_storage.js",
+					"css/app/base.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"ucenter/view/rank-detail.html": {
+				"resources": [
+					"images/icon/number1.png",
+					"js/mui.pullToRefresh.js",
+					"js/mui.pullToRefresh.material.js",
+					"images/icon/number2.png",
+					"ucenter/css/rank-detail.css",
+					"images/icon/number3.png",
+					"images/bgm/rank_detail.png",
+					"css/pull-top-tips.css",
+					"ucenter/js/ucenter.js",
+					"js/app.js",
+					"libs/imgtools/imgload.js",
+					"fonts/mui.ttf",
+					"libs/imgtools/md5.min.js",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js",
+					"config.js",
+					"css/app/base.css",
+					"js/apptools.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/template.js",
+					"js/core.js",
+					"images/default_avatar.jpg"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"event/view/event-main.html": {
+				"resources": [
+					"css/iconfont.css",
+					"fonts/iconfont.ttf",
+					"event/js/event.js",
+					"js/mui.pullToRefresh.js",
+					"js/app.js",
+					"js/mui.pullToRefresh.material.js",
+					"fonts/mui.ttf",
+					"js/mytools/my_storage.js",
+					"config.js",
+					"css/app/base.css",
+					"js/apptools.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/core.js",
+					"event/view/js/event-main.js",
+					"js/template.js",
+					"css/pull-top-tips.css",
+					"event/js/event-render.js",
+					"images/img_error.png",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"js/mytools/net_tools.js",
+					"event/css/event.css",
+					"images/app-logo.png"
+				],
+				"refer": [
+					"event/view/event-my-head.html",
+					"event/view/send-event.html",
+					"event/view/join-event.html",
+					"event/view/event-detail.html",
+					"event/view/event-my.html"
+				],
+				"priority": 0
+			},
+			"event/view/event-my.html": {
+				"resources": [
+					"event/view/js/event-my-head.js",
+					"css/iconfont.css",
+					"js/apptools.js",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/mytools/my_storage.js",
+					"js/core.js",
+					"event/js/event.js",
+					"config.js",
+					"event/view/event-my-body.html",
+					"event/view/js/event-my.js",
+					"css/pull-top-tips.css",
+					"libs/imgtools/imgload.js",
+					"libs/imgtools/md5.min.js",
+					"js/mytools/net_tools.js",
+					"event/js/event-render.js",
+					"js/template.js",
+					"js/mui.pullToRefresh.js",
+					"js/mui.pullToRefresh.material.js",
+					"images/img_error.png",
+					"images/app-logo.png",
+					"event/css/event.css",
+					"css/icons-extra.css",
+					"fonts/mui-icons-extra.ttf"
+				],
+				"refer": [
+					"event/view/event-detail.html",
+					"event/view/event-member.html"
+				],
+				"priority": 0
+			},
+			"event/view/event-member.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/app/base.css",
+					"js/mui.pullToRefresh.js",
+					"js/app.js",
+					"libs/imgtools/imgload.js",
+					"js/mui.pullToRefresh.material.js",
+					"libs/imgtools/md5.min.js",
+					"js/mytools/net_tools.js",
+					"js/mytools/my_storage.js",
+					"event/js/event.js",
+					"config.js",
+					"js/apptools.js",
+					"event/js/event-render.js",
+					"js/core.js",
+					"js/template.js",
+					"images/default_avatar.jpg",
+					"fonts/icomoon.ttf",
+					"css/icomoon.css",
+					"css/pull-top-tips.css",
+					"images/testimg/dul_head.png",
+					"event/view/js/event-member.js"
+				],
+				"refer": [],
+				"priority": 0
+			}
+		},
+		"idle": {
+			"resources": [
+				"images/expression/miniblog/xia.gif",
+				"ucenter/view/usercenter_group.html",
+				"js/mui.view.js",
+				"README.md",
+				"js/service.js",
+				"unlock.html",
+				"js/feedback.js",
+				"libs/easymob-webim-sdk/jquery-1.11.1.js",
+				"images/expression/miniblog/kiss.gif",
+				"question/view/question-mine.html",
+				"images/set.png",
+				"images/expression/miniblog/shandian.gif",
+				"news/view/comment.html",
+				"setting.html",
+				"images/expression/miniblog/tiaosheng.gif",
+				"images/user-photo.png",
+				"images/expression/miniblog/huitou.gif",
+				"weibo/view/js/weibo-repost.js",
+				"css/baguetteBox.css",
+				"libs/easymob-webim-sdk/strophe-custom-2.0.0.js",
+				"images/expression/miniblog/feiwen.gif",
+				"rate.html",
+				"images/expression/miniblog/xianwen.gif",
+				"images/expression/miniblog/ruo.gif",
+				"images/expression/miniblog/pijiu.gif",
+				"images/expression/miniblog/ketou.gif",
+				"people/view/people-main.html",
+				"js/mui.locker.js",
+				"images/expression/miniblog/shengli.gif",
+				"libs/cropper/cropper.js",
+				"images/expression/miniblog/xu.gif",
+				"libs/easymob-webim-sdk/easemob.im-1.0.5.js",
+				"images/expression/miniblog/shenma.gif",
+				"libs/easymob-webim-sdk/json2.js",
+				"js/feedback-page.js",
+				"libs/easymob-webim-sdk/quickstart.md",
+				"libs/cropper/cropper.css",
+				"images/avatar.jpg",
+				"images/expression/miniblog/zhutou.gif"
+			]
+		}
+	},
+	"fullscreen": false
+}

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+	<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/store.js" type="text/javascript" charset="utf-8"></script>
+	<style type="text/css">
+		.mui-scroll-wrapper{
+			top: 45px;
+		}
+		.mui-scroll{
+			background: white;
+			padding: 10px;
+		}
+		.ma0 {
+			margin-top: 5px;
+			margin-bottom: 0px!important;
+		}
+		.input-message {
+			margin-left: 10px;
+			font-size: 12px;
+			color: #8F8F94
+		}
+		.maT10 {
+			margin-bottom: 10px!important;
+		}
+	</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+	    <h1 class="mui-title">新建收货地址</h1>
+	</header>
+	
+	<div class="mui-scroll-wrapper">
+		<div class="mui-scroll">
+			<div class="mui-input maT10">
+				<label>收货人</label><span class="input-message">**</span><br>
+				<input id="name" class="ma0" type="text" name="name" placeholder="收货人姓名" maxlength="30" /><br>
+			</div>
+			<div class="mui-input maT10">
+				<label>邮政编码</label><span class="input-message">收货人邮编</span><br>
+				<input class="ma0" id="code" type="number" name="code" placeholder="邮政编码" maxlength="6" /><br>
+			</div>
+			<div class="mui-input maT10">
+				<label>联系电话</label><span class="input-message">**收货人联系方式</span><br>
+				<input class="ma0" id="phone" type="number" name="phone" placeholder="手机号码" maxlength="11" /><br>
+			</div>
+			<div class="mui-input maT10">
+				<label>收货地址</label><span class="input-message">**越详细越好</span><br>
+				<textarea class="ma0" id="adress" name="adress" rows="3" placeholder="具体收货地址" minlength="5"></textarea><br>
+			</div>
+			
+			<button id="ok_btn" class="mui-btn mui-btn-block mui-btn-positive">提交新地址</button>
+		</div>
+	</div>
+</body>
+    <script type="text/javascript" charset="UTF-8">
+      	mui.init();
+      	mui('.mui-scroll-wrapper').scroll();
+      	var okBtn = document.getElementById("ok_btn");
+		
+		var nameInput = document.getElementById('name');
+		var codeInput = document.getElementById('code');
+		var phoneInput = document.getElementById('phone');
+		var addressInput = document.getElementById('adress');
+		var selfWeb,transListWeb = null;
+		var transInfo = null;
+		var transId = 0;
+		
+		mui.plusReady(function(){
+
+			selfWeb = plus.webview.currentWebview();
+			transListWeb = plus.webview.getWebviewById('store-trans-list');
+			transInfo = selfWeb.data;
+			if(transInfo){
+				transId = transInfo.id;
+				nameInput.value = transInfo.contact;
+				codeInput.value = transInfo.zip_code;
+				phoneInput.value = transInfo.phone;
+				addressInput.value = transInfo.address;
+			}
+		})
+      	
+      	okBtn.addEventListener('tap',function(e){
+      		toast.showLoading();
+			var nameText = nameInput.value.trim();
+			var codeText = codeInput.value.trim();
+			var phoneText = phoneInput.value.trim();
+			var adressText = addressInput.value.trim();
+      		var restInfo = {
+      			trans_id:transId,
+      			phone:phoneText,
+      			zip_code:codeText,
+      			contact:nameText,
+      			address:adressText,
+      			is_default:transInfo?transInfo.is_default:0
+      		};
+			store.setTrans(restInfo,function(res){
+				toast.hideLoading();
+				if(res.code == 200){
+					toast.info(res.info);
+					var newTransInfo = res.data;
+					if(!transId){
+						newTransInfo.new_trans = 1;
+					}
+					mui.fire(transListWeb,'transNew',{data:newTransInfo});
+					mui.back();
+				}
+			})
+      	})
+    </script>
+</html>

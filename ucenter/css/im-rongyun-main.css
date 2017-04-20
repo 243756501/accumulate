@@ -1,0 +1,24 @@
+.im-item{
+	padding: 10px;
+}
+.im-img{
+	display: block;
+    width: 3em;
+    height: 3em;
+    margin-right: 10px;
+    border-radius: 10%;
+}
+.item-text2{
+    margin-top: 0.6em;
+    width: 100%;
+}
+.unread-count{
+    position: fixed;
+    float: right;
+    margin-top: -2%;
+    right: 80%;
+}
+.no-login{
+	text-align: center;
+	display: ;
+}

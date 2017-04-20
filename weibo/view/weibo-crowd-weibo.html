@@ -1,0 +1,238 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/icomoon.css" />
+		<link href="../../css/previewimage.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/pull-top-tips.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css" />
+		<link rel="stylesheet" type="text/css" href="../css/weibo.css" />
+		<style type="text/css">
+			.follow-btn{
+				padding: 5px;
+				text-align: center;
+				background-color: #1ABC9C;
+				color: #FFF;
+			}
+			.base-text-p{
+				margin-top: 10px;
+			}
+			.right-view{
+				padding-left: 5px;
+			}
+			.crowd-info-view{
+				box-shadow: 0px 0px 5px #C3C3C3;
+				-webkit-box-shadow: 0px 0px 5px #C3C3C3;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav base-header-background">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 id="title_view" class="mui-title"></h1>
+		</header>
+
+		<div id="load_view" class="base-loading">
+			<i class="mui-spinner"></i>
+		</div>
+		
+		<div id="main_view" class="mui-scroll-wrapper weibo-scroll-wrapper" style="display: none;">
+			<div id="pullrefresh" class="mui-scroll">
+				<div id="crowd_info_view" class="base-info-view crowd-info-view"></div>
+				<p></p>
+				<!--微博列表-->
+				<ul id="weibo_list" class="mui-table-view mui-clearfix">
+
+				</ul>
+			</div>
+		</div>
+		
+		<!--圈子信息模板-->
+		<script id="crowd_tpl" type="text/html">
+			<div class="app-grid mui-col-xs-3">
+				<img class="event-crowd base-round base-img-mid" onload="load(this)" data-src="{{logo}}" src="../../images/mediaImages/weibo_df.png" />
+			</div>
+			<div class="app-grid mui-col-xs-9">
+				<div class="right-view">
+					<div class="mui-ellipsis">{{title}}</div>
+					<h5 class="base-content-1 mui-ellipsis">{{intro}}</h5>
+					<div class="base-text-p">
+						<div class="app-grid mui-col-xs-4">
+							<i class="mui-icon mui-icon-person"></i>{{member_count}}
+						</div>
+						<div class="app-grid mui-col-xs-4">
+							<i class="mui-icon mui-icon-chatbubble"></i>{{post_count}}
+						</div>
+						<div class="app-grid mui-col-xs-4">
+							<div id="do_btn" class="follow-btn">
+								{{if is_follow&&is_check}}发布动态{{else if is_follow&&!is_check}}审核中{{else}}+关注{{/if}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</script>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/mui.zoom.js"></script>
+		<script src="../../js/mui.previewimage.js"></script>
+		<script src="../../js/mui.pullToRefresh.js"></script>
+		<script src="../../js/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/core.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/template.js"></script>
+		<script src="../../libs/imgtools/md5.min.js"></script>
+		<script src="../../libs/imgtools/imgload.js"></script>
+		<script src="../../js/support.js"></script>
+		<script src="../js/weibo.js"></script>
+		<script src="../js/weibo-render.js"></script>
+		<script src="../js/crowd.js"></script>
+		<script type="text/javascript">
+			mui.init()
+
+			var loadView = document.getElementById("load_view");
+			var mainView = document.getElementById("main_view");
+			var titleView = document.getElementById("title_view");
+			var crowdInfoView = document.getElementById("crowd_info_view");
+			var weiboList = document.getElementById("weibo_list");
+
+			var crowdInfo = {}, selfWeb, $weibo_support = null;
+			var weiboInfo = {
+				type: 'crowd',
+				page: 0
+			};
+
+			mui('.mui-scroll-wrapper').scroll({
+				bounce: false
+			});
+			mui.previewImage();
+			
+			//初始化圈子信息
+			function init_crowd_info(){
+				titleView.innerText = crowdInfo.title;
+				weiboList.innerHTML = '';
+				crowdInfoView.innerHTML = '';
+				weiboInfo.crowd_id = crowdInfo.id;
+				weiboInfo.page = 0;
+				weibo.getCrowdInfo(crowdInfo.id,function(res){
+					if(res.data){
+					 	crowdInfo = res.data;
+					 	crowdInfoView.innerHTML = template('crowd_tpl',crowdInfo);
+						mui('#pullrefresh').pullToRefresh().refresh(true);
+						mui('#pullrefresh').pullToRefresh().pullUpLoading();
+					}else{
+					 	toast.info('圈子信息获取失败!');
+					}
+				})
+			}
+			
+			window.addEventListener('crowdChange',function(e){
+				var tmpInfo = e.detail.data ||{};
+				if(tmpInfo.is_change == 2){	//圈子已解散
+					if(tmpInfo.id == crowdInfo.id){
+						selfWeb.close();
+					}else{
+						return;
+					}
+				}
+				if(tmpInfo.is_change == 1 || tmpInfo.id != crowdInfo.id){
+					crowdInfo = tmpInfo;
+					init_crowd_info();
+				}else{
+					changePage(loadView,mainView,false);
+				}
+			})
+			
+			mui('#crowd_info_view').on('tap','.event-crowd',function(e){
+				crowd.openDtlWeb(crowdInfo);
+			})
+			//关注/发布按钮
+			mui('#pullrefresh').on('tap','#do_btn',function(e){
+				var doBtn = this;
+				if(crowdInfo.is_follow){
+					if(crowdInfo.is_check){
+						webtools.openSingleWeb('weibo-send',{flag:'crowd',data:crowdInfo});
+					}
+				}else{	//关注圈子操作
+					weibo.handleCrowd({id:crowdInfo.id,flag:'join'},function(res){
+						toast.info(res.info);
+						if(res.code == 200){
+							crowdInfo.is_follow = 1;
+							if(crowdInfo.type == 1){
+								doBtn.innerHTML = '审核中';
+								crowdInfo.is_check = 0;
+							}else{
+								doBtn.innerHTML = '发布动态';
+								crowdInfo.is_check = 1;
+							}
+						}
+					})
+				}
+			})
+
+			mui.plusReady(function() {
+
+				selfWeb = plus.webview.currentWebview();
+				selfWeb.addEventListener('hide', function(e) {
+					changePage(loadView,mainView,true);
+				})
+				$weibo_support = creat_weibo_support('weibo_support');
+
+				mui('#pullrefresh').pullToRefresh({
+					down: {
+						callback: function() {
+							weiboInfo.page = 1;
+							var selfPull = this;
+							weibo.getWeiboList(weiboInfo, function(res) {
+								weiboList.innerHTML = '';
+								add_weibo_li(res.data, weiboList);
+								$weibo_support.bindSupport();
+								//重置底部加载状态
+								selfPull.refresh(res.data&&res.data.length>=10);
+								selfPull.endPullDownToRefresh();
+								changePage(loadView,mainView,false);
+							})
+						}
+					},
+					up: {
+						callback: function() {
+							weiboInfo.page++;
+							var selfPull = this;
+							weibo.getWeiboList(weiboInfo, function(res) {
+								add_weibo_li(res.data, weiboList);
+								selfPull.endPullUpToRefresh(!res.data||res.data.length<10);
+								$weibo_support.bindSupport();
+								changePage(mainView, loadView, true);
+							});
+						}
+					}
+				})
+			})
+
+			weibo.ext_weibo_listener('#pullrefresh');
+			//语音播放
+			mui('#pullrefresh').on('tap', '.weibo-content-voice-btn', function(event) {
+				event.stopPropagation();
+				voicePlayer(this);
+			})
+			//实例化虾米音乐播放对象
+			var xiamiMusicObj = new XiamiMusicObj('#pullrefresh');
+			
+			//功能按钮
+			weibo.operation('#pullrefresh');
+			
+			linkUrl('#mui-scroll'); //打开外链网址
+			//点击头像进入个人主页
+			app.userListener();
+			window.addEventListener('userChange', function(event) {
+				init_crowd_info();
+			})
+		</script>
+	</body>
+
+</html>

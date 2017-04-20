@@ -1,0 +1,162 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/rank-detail.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/pull-top-tips.css"/>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 id="title_view" class="mui-title">排行榜</h1>
+		</header>
+		
+		<div id="load_view" style="text-align: center;margin-top: 30%;">
+			<i class="mui-spinner"></i>
+		</div>
+		
+		<div id="main_view" class="base-fade-view">
+			<nav id="my_rank_view" class="center-flex my-rank"></nav>
+			
+			<div class="mui-fullscreen">
+				<div id="pullrefresh" class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<div id="h_list_view" class="list-head"></div>
+						<div class="list-body">
+							<ul id="b_list_view" class="mui-table-view"></ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!--榜单前3排名-->
+		<script id="head_tpl" type="text/html">
+			{{each list as value i}}{{if i<3}}
+				<div class="list-topthree num-{{i+1}}">
+					<img class="user-head user-flag" data-uid="{{value.uid}}" src="../../images/default_avatar.jpg" onload="load(this)" data-src="{{value.avatar128}}" />
+					<img class="rank-tip" src="../../images/icon/number{{i+1}}.png" />
+					<div class="mui-ellipsis">{{value.nickname}}</div>
+					<p class="">{{value.title}}</p>
+					<div class="info-view">
+						<strong>{{value.rank_value}}</strong>
+						<span class="info-type">{{rank_title}}</span>
+					</div>
+				</div>
+			{{/if}}{{/each}}
+		</script>
+		
+		<!--普通榜单-->
+		<script id="body_tpl" type="text/html">
+			<div class="center-flex">
+				<div class="rank-num">{{ranking}}</div>
+				<img class="user-head user-flag" data-uid="{{uid}}" src="../../images/default_avatar.jpg" onload="load(this)" data-src="{{avatar128}}" />
+				<div class="user-name-view mui-ellipsis user-flag" data-uid="{{uid}}">
+					<div>{{nickname}}</div>
+					<p>{{title}}</p>
+				</div>
+			</div>
+			<div class="info-view">
+				<strong class="type-num">{{rank_value}}</strong>
+				<p class="info-type">{{rank_title}}</p>
+			</div>
+		</script>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/mui.pullToRefresh.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.pullToRefresh.material.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/ucenter.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui('.mui-scroll-wrapper').scroll({bounce:false});
+			
+			var loadView = document.getElementById("load_view");
+			var mainView = document.getElementById("main_view");
+			var titleView = document.getElementById("title_view");
+			var myrkView = document.getElementById("my_rank_view");
+			var listViewH = document.getElementById("h_list_view");
+			var listViewB = document.getElementById("b_list_view");
+			var selfWeb,rankInfo = {},rqstInfo = {type:'fans',page:0};
+
+			var addView = function(data,page){
+				for(var i in data){
+					var info = data[i];
+					info.rank_title = rankInfo.rank_title;
+					if(page >1 || i >= 3){
+						var li = app.createListItem(info,'mui-table-view-cell center-flex');
+						li.innerHTML = template('body_tpl',info);
+						listViewB.appendChild(li);
+					}
+				}
+			}
+			
+			/*上下拉*/
+			mui('.mui-scroll').pullToRefresh({
+				down: {
+					callback: function() {
+						rqstInfo.page = 1;
+						var selfPull = this;
+						ucenter.getRankList(rqstInfo, function(res) {
+							listViewB.innerHTML = '';
+							addView(res.data,rqstInfo.page);
+							//重置底部加载状态
+							selfPull.refresh(res.data&&res.data.length>=10);
+							selfPull.endPullDownToRefresh();
+						})
+					}
+				},
+				up: { 
+					callback: function() {
+						var selfPull = this;
+						if(rqstInfo.page <10){	//只显示前100
+							rqstInfo.page ++;
+							ucenter.getRankList(rqstInfo, function(res) {
+								addView(res.data,rqstInfo.page);
+								changePage(loadView,mainView,false);
+								selfPull.endPullUpToRefresh(!res.data||res.data.length<10);
+							});
+						}else{
+							selfPull.endPullUpToRefresh(true);
+						}
+					}
+				}
+			})
+			
+			window.addEventListener('rankChange',function(event){
+				var tmpData = event.detail.data;
+				if(rankInfo.rank_type != tmpData.rank_type){
+					rankInfo = tmpData;
+					titleView.innerHTML = rankInfo.rank_title + '榜';
+					myrkView.innerHTML = template('body_tpl',rankInfo);
+					listViewH.innerHTML = template('head_tpl',rankInfo);
+					listViewB.innerHTML = '';
+					rqstInfo.type = rankInfo.rank_type;
+					rqstInfo.page = 0;
+					mui(".mui-scroll-wrapper").scroll().scrollTo(0,0);
+					mui('.mui-scroll').pullToRefresh().pullUpLoading();
+				}else{
+					changePage(loadView,mainView,false);
+				}
+			})
+			
+			mui.plusReady(function(){
+				selfWeb = plus.webview.currentWebview();
+				selfWeb.addEventListener('hide', function(e) {
+					changePage(loadView,mainView,true);
+				})
+			})
+			//进入个人主页。
+			app.userListener();
+		</script>
+	</body>
+
+</html>

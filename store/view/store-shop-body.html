@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../css/store-goods-list.css"/>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/store.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/store-render.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/store-public.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<div id="loading_page" style="text-align: center;margin-top: 55%;">
+		<i class="mui-spinner"></i>
+	</div>
+	
+    <div id="pullrefresh" style="display: none;" class="mui-scroll-wrapper">
+    	<div class="mui-scroll">
+    		<!--店铺简略信息-->
+    		<div id="shop_view" class="shop-view"></div>
+    			
+    		<!--店铺商品列表-->
+    		<div class="">
+    			<ul id="goods_list" class="mui-table-view">
+				</ul>
+    		</div>
+    	</div>
+    </div>
+    <script id="shop_template" type="text/html">
+    	<div style="height: 2em;"></div>
+		<div class="shop-info">
+			<img onload="load(this)" src="../../images/app-logo.png" class="shop-logo mui-pull-left" data-src="{{logo_url.thumb}}">
+			<div class="shop-text mui-media-body">
+				<div style="color: white;" class="mui-ellipsis-2">{{title}}</div>
+				<div class="shop-des mui-ellipsis-2">{{summary}}</div>
+				<div class="sell-count">
+					<span>商品：{{goods_num}}件</span>
+					<span>销量：{{order_count}}单</span>
+				</div>
+			</div>
+		</div>
+    </script>
+    
+</body>
+    <script type="text/javascript" charset="utf-8">
+    
+      	var lodView = document.getElementById('loading_page');
+		var mainView = document.getElementById('pullrefresh');
+      	var shopView = document.getElementById('shop_view');
+      	var goodsList = document.getElementById('goods_list');
+		var godsDetlWeb = null;
+		
+    	mui.plusReady(function(){
+    		
+    		var thisWeb = plus.webview.currentWebview();
+    		var parentWeb = thisWeb.parent();
+    		var shopId = parentWeb.shopId;
+    		
+    		mui.init({
+				pullRefresh: {
+					container: '#pullrefresh',
+					up: {
+						contentrefresh: '正在加载...',
+						callback: pullup_refresh
+					}
+				}
+			});
+	      	
+	      	
+	      	store.getShopList({shop_id:shopId},function(res){
+	      		if(res.code == 200){
+	      			var shopInfo = res.data[0];
+	      			parentWeb.evalJS('document.getElementById("shop_name").innerHTML = "'+ shopInfo.title +'";')
+	      			shopView.innerHTML = template('shop_template',shopInfo);
+	      		}
+	      		changePage(lodView,mainView,false);
+	      	})
+	      	
+	      	
+	      	var goodsRestInfo = {shop_id:shopId,page:0};
+	      	/**
+			 * 上拉加载更多
+			 */
+			function pullup_refresh() {
+				goodsRestInfo.page++;
+				store.getGoodsList(goodsRestInfo,function(res){
+					var length = typeof(res.data) == 'undefined' ? 0 : res.data.length;
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(length == 10 ? false : true);
+					if(res.code == 200){
+						for(i in res.data){
+							var goodsInfo = res.data[i];
+							var li = get_goods_li(goodsInfo);
+							goodsList.appendChild(li);
+						}
+					}else{
+						toast.info(res.info);
+					}
+				});
+			}
+	      	
+            setTimeout(function () {
+                mui('#pullrefresh').pullRefresh().pullupLoading();
+            }, 1000);
+
+    	})
+      	/*商品列表点击连接事件*/
+		goods_li_click('.mui-scroll');
+    </script>
+</html>

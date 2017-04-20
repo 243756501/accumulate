@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.mui-fullscreen{
+				background: #FFF;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 id="title" class="mui-title"></h1>
+		</header>
+		
+		<div class="mui-content mui-fullscreen">
+		    <article id="content_view"></article>
+		</div>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init()
+			
+			var selfWeb = null;
+			var titleView = document.getElementById("title");
+			var contentView = document.getElementById("content_view");
+
+			mui.plusReady(function () {
+			    selfWeb = plus.webview.currentWebview();
+				titleView.innerHTML = selfWeb.data.content.title;
+			    contentView.innerHTML = imgTools.getDtlContent(selfWeb.data.content.content.keyword1);
+			})
+		</script>
+	</body>
+
+</html>

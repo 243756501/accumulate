@@ -1,0 +1,201 @@
+@-webkit-keyframes base-fade-in
+{
+	from  {opacity: 0;}
+	to {opacity: 1;}
+}
+.base-fade-view{
+	display: none;
+	opacity: 0;
+	-webkit-animation: base-fade-in 1.5s forwards;"
+}
+.app-table-cell{
+	display: inline-block;
+}
+.app-grid{
+	display: inline-block;
+	margin-right: -4px !important;
+}
+.base-flex{
+  	display: -webkit-flex;
+	align-items: baseline;
+}
+.base-followed-btn{
+	padding: 5px 5px 2px 5px;
+	color: #CCC;
+	border: 1px solid #EEE;
+	border-radius: 10%;
+}
+.base-btn-2{
+	padding: 5px 10px;
+	color: #FFF;
+	border-radius: 10%;
+	background: #1ABC9C;
+}
+.base-info-view{
+	padding: 10px;
+	background: #FFF;
+}
+.base-scroll-view{
+	top: 45px !important;
+}
+/*loading加载位置*/
+.base-loading
+{
+	text-align: center;
+	margin-top: 60%;
+}
+/*头部导航栏背景颜色*/
+.base-header-background
+{
+	background: #FFFFFF;
+	color: #1ABC9C !important;
+}
+.base-header-background h1
+{
+	color: #1ABC9C;
+}
+.base-text-0{
+	font-size: 14px;
+	color: #444;
+}
+.base-text-p{
+	font-size: 14px;
+	color: #8f8f94;
+}
+.text-btn{
+	font-size: 17px !important;
+	padding-top: 14px !important;
+	padding-bottom: 14px !important;
+}
+.base-head-btn{
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 15px !important;
+	padding-right: 15px !important;
+}
+.base-head-btn:active{
+	background: #999;
+}
+.base-white-color{
+	background: white !important;
+}
+.base-cancel-color{
+	color: #AAA;
+}
+.base-ok-color {
+	color: #1ABC9C !important;
+}
+.base-ok-label {
+	color: #FFF !important;
+	background-color: #1ABC9C !important;
+}
+.base-head-title{
+	color: #1ABC9C;
+	font-weight: bold;
+}
+.base-table-view{
+	margin-top: 0 !important;
+}
+.base-img-small{
+	margin-right: 10px;
+	height: 50px !important;
+	width: 50px !important;
+}
+.base-img-mid{
+	margin-right: 10px;
+	height: 80px !important;
+	width: 80px !important;
+}
+.base-cir{
+	border-radius: 50%;
+}
+.base-round{
+	border-radius: 10%;
+}
+.base-content-1{
+	overflow: hidden;
+	margin: 0;
+	padding-top: 10px;
+}
+.base-text-small{
+	font-size: 12px !important;
+}
+.base-list-radio{
+	top: 30% !important;
+}
+.base-head-combine
+{
+	box-shadow: 0 0px 0px #FFFFFF !important;
+	color: #1ABC9C;
+}
+.base-slider-header
+{
+	background: #FFFFFF !important;
+	height: 40px !important;
+}
+.base-body-padding
+{
+	padding: 0 10px !important;
+}
+.base-tag-1{
+	margin: 0 5px;
+	padding: 0 5px;
+	border-radius: 3px;
+	font-size: 12px;
+	background: #EC971F;
+	color: #FFF;
+}
+.base-ellipsis-4 {
+	display: -webkit-box;
+	overflow: hidden;
+	white-space: normal!important;
+	text-overflow: ellipsis;
+	word-wrap: break-word;
+	-webkit-line-clamp: 4;
+	-webkit-box-orient: vertical
+}
+/*
+ * 话题标签的背景形状
+ */
+.base-topic-label
+{
+	background: #EEE;
+	display: inline-block;
+	padding: 5px;
+	font-size: 14px;
+	border-radius: 5px;
+	margin: 5px;
+	max-width: 18em;
+}
+
+/*
+ * 发布时间类字体样式
+ */
+.base-time-font
+{
+	color: #888888;
+	font-size: 12px;
+}
+/*
+ * 微博资讯item简介字体样式
+ */
+.base-content-font
+{
+	color: #888888;
+	font-size: 12px;
+}
+/*
+ * 资讯微博下小头像
+ */
+.base-author-icon
+{
+	width: 25px !important;
+	border-radius:50% ;
+}
+/*
+ * Img-icon
+ */
+.base-icon
+{
+	width:25px !important;
+}

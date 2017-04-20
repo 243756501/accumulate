@@ -1,0 +1,17 @@
+.mui-collapse{
+	margin: 0 !important;
+	background-color: white;
+	text-align: center;
+}
+.score-collapse{
+	width: 45%;
+	text-align: left;
+}
+.score-pop{
+	left: 15%;
+	top: 25%;
+}
+.score-amount{
+	float: right;
+	margin-top: -20px;
+}

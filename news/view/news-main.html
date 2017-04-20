@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css" />
+		<link rel="stylesheet" type="text/css" href="../css/news-main.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/pull-top-tips.css"/>
+		<link rel="stylesheet" type="text/css" href="../../account/css/animate.min.css"/>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav base-header-background">
+			<h1 class="mui-title">资讯</h1>
+			<img id="shakeBtn" src="../../images/icon/icon-shake.png" class="mui-pull-right base-icon nm-shakeIcon"/>
+		</header>
+		<div class="mui-content">
+			<div id="wrapper" class="nm-slideitem base-white-color mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+				<div id="nav_list" class="mui-scroll base-scrollsegmented-font">
+					<a id="0" class="mui-control-item mui-active" data-type="0" href="#item_0">首页</a>
+				</div>
+			</div>
+			<div class="nm-write-div">
+				<img id="NewsWrite" class="nm-write-icon" src="../../images/icon/icon-newswrite.png" />
+			</div>
+			<div id="popover" class="mui-popover">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<div id="popoverDiv">
+							<img class="shakeloading-Img" src="../../images/mediaImages/xubox_loading6.gif"/>
+							<p>摇一摇精彩推荐中...</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="scroll_wrapper" class="mui-scroll-wrapper">
+				<div id="news_refresh" class="mui-scroll">
+					<div id="sliderImage" class="mui-slider nm-slider-group-body">
+						<div id="nm_slider_group" class="mui-slider-group">
+						</div>
+						<div id="nm_slider_indicator" class="mui-slider-indicator mui-text-right">
+						</div>
+					</div>
+					<div id="loading_page" style="text-align: center;margin-top: 30%;">
+						<i class="mui-spinner"></i>
+					</div>
+					<div style="display: none;" id="pullrefresh" class="mui-clearfix">
+						<ul id="news_0" class="mui-table-view" data-page="1"></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script id="nm_listitem_script" type="text/html">
+			<div class="nm-list-left mui-pull-left">
+				<img src="../../images/app-logo.png" onload="load(this)" data-src="{{if !cover_url}}../../images/topicavatar.png{{else}}{{cover_url.banana}}{{/if}}" />
+			</div>
+			<div class="nm-list-right">
+				<div class="list-item-time">
+					<img src="../../images/time-icon.png"></img>
+					<span class="base-time-font mui-ellipsis">{{update_time}}</span>
+				</div>
+				<div class="list-item-title">
+					<p class="list-item-titlefont mui-ellipsis">{{title}}</p>
+				</div>
+				<div class="list-item-content mui-ellipsis-2 base-content-font">{{description}}</div>
+				<div class="list-item-author">
+					<img class="base-author-icon" src="../../images/default_avatar.jpg" onload="load(this)" data-src="{{if !user.avatar128}}../../images/default_avatar.jpg{{else}}{{user.avatar128}}{{/if}}">			
+					<div class="nm-list-author-div" style="width: 80px;"><p class="base-time-font mui-ellipsis">{{user.nickname}}</p></div>
+				</div>
+			</div>
+		</script>
+		<script id="hotNews_script" type="text/html">
+			<img onload="load(this)" src="../../images/mediaImages/df_big.png" data-src="{{if !cover_url}}../../images/topicavatar.png{{else}}{{cover_url.banana}}{{/if}}">
+			<div class="mui-slider-title">
+				<p class="mui-ellipsis">{{title}}</p>
+			</div>
+		</script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/core.js"></script>
+		<script src="../../js/mui.pullToRefresh.js"></script>
+		<script src="../../js/mui.pullToRefresh.material.js"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/news.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/news-render.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/news-main.js" type="text/javascript " charset="utf-8"></script>
+	</body>
+
+</html>

@@ -1,0 +1,55 @@
+
+.shop-logo{
+	width: 4em;
+	height: 4em;
+	margin: 0px 10px;
+}
+.shop-view{
+	opacity:0.9;
+	background: url(../../images/banan.jpg);
+}
+
+.shop-info{
+	min-height: 5em;
+	top: 2em;
+}
+.shop-text{
+	padding-right: 5px;
+}
+.shop-des{
+	color: white;
+	font-size: 14px;
+}
+.sell-count{
+	text-align: right;
+	color: orange;
+	font-size: 13px;
+}
+.store-list-img{
+	width: 5em;
+	height: 5em;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+.goods-nav{
+	margin: 5px 5px;
+	background: white;
+}
+.price-icon{
+	font-size: 12px;
+	display: block;
+}
+.mui-control-item{
+	border-bottom: 0 !important;
+}
+.goods-price{
+	margin-top: 5px !important;
+	color: red;
+	font-size: 18px;
+}
+.mui-ellipsis-2{
+	min-height: 40px;
+}
+.item-bottom{
+	font-size: 15px;
+}

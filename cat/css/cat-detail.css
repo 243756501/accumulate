@@ -1,0 +1,113 @@
+.mui-scroll-wrapper{
+	bottom: 49px;
+}
+.detail-view{
+	padding: 10px;
+	background: white;
+	margin-bottom: 10px;
+}
+.comment-view{
+	padding-top: 10px;
+	background: white;
+}
+.avatar-img{
+	border-radius: 50%;
+	margin-right: 10px;
+	width: 50px;
+	height: 50px;
+}
+.count-info-view{
+	color: #888;
+	margin: 5px 0;
+}
+.count-info-right{
+	float: right;
+}
+.march-state{
+	color: green;
+}
+.basis-info{
+	margin: 10px 0;
+}
+.house-info-view{
+	display: inline-block;
+	width: 50%;
+	margin-right: -5px;
+}
+.house-info{
+	display: inline-block;
+}
+.icon-phone{
+	color: green;
+	font-size: 24px;
+	float: right;
+}
+.report-btn{
+	float: right;
+	padding: 5px 10px;
+	background: #eee;
+	color: green;
+	border-radius: 2px;
+}
+.diy-bottom-box {
+	position: fixed;
+	width: 100%;
+	height: 50px;
+	bottom: 0px;
+	border-top: solid 1px #ddd;
+	background-color: #EEE;
+}
+.botm-btn{
+	text-align: center;
+	margin-right: -4px;
+	width: 20%;
+	display: inline-block;
+	line-height: 50px;
+	border-right: 1px solid #ddd;
+}
+.botm-btn:active{
+	background: #ddd;
+}
+.left-one{
+	width: 40% !important;
+	text-align: left;
+	padding-left: 10px;
+}
+.send-btn{
+	margin-top: 7px;
+	right: 5px;
+	height: 36px;
+	width: 60px;
+}
+.reply-box-item{
+	display: inline-block;
+	line-height: 50px;
+	text-align: center;
+}
+.news-content-img {
+	max-width: 100%;
+	height: auto;
+}
+.comment-item{
+	padding: 10px 5px !important;
+	border-bottom: 1px solid #eee;
+}
+.comment-item p{
+	margin: 0;
+}
+.comm-reply-view{
+	opacity:0;
+	width: 40px;
+	float: right;
+	margin-right: -25px;
+}
+.btm-reply-btn{
+	background: #EEE !important;
+	border: 0 !important;
+	padding: 0 !important;
+	width: 80% !important;
+	margin: 0 !important;
+}
+.btm-reply-btn:active{
+	background: #DDD !important;
+}

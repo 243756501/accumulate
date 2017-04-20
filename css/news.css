@@ -1,0 +1,42 @@
+.nav-mod {
+	height: 40px;
+	width: 100%;
+}
+#carousel {
+	background-color: #F3F3F3;
+}
+.selected span {
+	background-color: #FFFFFF;
+	color: #2bb1e1;
+}
+ul {
+	list-style-type: none;
+}
+p {
+	margin: 0px;
+}
+#second-type {
+	display: none;
+	background-color: #FFFFFF;
+	z-index: 980;
+	position: absolute;
+	width: 100%;
+}
+#second-type ul {
+
+	margin: 0px;width: 100%;padding: 2px;
+}
+#second-type ul li {
+
+	margin: 2px;
+}
+#second-type ul li a{
+	padding: 5px 8px;display: block;border: solid 1px #F3F3F3;
+}
+
+.news-item{
+	margin-left: 5px;
+	margin-right: 5px;
+	border-bottom: 1px solid #ddd;
+}
+

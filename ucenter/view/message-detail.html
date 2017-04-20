@@ -1,0 +1,192 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/pull-top-tips.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css" />
+		<link rel="stylesheet" type="text/css" href="../css/mssage-detail.css"/>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 id="msg_title" class="mui-title"></h1>
+		</header>
+		<div id="loading_page" class="base-loading">
+			<i class="mui-spinner"></i>
+		</div>
+		
+		<div id="pullrefresh" style="display: none;" class="mui-scroll-wrapper base-scroll-view">
+			<div class="mui-scroll">
+				<ul id="list_view" class="mui-table-view mui-clearfix"></ul>
+			</div>
+		</div>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/mui.pullToRefresh.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.pullToRefresh.material.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../weibo/js/weibo.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/ucenter.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/message-render.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init()
+			var myInfo,selfWeb,selfPull,typeInfo= null;
+			var restInfo ={type:'weibo',page:0};
+			
+			var loadView = document.getElementById("loading_page");
+			var mainView = document.getElementById("pullrefresh");
+			var msgTitle = document.getElementById("msg_title");
+			var listView = document.getElementById("list_view");
+			var tplts = {
+				weibo:{tplt:'msg_weibo',class:'msg-item-weibo'},
+				common_announce:{tplt:'msg_announce',class:'msg-item-announce'}
+			};
+			
+			mui('#pullrefresh').scroll({bounce: false});
+			
+			window.addEventListener('msgTypeChange', function(event) {
+				var tempData = event.detail.data;
+				var isFlush = event.detail.flush;
+				if(!typeInfo|| isFlush ||tempData.type != typeInfo.type){
+					msgTitle.innerHTML = tempData.detail.title;
+					typeInfo = tempData;
+					restInfo.type = typeInfo.type;
+					restInfo.page = 0;
+					listView.innerHTML = '';
+					mui('.mui-scroll').pullToRefresh().refresh(true);
+					
+					mui('.mui-scroll').pullToRefresh().pullUpLoading();
+					
+				}else{
+					changePage(loadView,mainView,false);
+				}
+			})
+
+			//渲染列表
+			function render_list(listData){
+				for (var index in listData) {
+					var tmpInfo = listData[index];
+					tmpInfo.type = tmpInfo.type.toLowerCase();
+					var tpltInfo = tplts[tmpInfo.type];
+					var li = app.createListItem(tmpInfo,tpltInfo?tpltInfo.class:'mui-table-view-cell');
+					if(tmpInfo.type == 'common_announce'){	//如果是公告,在页面上找一个图片作为封面图
+						
+						var tmpStr = tmpInfo.content.content.keyword1;
+					    tmpInfo.sample_img = apptools.getCover(tmpStr)[0];
+						tmpInfo.sample_content = tmpStr.replace(/<[^>]*>/gi,'');
+					}else if(tmpInfo.type == 'weibo'){	//同公告
+						if(tmpInfo.content.weibo_data){
+							var weiboInfo = tmpInfo.content.weibo_data;
+							if(weiboInfo.type == 'image'){
+								tmpInfo.sample_img = weiboInfo.attach.image.thumb[0];
+							}else if(weiboInfo.type == 'link' || weiboInfo.type == 'share'){
+								tmpInfo.sample_img = weiboInfo.data.img;
+							}else{
+								tmpInfo.sample_img = weiboInfo.user.avatar128;
+							}
+						}else{
+							continue;
+//							tmpInfo.sample_img = myInfo.avatar128;
+						}
+					}
+					tmpInfo.create_time = apptools.friendlyDate(tmpInfo.create_time);
+					li.innerHTML = render_message(tmpInfo,tpltInfo?tpltInfo.tplt:'msg_tplt');
+					listView.appendChild(li);
+				}
+			}
+			//初始化上下拉组件
+			mui('.mui-scroll').pullToRefresh({
+		        down: {
+		            callback: function() {
+		        		restInfo.page = 1;
+		        		selfPull = this;
+						ucenter.getMsgList(restInfo, function(res) {
+							listView.innerHTML = '';
+							if(res.data)render_list(res.data);
+							selfPull.refresh(res.data&&res.data.length>=5);
+							selfPull.endPullDownToRefresh();
+							changePage(loadView,mainView,false);
+						});
+		            }
+		        },
+		        up: {
+		            callback: function() {
+		        		restInfo.page++;
+		        		selfPull = this;
+						ucenter.getMsgList(restInfo, function(res) {
+							if(res.data)render_list(res.data);
+							console.log(JSON.stringify(res.data));
+			            	selfPull.endPullUpToRefresh(!res.data||res.data.length<5);
+			            	changePage(loadView,mainView,false);
+						});
+		            }
+		        }
+		    });
+			mui.plusReady(function() {
+				selfWeb = plus.webview.currentWebview();
+				myInfo = JSON.parse(myStorage.getItem('user_info'));
+				selfWeb.addEventListener('hide',function(e){
+					changePage(loadView,mainView,true);
+				})
+			})
+			
+			//处理圈子邀请信息
+			mui('#list_view').on('tap','.mui-table-view-cell',function(e){
+				var msgInfo = this.detail_info;
+				try{
+					if(typeInfo.type.toLowerCase() == 'weibo_crowd' && msgInfo.content.args.action == 'invite'){
+						plus.nativeUI.actionSheet({
+							title:"是否接受邀请",
+							cancel:"取消",
+							buttons:[{title:"接受"},{title:"拒绝"}]
+						}, function(e){
+							var rstInfo = {id:msgInfo.content.args.id};
+							if(e.index > 0){
+								rstInfo.flag = e.index == 1?1:0;
+								weibo.checkCrowdInvite(rstInfo,function(res){
+									if(e.index == 1 && res.code == 200){
+										toast.info('加入圈子成功！');
+									}else{
+										toast.info(res.info);
+									}
+								})
+							}
+						});
+					}
+				}catch(e){
+					
+				}
+			})
+			//查看公告详细
+			mui('#list_view').on('tap','.'+ tplts.common_announce.class,function(e){
+				var msgInfo = this.detail_info;
+				webtools.openSingleWeb('message-announce',msgInfo);
+			})
+			//微博消息处理开始
+			mui('#list_view').on('tap','.'+ tplts.weibo.class,function(e){
+				var weiboInfo = this.detail_info.content.weibo_data;
+				if(e.srcElement.classList.contains('msg-weibo-reply-btn')){
+					var data = {
+			            to_user: weiboInfo.user,
+			            weibo_comment: weiboInfo
+					};
+					webtools.openSingleWeb('../../weibo/view/weibo-comment',data);
+				}else{
+					webtools.openDtlWeb('weibo',weiboInfo.id);
+				}
+			})
+			
+			//跳转用户中心
+			app.userListener();
+		</script>
+	</body>
+
+</html>

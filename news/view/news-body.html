@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/news.css" rel="stylesheet" />
+		<link href="../../css/icomoon.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/news-body.css"/>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.pullToRefresh.js"></script>
+		<script src="../../js/mui.pullToRefresh.material.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/news.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/news-render.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<!--身体-->
+		<div style="background-color: white;height: 45px;" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+			<div id="first_top_nav" class="mui-scroll">
+				<a id="0" class="mui-control-item mui-active">首页</a>
+			</div>
+		</div>
+		<div id="second_top_nav">
+		</div>
+		<div id="refresh-btn">
+		</div>
+		<div id="scroll_wrapper" class="mui-scroll-wrapper">
+			<div id="news_refresh" class="mui-scroll">
+				<div id="topImageView" class="mui-slider">
+					<div id="hot_news_list" class="mui-slider-group">
+					</div>
+					<div id="tips_list" class="mui-slider-indicator mui-text-right">
+					</div>
+				</div>
+				<div id="loading_page" style="text-align: center;margin-top: 30%;">
+					<i class="mui-spinner"></i>
+				</div>
+				<div style="display: none;" id="pullrefresh" class="news-list mui-clearfix">
+					<ul id="news_0" class="mui-table-view" page="1"></ul>
+				</div>
+			</div>
+		</div>
+
+		<!--script模板-->
+		<script id="nav_popover" type="text/html">
+			<div class="mui-popover-arrow"></div>
+			<ul class="mui-table-view">
+				{{each NewsSecond as value i}}
+				<li class="mui-table-view-cell">
+					<a id="{{value.id}}" style="text-overflow: inherit;">{{value.title}}
+					</a>
+				</li>
+				{{/each}}
+			</ul>
+		</script>
+
+		<script id="hot_news_template" type="text/html">
+			<a><img class="news-top-image" onload="load(this)" src="../../images/mediaImages/df_big.png" data-src="{{if !cover_url}}../../images/topicavatar.png{{else}}{{cover_url.banana}}{{/if}}"/></a>
+			<p class="mui-slider-title">{{title}}</p>
+		</script>
+	</body>
+	<script>
+		mui.init();
+		var firstTopNav = document.getElementById('first_top_nav');
+		var secondTopNav = document.getElementById('second_top_nav');
+		var loadingPage = document.getElementById('loading_page');
+		var mainPage = document.getElementById('scroll_wrapper');
+		var hotNewsList = document.getElementById('hot_news_list');
+		var tipsList = document.getElementById('tips_list');
+		var refreshBtn = document.getElementById('refresh-btn');
+		var news_refresh = document.getElementById('news_refresh');
+		var topNav = [firstTopNav, secondTopNav];
+		var pullObj = null;
+		var restInfo = {
+			newsType: 0,
+			page: 1
+		};
+		
+		//当前ul对象
+		var flagDiv = document.getElementById('news_0');
+		//上一个ul对象
+		var previousDiv = document.getElementById('news_0');
+		var flagRefresh = true;
+		var newsDetlWeb = null;		//详情页面
+		
+		mui.plusReady(function() {
+			var newsHeadWeb = plus.webview.getWebviewById('nav_news');
+			
+			//导航栏
+			news.getNewsClass(0, function(res) {
+				if (res.code == 200 && res.data != null) {
+					//存储以供发送页面使用
+					myStorage.setItem('news_send_category',JSON.stringify(res.data));
+					for (var index in res.data) {
+						var navInfo = res.data[index];
+						var nav_a = document.createElement('a');
+						nav_a.className = 'mui-control-item';
+						nav_a.innerText = navInfo.title;
+						nav_a.id = navInfo.id;
+						firstTopNav.appendChild(nav_a);
+						
+						var ul = document.createElement('ul');
+						ul.className = 'mui-table-view';
+						ul.id = 'news_'+navInfo.id;
+						ul.setAttribute('page',1);
+						ul.style.display = 'none';
+						document.getElementById('pullrefresh').appendChild(ul);
+						if (navInfo.NewsSecond != null) {
+							nav_a.href = '#class_' + navInfo.id;
+							var spinnerDiv = document.createElement('div');
+							spinnerDiv.id = 'class_' + navInfo.id;
+							spinnerDiv.className = 'mui-popover mui-bar-popover';
+							spinnerDiv.innerHTML = template('nav_popover', navInfo);
+							secondTopNav.appendChild(spinnerDiv);
+							
+							for(var i in navInfo.NewsSecond){
+								var ul = document.createElement('ul');
+								ul.className = 'mui-table-view';
+								ul.id = 'news_'+navInfo.NewsSecond[i].id;
+								ul.setAttribute('page',1);
+								ul.style.display = 'none';
+								document.getElementById('pullrefresh').appendChild(ul);
+							}
+						}
+					}
+				}
+			});
+			
+			//推荐资讯
+			news.getRecommendNewsList(2, function(res) {
+				if (res.code == 200) {
+					for (var i = 0; i < 4 && i < res.data.length; i++) {
+						var hotNewsInfo = res.data[i];
+						var hotDiv = document.createElement('div');
+						hotDiv.className = 'mui-slider-item';
+						hotDiv.detail_info = hotNewsInfo;
+						hotDiv.innerHTML = template('hot_news_template', hotNewsInfo);
+						var tipsdiv = document.createElement('div');
+						if (i == 0) {
+							tipsdiv.className = 'mui-indicator mui-active';
+						} else {
+							tipsdiv.className = 'mui-indicator';
+						}
+						tipsList.appendChild(tipsdiv);
+						hotNewsList.appendChild(hotDiv);
+					}
+					mui('#topImageView').slider({
+						interval: 10000 //自动轮播周期，若为0则不自动播放，默认为0；
+					});
+				}
+			});
+			
+			//初始化news列表
+			getNews();
+			
+			mui(news_refresh).pullToRefresh({
+				up: {
+					callback: function() {
+						var flag = true;
+						pullObj = this;
+						var tempDiv = flagDiv;
+						var tempPage = parseInt(tempDiv.getAttribute('page'));
+						if (flagRefresh){
+							flagRefresh = false;
+							restInfo.page = tempPage + 1;
+							news.getNewsList(restInfo, function(res) {
+								if (res.code == 200) {
+									tempDiv.setAttribute('page',restInfo.page);
+									flagRefresh = true;
+									for (var index in res.data) {
+										var li = get_news_li(res.data[index]);
+										tempDiv.appendChild(li);
+									}
+								} else {
+									mui.toast(res.info);
+								}
+								changePage(false);
+							pullObj.endPullUpToRefresh(res.data?false:true);
+							});
+						}
+					}
+				}
+			});
+			
+			//顶部导航栏功能实现
+			mui.each(topNav, function(index, navEl) {
+				mui(navEl).on('tap', 'a', function(event) {
+					changePage(true);
+					if (navEl.id == 'second_top_nav') {
+						mui(get_parent_node(this, '.mui-popover')).popover('toggle');
+					}
+					previousDiv.style.display = 'none';
+					mui('#scroll_wrapper').scroll().scrollTo(0, 0,200);
+//					news_list.innerHTML = '';
+					restInfo.newsType = this.id;
+					flagDiv = document.getElementById('news_'+this.id);
+					flagDiv.style.display = 'block';
+					previousDiv = document.getElementById('news_'+this.id);
+					restInfo.page = 1;
+					if (flagDiv.innerHTML == ''){
+						getNews();
+					}else{
+						changePage(false);
+					}
+					newsHeadWeb.evalJS('change_top("' + this.innerText + '")');
+				});
+			});
+			
+			newsDetlWeb = mui.preload({
+				url:'news-detail.html',
+				id:'news-detail'
+			})
+			
+		});
+		
+		/*loading的加载和显示*/
+		var changePage = function(loading) {
+			document.getElementById('loading_page').style.display = loading?'block':'none';
+			document.getElementById('pullrefresh').style.display = loading?'none':'block';
+		}
+			//阻尼系数
+		var deceleration = mui.os.ios ? 0.003 : 0.0009;
+		mui('#scroll_wrapper').scroll({
+			bounce: false,
+			indicators: true, //是否显示滚动条
+			deceleration: deceleration
+		});
+
+		function getNews() {
+			news.getNewsList(restInfo, function(res) {
+				if (res.code == 200) {
+					for (var index in res.data) {
+						var li = get_news_li(res.data[index]);
+						flagDiv.appendChild(li);
+					}
+				} else {
+					mui.toast(res.info);
+				}
+				changePage(false);
+			});
+		}
+		
+		mui('#hot_news_list').on('tap', 'div', function() {
+			var newsInfo = this.detail_info;
+			webtools.openDtlWeb('news',newsInfo.id);
+		});
+		
+		//添加列表项的点击事件
+		mui('#pullrefresh').on('tap', 'li', function(event) {
+			var newsInfo = this.detail_info;
+			webtools.openDtlWeb('news',newsInfo.id);
+		});
+		
+		refreshBtn.addEventListener('tap', function() {
+			var tempDiv = flagDiv;
+			tempDiv.innerHTML = '';
+			restInfo.page = 1;
+			tempDiv.setAttribute('page',1);
+			getNews();
+			if(pullObj)
+			pullObj.refresh(true);
+			mui('#scroll_wrapper').scroll().scrollTo(0, 0,200);
+		});
+		
+		mui('#first_top_nav').on('tap','a',function(e){
+			if(pullObj)
+			pullObj.refresh(true);
+		})
+		mui('#second_top_nav').on('tap','li',function(e){
+			if(pullObj)
+			pullObj.refresh(true);
+		})
+	</script>
+
+</html>

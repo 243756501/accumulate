@@ -1,0 +1,131 @@
+html,body{
+	height: 100%;
+}
+.lable-view{
+	font-size: 17px;
+	background: #1ABC9C;
+	max-width: 100px;
+	color: white;
+	display: none;
+	border-radius: 20px;
+	padding: 4px 10px !important;
+	padding-right: 3px !important;
+	text-overflow: clip;
+}
+.content-body{
+	margin-bottom: 50px;
+}
+.weibo-send-content {
+	font-size: 15px;
+	color: #1ABC9C;
+	border: 0;
+}
+.weibo-all-btn {
+	border-radius: 20px;
+	font-size: 12px;
+	color: #1ABC9C;
+}
+.state-view{
+	padding: 10px;
+}
+.weibo-font-number {
+	padding: 0 10px;
+	text-align: right;
+}
+.announce-splitline {
+	margin: 0 10px;
+	opacity: 0.2;
+}
+
+.location-text {
+	position: relative;
+	bottom: -5px;
+	display: inline-block;
+	margin: 0;
+	max-width: 18em !important;
+}
+.send-footer{
+	position: fixed;
+	bottom: 0;
+}
+.tool-view .mui-bar-tab{
+	background: #EFEFF4;
+	border-bottom: 1px solid #ddd;
+}
+.tool-view .attach-view .container{
+	display: none;
+	min-height: 200px;
+}
+.record-time{
+	margin: 15px;
+	color: #1ABC9C;
+}
+.circle-bom{
+	background-color: #1ABC9C;
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	display: inline-block;
+}
+.circle-mid{
+	background-color: #1ABC9C;
+	width: 80px;
+	height: 80px;
+	margin: -100px 0 30px 0;
+	border-radius: 50%;
+	border: 3px solid white;
+	display: inline-block;
+}
+.record-btn{
+	color: #555;
+	border-radius: 50%;
+	border: 1px solid #ccc;
+	padding: 10px;
+	margin-left: 20px;
+	display: none;
+}
+.inline-block{
+	display: inline-block ;
+}
+.icon-line{
+	line-height: 180px;
+}
+.del-line{
+	margin-right: 20px;
+	text-align: right;
+}
+.bar-tips{
+	color: white;
+	background: red;
+    position: fixed;
+    margin-top: -10px;
+    margin-left: -5px;
+    display: none;
+}
+.null-badge{
+	padding: 5px;
+	border-radius: 50%;	
+}
+.cir-icon{
+    position: fixed;
+    margin-top: 30px;
+    padding-left: 32px;
+    height: 40px;
+    width: 40px;
+    color: white;
+    font-size: 40px !important;
+}
+#topic_trigger{
+	padding-left: 20px;
+	padding-right: 20px;
+}
+.lg-cover{
+	height: 30vw;
+	width: 100%;
+	border: 1px dashed #DDD;
+}
+.lg-title{
+	border: 0 !important;
+	border-bottom: 1px solid #EEE !important;
+	font-size: 18px;
+}

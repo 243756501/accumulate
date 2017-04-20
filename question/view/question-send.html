@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/mui.picker.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app-form.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/module.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/tools/img_uploader.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/question-send.css"/>
+		<script src="../../js/mytools/body_before.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">提问</h1>
+		    <div id="send_btn" class="mui-pull-right hu-hd-btn nav-right-btn">提交</div>
+		</header>
+		
+		<div class="app-content">
+			<div class="app-form-block">
+				<div class="app-ipt-title">标题</div>
+				<input class="app-form-textarea" id="title" type="text" name="title" placeholder="标题" />
+			</div>
+
+			<div class="app-form-block">
+				<div class="app-ipt-title">分类</div>
+				<div class="mui-table-view-cell mui-collapse">
+					<a id="showUserType" class="mui-navigate-right">选择分类</a>
+				</div>
+			</div>
+			<div class="app-form-block">
+				<div class="app-ipt-title">悬赏</div>
+				<div class="flex-box" style="background-color: white;">
+					<div id="score_show_btn" class="mui-table-view-cell mui-clearfix mui-collapse score-collapse">
+						<a id="score_title" class="mui-navigate-right">积分类型</a>
+					</div>
+					<input style="height: 43px;" type="number" id="score_ipt" placeholder="悬赏数额"/>
+				</div>
+			</div>
+
+			<div class="app-form-block">
+				<div class="app-ipt-title">内容</div>
+				<textarea id="question_content" class="app-form-textarea addself-textarea" placeholder="问题详情" onfocus="addself(this)"></textarea>
+			</div>
+
+			<div class="app-form-block">
+				<div class="app-ipt-title">图片<small>(选填,提供问题截图)</small></div>
+				<!--图片上传区域start-->
+				<div id="image_up_view" class="image-up-view">
+					<span id='image_list' class="image-list"></span>
+					<img id="add_btn" class="add-btn" src="../../images/add.png"/>
+				</div>
+				<!--图片上传区域end-->
+			</div>
+		</div>
+		
+		<!--积分类型菜单-->
+		<div id="score_list_popover" class="mui-popover score-pop">
+			<ul id="score_list_view" class="mui-table-view mui-table-view-radio"></ul>
+		</div>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/mui.picker.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mytools/com_render.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/question.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mytools/img_uploder.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/question-send.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>

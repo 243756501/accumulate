@@ -1,0 +1,90 @@
+.mui-fullscreen{
+	background: url(../../images/bgm/rank_detail.png);
+	background-size: 100% 100%;
+	margin-bottom: 19px;
+}
+.mui-scroll{
+	padding: 165px 15px 0 15px;
+}
+.my-rank{
+	position: absolute;
+	z-index: 999;
+	background: #FFF;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	padding: 5px 10px;
+	border-top: 1px solid #EFEFEF;
+}
+.my-rank p{
+	margin: 0;
+}
+.list-head {
+	min-height: 170px;
+	background: #FFF;
+	border-radius: 8px 8px 0px 0px;
+	display: flex;
+}
+.user-head {
+	border-radius: 50%;
+	width: 50px;
+	height: 50px;
+}
+.list-topthree {
+	padding: 15px 10px 0 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	flex: 1;
+}
+.num-2 {
+	position: relative;
+	left: -33.3%;
+}
+.num-1 {
+	position: relative;
+	border-radius: 10px;
+	margin-bottom: -10px;
+	background: #FFF;
+	top: -30px;
+	border: 1px;
+	border-image: linear-gradient(#EAEAEA 0%, #FFFFFF 60%) 0 100;
+	left: 33.3%;
+}
+.num-1 .user-head {
+	width: 70px;
+	height: 70px;
+}
+.rank-tip {
+	width: 40px;
+	height: 40px;
+	top: -15px;
+	position: relative;
+}
+.info-view {
+	opacity: 0.5;
+}
+.info-type {
+	color: #444;
+	font-size: 12px;
+}
+
+.center-flex {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.rank-num {
+	width: 35px;
+	text-align: center;
+}
+.user-name-view{
+	opacity: 0.7;
+	margin-left: 15px;
+	max-width: 7em;
+}
+.type-num{
+	position: relative;
+	right: 15px;
+	font-size: 14px;
+}

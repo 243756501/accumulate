@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    	<link href="../../css/mui.min.css" rel="stylesheet"/>
+		<link href="../../css/mui.picker.min.css" rel="stylesheet" />
+		<link href="../../css/previewimage.css" rel="stylesheet"/>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/issue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.picker.min.js"></script>
+		<script src="../../js/mui.zoom.js"></script>
+		<script src="../../js/mui.previewimage.js"></script>
+		<script src="../../js/uploader.js" type="text/javascript" charset="utf-8"></script>
+   
+   <style type="text/css">
+   		.mui-scroll-wrapper{
+			top: 45px;
+		}
+		.mui-scroll{
+			background: white;
+			padding: 5px;
+		}
+   </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">发布专辑</h1>
+	</header>
+	
+	<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div class="mui-input" style="margin-top: 10px;">
+						<label>专辑标题</label>
+						<br>
+						<input id="title"  type="text" name="title" placeholder="标题" />
+					</div>
+					
+					<div class="mui-input" style="margin-top: 10px;">
+						<label>专辑网址</label>
+						<br>
+						<input id="url"  type="text" name="title" placeholder="http://" />
+					</div>
+							
+					<div class="mui-input mui-clearfix">
+					<label>添加封面</label>
+					<br>
+						<div style="margin-bottom: 5px;">
+					 
+					        <div id="show_cover" style="margin-top: 5px;"></div>
+					
+					    </div>
+					<input type="hidden" value="1" id="attach_ids" name="attach_ids"/>
+					<button id="upload_cover" class="mui-icon mui-icon-image" style="width: 100px; height: 100px;float: left;"></button>
+		
+				</div>
+		
+					<div class="mui-input">
+						<label>专辑分类</label>
+						<br>
+						<input name="issue_id" id="role_id" value="1" type="hidden">
+						<button id='showIssueType' class="mui-btn" type='button' style="font-size: 18px;display: block;width: 100%;margin-bottom: 10px;">选择分类
+						</button>
+					</div>
+		
+					<div class="mui-input">
+						<label>专辑内容</label>
+						<textarea id="content" placeholder="专辑内容"></textarea>
+					</div>
+
+		
+		
+				<div class="mui-input mui-clearfix">
+					<label>上传图片</label>
+					<br>
+						<div style="margin-bottom: 5px;">
+					 
+					        <div id="show_img" style="margin-top: 5px;"></div>
+					
+					    </div>
+					<input type="hidden" value="1" id="attach_ids" name="attach_ids"/>
+					<button id="upload" class="mui-icon mui-icon-image" style="width: 100px; height: 100px;float: left;"></button>
+		
+				</div>
+				<button id="send_btn" style="margin-top: 10px;" class="mui-btn mui-btn-positive  mui-btn-block">发表</button>
+			</div>
+		</div>
+</body>
+<script type="text/javascript" charset="utf-8">
+      	mui.init();
+      	mui('.mui-scroll-wrapper').scroll();
+		mui.plusReady(function(){
+			
+			var showTypeBtn = document.getElementById('showIssueType');
+			var issueTitle = document.getElementById('title');
+			var issueContent = document.getElementById('content');
+			var uploadImage = document.getElementById('upload');
+			var upload_cover = document.getElementById('upload_cover')
+			var issue_url = document.getElementById('url')
+			var imageArr = [];
+
+			uploadImage.createUploader({input_name: 'attach_ids', showDiv: 'show_img', multiple: true,contentDom:issueContent,imageArr:imageArr});
+			upload_cover.createUploader({input_name: 'attach_ids', showDiv: 'show_cover', multiple: true,})
+			
+			issue.getTypeData(function(res){
+	      		if(res.code == 200){
+	      				var typeArr = [];
+	      			for(index in res.data){
+	      				var navInfo = res.data[index];
+	      				var pickerEle = {
+	      					value:navInfo.id,
+	      					text:navInfo.title
+	      				}
+	      				typeArr.push(pickerEle);
+	      				if(navInfo.QuestionSecond != null){
+	      					for(ind in navInfo.QuestionSecond){
+		      					var SepickerEle = {
+			      					value:navInfo.QuestionSecond[ind].id,
+			      					text:'<--' + navInfo.QuestionSecond[ind].title
+			      				}
+		      					typeArr.push(SepickerEle);
+	      					}
+	      				}
+	      			}
+	      			
+      				var userPicker = new mui.PopPicker();
+					userPicker.setData(typeArr);
+					showTypeBtn.addEventListener('tap', function(event){
+						userPicker.show(function(items){
+							if(items[0].text.indexOf('<') >= 0){
+								showTypeBtn.innerText = items[0].text.substring(3,items[0].text.length);
+							}else{
+		      					showTypeBtn.innerText = items[0].text;
+							}
+		      				showTypeBtn.setAttribute('type-id',items[0].value);
+							//返回 false 可以阻止选择框的关闭
+							//return false;
+						});
+					}, false);
+	      		}else{
+	      			toast.info('获取专辑分类信息失败！');
+	      		}
+	      	})
+			
+			/*发送按钮*/
+			document.getElementById('send_btn').addEventListener('tap',function(e){
+				
+				/*把内容中的图片锚点替换为url*/
+				var description = issueContent.value;
+				for(index in imageArr){
+					var imageId = '[img' + imageArr[index].id + ']';
+					description = description.replace(imageId,'<br><img src="' + imageArr[index].url + '"/>');
+				}
+				description = description.replace(/[img[0-9]+]/g,'');
+				
+				var cover_id = document.getElementById("show_cover").getElementsByTagName('span')[0].getAttribute('picture_id');
+				var restInfo = {
+					id:showTypeBtn.getAttribute('type-id'),
+					title:issueTitle.value,
+					description:description,
+					issue_url:issue_url.value,
+					cover_url:cover_id
+				}
+				console.log(JSON.stringify(restInfo));
+				if(restInfo.cover_url != null &&restInfo.id != null && restInfo.title.length >= 5 && restInfo.description.length >= 5){
+					issue.sendIssue(restInfo,function(res){
+						if(res.code == 200){
+							toast.info(res.info);
+							mui.back();
+						}else{
+							toast.info(res.info);
+						}
+					})
+				}else{
+					toast.info('请发布一个有意义的专辑');
+				}
+			});
+		});
+</script>
+</html>

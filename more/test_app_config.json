@@ -1,0 +1,224 @@
+{
+    "user": {
+        "can_reg": 1,
+        "reg_class": "normal",
+        "reg_type": "username,email,mobile",
+        "reg_role": [
+            {
+                "id": "1",
+                "title": "站长"
+            },
+            {
+                "id": "2",
+                "title": "开发者"
+            }
+        ],
+        "reg_step": [
+            {
+                "data-id": "disable",
+                "title": "禁用",
+                "items": []
+            },
+            {
+                "data-id": "enable",
+                "title": "启用",
+                "items": [
+                    {
+                        "data-id": "change_avatar",
+                        "title": "修改头像"
+                    },
+                    {
+                        "data-id": "expand_info",
+                        "title": "填写扩展资料"
+                    },
+                    {
+                        "data-id": "set_tag",
+                        "title": "选择个人标签"
+                    }
+                ]
+            }
+        ],
+        "can_skip": "change_avatar,expand_info,set_tag",
+        "user_board": [
+            {
+                "data-id": "disable",
+                "title": "禁用",
+                "items": []
+            },
+            {
+                "data-id": "enable",
+                "title": "启用",
+                "items": [
+                    {
+                        "data-id": "Weibo",
+                        "title": "动态"
+                    },
+                    {
+                        "data-id": "Question",
+                        "title": "问答"
+                    },
+                    {
+                        "data-id": "News",
+                        "title": "资讯"
+                    },
+                    {
+                        "data-id": "info",
+                        "title": "资料"
+                    },
+                    {
+                        "data-id": "rank_title",
+                        "title": "头衔"
+                    },
+                    {
+                        "data-id": "follow",
+                        "title": "TA的关注/粉丝"
+                    }
+                ]
+            }
+        ],
+        "email_verify_type": "2",
+        "mobile_verify_type": "1",
+        "sms_resend_time": "60",
+        "nickname_min": "2",
+        "nickname_max": "32",
+        "username_min": "2",
+        "username_max": "32"
+    },
+    "base": {
+        "update": 0,
+        "can_sort": "1",
+        "mod_sort": "2e52f75da99129c769233a46b8e0e764",
+        "mod_list": [
+            {
+                "title": "动态",
+                "name": "Weibo"
+            },
+            {
+                "title": "资讯",
+                "name": "News"
+            },
+            {
+                "title": "论坛",
+                "name": "Forum"
+            },
+            {
+                "title": "问答",
+                "name": "Question"
+            },
+            {
+                "title": "找人",
+                "name": "People"
+            },
+            {
+                "title": "分类信息",
+                "name": "Cat"
+            },
+            {
+                "title": "群组",
+                "name": "Group"
+            },
+            {
+                "title": "活动",
+                "name": "Event"
+            },
+            {
+                "title": "专辑",
+                "name": "Issue"
+            },
+            {
+                "title": "积分商城",
+                "name": "Shop"
+            },
+            {
+                "title": "微店",
+                "name": "Store"
+            }
+        ]
+    },
+    "plus": {
+        "igt": "1",
+        "im": {
+            "wukong": {
+                "open": "0"
+            },
+            "rongyun": {
+                "open": "1",
+                "app_key": "c9kqb3rdkdwcj"
+            }
+        }
+    },
+    "weibo": {
+        "show_title": "1",
+        "weibo_max": "1000",
+        "info": "近期将对OpenSNS各模块进行细节改进，欢迎提出您的建议。",
+        "can_topic": "1",
+        "can_image": "1",
+        "default_topic": "V3详情早知道，产品经理来爆料",
+        "weibo_tab": [
+            {
+                "data-id": "disable",
+                "title": "禁用",
+                "items": []
+            },
+            {
+                "data-id": "enable",
+                "title": "启用",
+                "items": [
+                    {
+                        "data-id": "all",
+                        "title": "全站关注"
+                    },
+                    {
+                        "data-id": "concerned",
+                        "title": "我关注的"
+                    },
+                    {
+                        "data-id": "hot",
+                        "title": "热门动态"
+                    },
+                    {
+                        "data-id": "fav",
+                        "title": "我的喜欢"
+                    }
+                ]
+            }
+        ]
+    },
+    "news": {
+        "guest_can_comment": "0"
+    },
+    "question": {
+        "need_audit": "0",
+        "answer_min": "4"
+    },
+    "issue": {
+        "need_audit": "0",
+        "guest_can_comment": "1"
+    },
+    "event": {
+        "need_audit": 0,
+        "guest_can_comment": 1
+    },
+    "forum": {
+        "img_max": "20",
+        "hot_forum": "1,2,3",
+        "reco_forum": "1,2,3"
+    },
+    "group": {
+        "need_audit": "0",
+        "build_max": "5",
+        "reco_forum": ""
+    },
+    "shop": {
+        "score_type": "8",
+        "hot_critical_value": "3",
+        "guest_can_comment": "0"
+    },
+    "store": {
+        "score_type": "4",
+        "center_words": "出任CEO，迎娶白富美，走上人生巅峰。",
+        "child_li_num": "5",
+        "store_verify": 0,
+        "goods_verify": 0
+    }
+}

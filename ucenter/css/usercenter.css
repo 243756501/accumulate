@@ -1,0 +1,56 @@
+.user-info-view {
+	height: 130px;
+	width: 100%;
+}
+.user-info-page {
+	background: white;
+}
+.info-bg-view{
+	position: absolute;
+	width: 100%;
+	height: 130px;
+}
+.user-info-view .info-view{
+	position: relative;
+}
+.user-info-view .text-view{
+	text-align: right;
+	padding: 10px 10px;
+	color: white;
+}
+.user-info-view .user-header{
+	margin: 20px 10px;
+	width: 70px !important;
+	height: 70px !important;
+}
+.user-info-view .follow-btn{
+	margin-bottom: 10px;
+}
+.user-info-view .follow-btn a{
+	border-radius: 2px;
+	padding:5px 5px 2px 5px;
+	color: #FFF;
+}
+.user-info-view .ucenter-name{
+	margin-bottom: 25px;
+	line-height: 40px;
+	font-size: 21px;
+}
+.user-info-view .count div{
+	display: inline-block;
+	font-size: 14px;
+	margin-left: 15px;
+}
+.user-info-page .mui-table-view {
+	padding: 10px 5px 5px 10px;
+}
+.weibo-item .expression_img {
+	width: initial !important;
+}
+.table-part-line {
+	height: 15px;
+	background: #EFEFF4;
+}
+.mui-bar~.mui-pull-top-tips {
+	top: 160px;
+}

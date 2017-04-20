@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/mui.picker.min.css"  rel="stylesheet" />
+		<link href="../../css/previewimage.css" rel="stylesheet"/>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/core.js"></script>
+		<script src="../js/forum.js"></script>
+		<script src="../../js/mui.picker.min.js"></script>
+		<script src="../../js/mui.previewimage.js"></script>
+		<script src="../../js/uploader.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.module-chose{
+				font-size: 18px;
+				display: block;
+				width: 100%;
+				margin-bottom: 10px;
+				min-height: 40px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">发帖</h1>
+			<button id="send_btn" class="mui-btn mui-pull-right mui-btn-green">发表</button>
+		</header>
+		<div class="mui-content" style="margin: 10px 5px;">
+
+			<div class="mui-input">
+				<label>分类</label>
+				<br>
+				<input name="forum" id="forum_id" value="0" type="hidden">
+				<button id='showUserType' class="mui-btn module-chose" type='button'>
+				</button>
+			</div>
+			<div class="mui-input">
+				<label>标题</label>
+				<br>
+				<input id="title" type="text" name="title" placeholder="标题" />
+			</div>
+			<div class="mui-input">
+				<label>内容</label>
+				<br>
+				<textarea id="content" placeholder="填写帖子内容" style="min-height: 10em;font-size: 14px;"></textarea>
+			</div>
+			<div class="mui-input mui-clearfix">
+				<label>上传图片</label>
+				<br>
+					<div style="margin-bottom: 5px;">
+				        <div id="show_img" style="margin-top: 5px;"></div>
+				    </div>
+				<input type="hidden" value="1" id="attach_ids" name="attach_ids"/>
+				<button id="upload" class="mui-icon mui-icon-image" style="width: 100px; height: 100px;float: left;"></button>
+		</div>
+	</body>
+	<script type="text/javascript" charset="utf-8">
+		mui.init();
+		var $forumButton = document.getElementById('showUserType');
+		var $forum_id = document.getElementById('forum_id');
+		var content = document.getElementById('content');
+		var uploadImage = document.getElementById('upload');
+		var imageArr = [];
+		var restInfo = {};
+		mui.plusReady(function(){
+			var sendWeb = plus.webview.currentWebview();
+			var forumInfo = sendWeb.forumInfo;
+
+			uploadImage.createUploader({input_name: 'attach_ids', showDiv: 'show_img', multiple: true,contentDom:content,imageArr:imageArr});
+
+			forum.getForumList(restInfo, function(res) {
+				if (res.code = 200) {
+					var data = res.data;
+					var forumPicker = new mui.PopPicker();
+					//默认角色赋值
+					if(forumInfo){
+						$forumButton.innerHTML = forumInfo.title;
+						$forum_id.value = forumInfo.id;
+					}else{
+						$forumButton.innerHTML = data[0].title;
+						$forum_id.value = data[0].id;
+					}
+					var pickerData = [];
+					//记录数组的下标
+					for (var item in data) {
+						pickerData[item] = {
+							value: data[item].id,
+							text: data[item].title
+						};
+					}
+				
+					forumPicker.setData(pickerData); 
+					//  var userResult = document.getElementById('userResult');
+					$forumButton.addEventListener('tap', function(event) {
+						forumPicker.show(function(items) {
+							$forum_id.value = items[0].value;
+							$forumButton.innerHTML = items[0].text;
+							//返回 false 可以阻止选择框的关闭
+							//return false;
+						});
+					}, false);
+				}
+			});
+		});
+		document.getElementById('send_btn').addEventListener('tap', function() {
+			
+			var pTitle = document.getElementById('title').value;
+			var pContent = document.getElementById('content').value;
+			var forumId = document.getElementById('forum_id').value;
+			for(index in imageArr){
+				var imageId = '[img' + imageArr[index].id + ']';
+				pContent = pContent.replace(imageId,'<br><img src="' + imageArr[index].url + '"/>');
+			}
+			pContent = pContent.replace(/[img[0-9]+]/g,'');
+			if (forumId == '') {
+				mui.toast("请选择分类");
+				return;
+			}
+			if (pTitle == '') {
+				mui.toast("标题不能为空");
+				return;
+			}
+			if (pContent == '') {
+				mui.toast("帖子内容不能为空");
+				return;
+			} else if (pContent.length < 20) {
+				mui.toast("帖子内容不能少于20字");
+				return;
+			}
+			toast.showLoading('投稿中');
+			var sendInfo = {
+				title: pTitle,
+				forum_id: forumId,
+				content: pContent
+			}
+			forum.sendpost(sendInfo, function(res) {
+				toast.hideLoading();
+				if (typeof(res) == 'object') {
+					if (res.code == 200) {
+						mui.toast('发帖成功');
+						mui.back();
+					}else{
+						toast.info(res.info);
+					}
+				} else {
+					mui.toast(res.info);
+				}
+			})
+		}, false);
+	</script>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../js/store.js"></script>
+		<script src="../../js/core.js" type="text/javascript"></script>
+		<script src="../../js/app.js" type="text/javascript"></script>
+		<script src="../js/store-render.js"></script>
+		<script src="../../js/template.js" type="text/javascript"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/store-order.css" rel="stylesheet" />
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="loading_page" style="text-align: center;margin-top: 30%;">
+				<i class="mui-spinner"></i>
+		</div>
+		<div id="pullrefresh" class="mui-scroll-wrapper" style="display: none;">
+			<div id="mui-scroll" class="mui-scroll">
+				<ul id="list_0" class="mui-table-view"></ul>
+				<ul id="list_1" class="mui-table-view"></ul>
+				<ul id="list_2" class="mui-table-view"></ul>
+				<ul id="list_3" class="mui-table-view"></ul>
+			</div>
+		</div>
+	</body>
+	<script>
+		mui.init({
+			pullRefresh: { 
+				container: '#pullrefresh',
+				down: {
+					contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+					callback: pulldown_refresh
+				},
+				up: {
+					contentrefresh: '正在加载...',
+					callback: pullup_refresh
+				}
+			}
+		});
+		var activList = null;
+		var tempList = null;
+		var loadPages = document.getElementById('loading_page');
+		var lists = document.getElementById('pullrefresh');
+		var orderInfo = {
+			page: 1,
+			condition: '0'
+		};
+
+		var loadPage = function(flag) {
+			if (flag) {
+				lists.style.display = 'block';
+				loadPages.style.display = 'none';
+			} else {
+				lists.style.display = 'none';
+				loadPages.style.display = 'block';
+			}
+		}
+
+			//阻尼系数
+		var deceleration = mui.os.ios ? 0.003 : 0.0009;
+		mui('#scroll_wrapper').scroll({
+			bounce: true,
+			indicators: true, //是否显示滚动条
+			deceleration: deceleration
+		});
+		
+		
+		mui.plusReady(function() {
+			var thisWeb = plus.webview.currentWebview();
+			var id = thisWeb.condition;
+			
+			if (id != null){
+				orderInfo.condition = id;
+			}else{
+				orderInfo.condition = 0;
+			}
+			activList = document.getElementById('list_' + orderInfo.condition);
+			orderInfo.page = 1;
+			if (mui.os.plus) {
+				setTimeout(function() {
+					mui('#pullrefresh').pullRefresh().pulldownLoading();
+				}, 1000);
+			} else {
+				mui('#pullrefresh').pullRefresh().pulldownLoading();
+			}
+			
+		});
+		
+		
+		window.addEventListener('myStore', function(event) {
+			activList.style.display = 'none';
+			//获得事件参数
+			if(mui.os.ios){
+				mui('#pullrefresh').pullRefresh().scrollTo(0,0);
+			}
+			var myId = event.detail.condition;
+			activList = document.getElementById('list_' + myId);
+			activList.style.display = 'block';
+			orderInfo.page = 1;
+			orderInfo.condition = myId;
+			if(activList.children.length == 0){
+				loadPage(false);
+				mui('#pullrefresh').pullRefresh().pulldownLoading();
+			}
+		})
+		
+		window.addEventListener('updateOrder',function(event){
+			loadPage(false);
+			mui('#pullrefresh').pullRefresh().pulldownLoading();
+		})
+
+			/*获取单个item LI*/
+		var get_store_li = function(shopMsg) {
+			var li = document.createElement('li');
+			li.className = 'mui-table-view-cell order-store-li mui-clearfix';
+			li.shop_info = shopMsg;
+			if (orderInfo.type == 'uncompleted') {
+				var html = order_list_render(shopMsg,order);
+			} else {
+				var html = order_list_render(shopMsg,order);
+			}
+			li.innerHTML = html;
+			return li;
+		};
+		/**
+		 * 上拉加载更多
+		 */
+		function pullup_refresh() {
+			orderInfo.page++;
+			tempList = activList;
+			setTimeout(function() {
+				store.getOrderList(orderInfo, function(res) {
+					var length = typeof(res.data) == 'undefined' ? 0 : res.data.length;
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(length == 10 ? false : true);
+					if (res.code == 200) {
+						for (var index in res.data) {
+							var li = get_store_li(res.data[index]);
+							tempList.appendChild(li);
+						}
+					} else {
+						toast.info('没有更多了');
+					}
+				})
+			}, 500);
+		}
+		/**
+		 * 下拉刷新
+		 */
+		function pulldown_refresh() {
+			setTimeout(function() {
+				orderInfo.page = 1;
+				tempList = activList;
+				store.getOrderList(orderInfo, function(res) {
+					tempList.innerHTML = '';
+					if (res.code == 200 && res.data != null) {
+						for (var index in res.data) {
+							var li = get_store_li(res.data[index]);
+							tempList.appendChild(li);
+						}
+					}else{
+						toast.info('当前暂无订单');
+						tempList.innerHTML = '<div style="padding: 30px;text-align: center;margin: 30px 0px;font-size: 14px;color: #AAAAAA;background-color: #EEEEF4;">没有订单</div>';
+					}
+					loadPage(true);
+					mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+					//重置底部加载状态
+					mui('#pullrefresh').pullRefresh().refresh(true);
+				})
+			}, 500);
+		}
+		
+			/**
+		 * 列表项目点击事件
+		 */
+		mui('#pullrefresh').on('tap', '.mui-table-view-cell', function(e) {
+			/*如果是未支付的订单则打开支付页面*/
+			if(!orderInfo.condition || orderInfo.condition == '0'){
+				mui.openWindow({
+					url:'store-order-okay.html',
+					id:'store-order-okay',
+					show:{
+						aniShow:'pop-in'
+					},
+				    extras:{
+				    	dataId:this.shop_info.id
+				    }
+				});
+			}else{
+				mui.openWindow({
+					url: 'store-order-detail.html',
+					id: 'store-order-detail',
+					extras: {
+						detailInfo:this.shop_info
+					}
+				})
+			}
+			
+		});
+		
+		mui('#pullrefresh').on('tap','.order-store-btn',function(){
+			var $this = this;
+			switch ($this.id){
+				case "pay":
+					
+					break;
+				case "cancel":
+					var btnArray = ['确定', '取消'];
+					mui.confirm('您正在取消订单，确认？', '取消', btnArray, function(e) {
+						if (e.index == 0) {
+							console.log($this.parentNode.parentNode.id);
+							store.cancelOrder($this.parentNode.parentNode.id,function(res){
+								if(res.code == 200){
+									toast.info('取消订单成功！');
+//									plus.webview.getWebviewById('store-order-body').evalJS('mui("#pullrefresh").pullRefresh().pulldownLoading()');
+									var cancelOrder = plus.webview.getWebviewById('store-order-body');
+									mui.fire(cancelOrder, 'cancelOrder', {
+										id: $this.parentNode.parentNode.id
+									});
+									mui.back();
+								}else{
+									toast.info('操作失败！');
+								}
+							});
+						} else {
+							console.log('取消');
+						}
+					})
+					break;
+				case "reply":
+					mui.openWindow({
+						url: 'store-post-comment.html',
+						id: 'store-post-comment',
+						show: {
+							aniShow: 'pop-in' //页面显示动画，默认为”slide-in-right“；
+						},
+						extras: {
+							sendId:$this.parentNode.parentNode.id
+						}
+					})
+					break;
+			}
+			return false;
+		});
+		
+	</script>
+</html>

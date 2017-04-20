@@ -1,0 +1,35 @@
+.order-store-title{
+	font-size: 14px;
+	padding-bottom: 10px;
+}
+.order-store-body{
+	background-color: #EFEFF4;
+	padding: 10px;
+	margin-bottom: 1px;
+	height: 75px;
+}
+.order-store-img{
+	width: 50px;
+	height: 50px;
+	float: left;
+	margin-right: 15px;
+}
+.order-store-bottom{
+	font-size: 12px;
+	padding-top: 15px;
+	float: right;
+}
+.order-store-btn{
+	margin-top: 15px;
+}
+.order-store-li{
+	padding: 20px;
+	border-bottom: 5px #F2F2F2 solid;
+	border-top: 2px #F2F2F2 solid;
+}
+.mui-table-view:after {
+	background: none;
+}
+.mui-table-view:before {
+	background: none;
+}

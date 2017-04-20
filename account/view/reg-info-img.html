@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/icomoon.css"/>
+		<style>
+			.main-page{
+				margin-top: 25%;
+				text-align: center;
+			}
+			.text-font{
+				font-size: 20px;
+			}
+			.img-view {
+				margin-top: 10%;
+			}
+			.head-img {
+				width: 150px;
+				height: 150px;
+				border-radius: 50%;
+			}
+			.btn-view{
+				margin: 10% 20%;
+				padding: 15px 40px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">注册资料完善</h1>
+		</header>
+
+		<div id="content" class="mui-content">
+			<div class="main-page">
+				<h5 class="text-font">选择头像</h5>
+				<div id="img_div" class="img-view">
+					<img id="reg_head" class="head-img" src="../img/account_unknown_img.png" />
+				</div>
+				<div>
+					<button id="next_btn" type="button" class="btn-view text-font mui-btn-green" disabled>确认</button>
+				</div>
+			</div>
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mytools/head_cut.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../ucenter/js/ucenter.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/reg_info.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+
+			var regHead = document.getElementById("reg_head");
+			var nextBtn = document.getElementById("next_btn");
+			//头像剪裁插件
+			myHeadCut({
+				trigger:regHead,
+				img:regHead
+			},function(res){
+				if(res.code == 200){
+					nextBtn.disabled = false;
+				}
+			})
+
+		    nextBtn.addEventListener('tap',function(e){
+				openNext();
+		    })
+		</script>
+	</body>
+
+</html>

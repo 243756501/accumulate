@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/previewimage.css" rel="stylesheet" />
+		<link href="../css/shop.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/icomoon.css" />
+		<script src="../../js/app.js"></script>
+		<script src="../../js/core.js"></script>
+		<script src="../../js/template.js"></script>
+		<script src="../js/shop.js"></script>
+		<script src="../js/shop-render.js"></script>
+		<script src="../../js/loadingbBtn.js"></script>
+		<script src="../../js/mui.zoom.js"></script>
+		<script src="../../js/mui.previewimage.js"></script>
+		<script src="../../js/share.js"></script>
+		<script src="../../js/apptools.js"></script>
+		<script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+		<style>
+			.news-content-img {
+				max-width: 100%;
+				height: auto;
+			}
+			
+			.diy-bottom-box {
+				position: fixed;
+				width: 100%;
+				height: 50px;
+				min-height: 50px;
+				border-top: solid 1px #bbb;
+				left: 0px;
+				z-index: 9999!important;
+				bottom: 0px;
+				overflow: hidden;
+				background-color: #fafafa;
+			}
+			
+			.diy-bottom {
+				position: absolute;
+				width: 100%;
+				height: 55px;
+				left: 0px;
+				bottom: 0px;
+				text-align: center;
+				vertical-align: middle;
+				line-height: 40px;
+				padding: 12px 4px;
+			}
+			
+			.noscrollbars {
+				background: #fff!important;
+				width: 90%!important;
+				border: solid 1px #ddd!important;
+				padding: 2px 5px !important;
+				line-height: 18px !important;
+				font-family: verdana !important;
+			}
+			
+			.avatar-image {
+				width: 38px;
+				height: 38px;
+				border-radius: 50%;
+				margin-right: 10px;
+			}
+			
+			.comment-li-btn {
+				border: none;
+				padding: 5px;
+				margin-left: 20px;
+				font-size: 22px;
+			}
+			
+			.news-comment {
+				min-height: 13px;
+				margin-bottom: 0px;
+			}
+			
+			.comment-title {
+				color: #848484;
+				font-size: 14px;
+				padding-top: 15px;
+				margin: 5px
+			}
+			
+			.item-minor {
+				padding: 0;
+				line-height: 1rem;
+			}
+			
+			.txt-xxs {
+				font-size: 12px;
+			}
+			
+			.txt-color-gr {
+				color: #929292;
+			}
+			
+			.mui-media {
+				padding-top: 5px;
+				padding-left: 5px;
+				padding-right: 5px;
+				border-bottom: solid 1px #E4E3E6;
+			}
+			
+			#shop_detail>span {
+				display: inline-block;
+				font-size: 14px;
+				margin-top: 0;
+				margin-bottom: 10px;
+				padding-right: 70px;
+				color: #8f8f94;
+			}
+			
+			.shop-join-state {
+				width: 116px;
+				height: 30px;
+				color: #fff;
+				font-size: 17px;
+				text-align: center;
+				line-height: 30px;
+				margin: 20px auto 35px auto;
+			}
+			
+			.icon-box {
+				width: 50%;
+				height: 100%;
+			}
+			
+			.icon-box ul {
+				width: 100%;
+				height: 100%;
+				list-style: none;
+			}
+			
+			.icon-box li {
+				width: 33%;
+				text-align: center;
+				border-left: 1px solid #CCCCCC;
+				float: left;
+			}
+			
+			.masking {
+				position: absolute;
+				top: 0;
+				background: rgba(0, 0, 0, .4);
+				z-index: 999;
+				width: 100%;
+			}
+			
+			.bottom-btn span {
+				margin-left: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="mui-title">商品详情</h1>
+		</header>
+		<div id="event_detail_page" class="mui-content">
+			<div id="scroll_wrapper" style="top: 45px;" class="mui-scroll-wrapper">
+				<div style="background: white;" class="mui-scroll">
+					<div id="shop_detail" style="margin:5px">
+					</div>
+					<div class="comment-title">
+						<span>评论:</span>
+					</div>
+					<div id="shop_comment" class="comment-list-box" style="margin-bottom:50px">
+						<ul id="comment_list" class="mui-table-view">
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--底部区域 评论 点赞-->
+		<footer class="mui-bar mui-bar-footer" id="show_foot" style="height: 50px;">
+			<i class="diy-icon icon-edit mui-pull-left" style="line-height: 50px;"></i>
+			<a id="show_hide" class="mui-btn mui-btn-link mui-pull-left" style="color: #C0C0C0;line-height: 50px;margin-left: 10px;">添加你的评论</a>
+			<div class="icon-box mui-pull-right">
+				<ul class="mui-text-center" style="margin: 0;padding: 0px;">
+					<li id="shares" >
+						<div class="bottom-btn">
+							<i class="diy-icon icon-share"  style="line-height: 50px;"></i>
+						</div>
+					</li>
+					<li id="sendcomment">
+						<div class="bottom-btn">
+							<i class="diy-icon icon-bubble2" style="line-height: 50px;"></i><span id="chat_icon"></span>
+						</div>
+					</li>
+					<li id="support" class="forum_support">
+						<div class="bottom-btn" id="support_btn">
+							<i class="diy-icon icon-eye" style="line-height: 50px;"></i><span id="view_num"></span>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</footer>
+		<div id="show_comment" class="diy-bottom-box" style="display: none;height: 50px;">
+			<div class="mui-grid-view mui-clearfix diy-bottom ">
+				<div class="mui-col-xs-9 mui-pull-left ">
+					<form style="background: #fafafa;border: none; ">
+						<div class="mui-input-row ">
+							<label style="border: none;width: 10%;padding: 7px 0px">
+								<i class="mui-icon mui-icon-compose "></i></label>
+							<input id="reply_text" type="text" class="noscrollbars" maxlength="100"></input>
+						</div>
+					</form>
+				</div>
+				<div class="mui-col-xs-3 mui-pull-left">
+					<button id="send_btn" class="mui-btn mui-btn-positive" style="padding:9px 20px;width:80%">发送</button>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script>
+		mui.init();
+		mui.previewImage();
+		mui('#scroll_wrapper').scroll();
+		var shopDetailInfo = null;
+		var moneyNeed = null;
+		var shopId = '';
+		var loadBar = '';
+		var detailDiv = document.getElementById('shop_detail');
+		var commentList = document.getElementById('comment_list');
+		var shopComment = document.getElementById('shop_comment');
+		var replyText = document.getElementById('reply_text');
+		var show_hide = document.getElementById('show_hide');
+		var show_foot = document.getElementById('show_foot');
+		var show_comment = document.getElementById('show_comment');
+		var chat_icon = document.getElementById('chat_icon');
+		var view_num = document.getElementById('view_num');
+		var share,masking;
+		show_hide.addEventListener('tap', function() {
+			if(is_login()){
+				show_comment.style.display = 'block';
+			show_foot.style.display = 'none';
+			createMsk();
+			replyText.value = '';
+			}else{
+				toast.info("请登录后操作")
+			}
+		});
+		mui.plusReady(function() {
+			share = new share();
+			var thisWeb = plus.webview.currentWebview();
+			shopDetailInfo = thisWeb.detailInfo;
+			shopDetailInfo.goods_detail = imgTools.getDtlContent(shopDetailInfo.goods_detail);
+			shopId = shopDetailInfo.id;
+			moneyNeed = shopDetailInfo.money_need;
+			detailDiv.innerHTML = parse_shop_html(detail_render, shopDetailInfo);
+			view_num.innerHTML = shopDetailInfo.is_hot;
+			var commentInfo = {
+				row_id: shopId,
+				page: 1
+			};
+			//加载按钮
+			loadBar = loadBtn();
+			var fistCount = 0;
+			var secondCount = 0;
+			var block = true;
+			loadBar.addEventListener('tap', function(event) {
+				if (block) {
+					block = false;
+					commentInfo.page++;
+					shop.getComment(commentInfo, function(res) {
+						if (res.code == 200) {
+							fistCount = res.data.list == null ? 0 : res.data.list.length;
+							for (var i = secondCount; i < fistCount; i++) {
+								var mInfo = res.data.list[i];
+								commentList.appendChild(get_coment_li(mInfo));
+							}
+							if (fistCount < 10) {
+								secondCount = fistCount;
+								commentInfo.page--;
+								loadBar.innerText = '暂无更多评论';
+							} else {
+								secondCount = 0;
+								loadBar.innerText = '点击加载更多';
+							}
+						} else {
+							mui.toast(res.info);
+						}
+						block = true;
+					});
+				}
+			});
+			var get_coment_li = function(mInfo) {
+				var li = document.createElement('li');
+				li.className = 'mui-media event mui-clearfix';
+				li.mInfo = mInfo;
+				li.innerHTML = parse_shop_html(comment, mInfo);
+				return li;
+			}
+			var getShopComments = function(commentInfo) {
+					shop.getComment(commentInfo, function(res) {
+						shopComment.appendChild(loadBar);
+						if (res.code == 200) {
+							for (index in res.data.list) {
+								var mInfo = res.data.list[index];
+								if (mInfo.user.nickname == null) {
+									mInfo.user.nickname = '游客';
+									mInfo.user.avatar128 = '../../images/default_avatar.jpg';
+								}
+								commentList.appendChild(get_coment_li(mInfo));
+							}
+							if (commentList.children.length == 0) {
+								commentInfo.page--;
+								loadBar.innerText = '暂无评论';
+							} else if (res.data.length < 10) {
+								secondCount = res.data.length;
+								commentInfo.page--;
+								loadBar.innerText = '暂无更多评论';
+							} else {
+								loadBar.innerText = '点击加载更多';
+							}
+						} else {
+							toast.info(res.info);
+						}
+					});
+				}
+				//获取评论列表
+			getShopComments(commentInfo);
+			//			//评论
+			document.getElementById('send_btn').addEventListener('tap', function() {
+				if (replyText.value == '') {
+					toast.info("评论不能为空。");
+					return;
+				}
+				toast.showLoading('评论中');
+				var sendComment = {
+					content: replyText.value,
+					row_id: shopId,
+				};
+				var comInfo = {
+					row_id: shopId,
+					page: 1
+				}
+				shop.sendComment(sendComment, function(res) {
+					if (typeof(res) == 'object') {
+						if (res.code == 200) {
+							show_comment.style.display = 'none';
+							show_foot.style.display = 'block';
+							masking.style.display = 'none';
+							replyText.value = '';
+							commentList.innerHTML = '';
+							getShopComments({
+								row_id: shopId,
+								page: 1
+							});
+							toast.info('发布成功');
+						} else {
+							toast.info(res.info);
+						}
+					} else {
+						toast.info(res.info);
+					}
+					toast.hideLoading();
+				})
+			}, false);
+			/*删除评论*/
+			mui('#comment_list').on('tap', '#delete', function(event) {
+				var li = get_parent_node(this, '.event');
+				toast.showLoading('删除中')
+				var id = li.mInfo.id;
+				var deleteComment = {
+					id: id,
+					row_id: shopId,
+				};
+				shop.deleteComment(deleteComment, function(res) {
+					toast.hideLoading();
+					if (res.code == 200) {
+						toast.info('删除回复成功');
+						li.parentNode.removeChild(li)
+					} else {
+						toast.info(res.info);
+					}
+				});
+			});
+			/**
+			 * 兑换商品
+			 */
+			mui('#shop_detail').on('tap', '.pay', function() {
+					mui.openWindow({
+						url: 'change-shop.html',
+						id: 'change-shop',
+						show: {
+							aniShow: 'pop-in',
+							autoShow: true
+						},
+						waiting: {
+							autoShow: true
+						},
+						extras: {
+							shopId: shopId,
+							moneyNeed: moneyNeed
+						},
+						createNew: false
+					})
+				})
+				/*回复评论*/
+			mui('#comment_list').on('tap', '#reply_btn', function(event) {
+				var li = get_parent_node(this, '.event');
+				var userName = li.mInfo.user.nickname;
+				replyText.focus();
+				replyText.value = '回复 @' + userName + '：'
+				createMsk();
+				show_comment.style.display = 'block';
+				show_foot.style.display = 'none';
+				masking.style.display = 'block';
+			});
+			
+			app.shareHref(shopDetailInfo.share_url,shopDetailInfo.goods_name,shopDetailInfo.goods_detail);
+		});
+		/**
+		 * 库存减少事件
+		 */
+		window.addEventListener('shopDetail', function(event) {
+			console.log("触发了库存减少事件---详情");
+			var id = event.detail.id;
+			var temp = "repository_" + id;
+			console.log(temp);
+			console.log(document.getElementById(temp).innerHTML);
+			document.getElementById(temp).innerHTML--;
+		})
+	</script>
+
+</html>

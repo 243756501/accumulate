@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta charset="utf-8">
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/core.js"></script>
+		<script src="../js/store.js"></script>
+		<script src="../../js/template.js"></script>
+		<script src="../js/store-render.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet"/>
+		<title></title>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav" >
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">评论</h1>
+		</header>
+		
+		 <div class="mui-input" style="margin-top: 45px;padding: 3px;">
+            <textarea id="content" style="height: 250px;" placeholder="请大胆写下对商品的感受吧，对他人帮助很大哟！" maxlength="150" onkeyup="javascript:setShowLength(this, 150, 'cost_tpl_title_length');"></textarea>
+            <div>
+            	<button id="1" class="btn">好评</button>
+            	<button id="0" class="btn">中评</button>
+            	<button id="-1" class="btn">差评</button>
+            </div>
+            <span id="cost_tpl_title_length" style="float: right;margin-top: -20px;padding-bottom: 20px;font-size: 12px;">还可以输入150字</span>
+    </div>
+
+    <button id="send_btn" class="mui-btn mui-btn-positive  mui-btn-block">发布</button>
+	</body>
+	<script>
+		mui.init();
+		var flag = null;
+		var sendInfo = {
+			response:1
+		};
+		var mGood = document.getElementById('1');
+		var mLose = document.getElementById('-1');
+		var mMid = document.getElementById('0');
+		mGood.style.color = 'red' ;
+		mui.plusReady(function(){
+			var thisWeb = plus.webview.currentWebview();
+			sendInfo.id = thisWeb.sendId;
+			document.getElementById('send_btn').addEventListener('tap',function(){
+				var content = document.getElementById('content').value;
+				if (content.replace(/(^\s*)|(\s*$)/g, "")==""){
+					toast.info('评论不能为空！');
+					return;
+				}
+				sendInfo.content = content;
+				store.sendComment(sendInfo,function(res){
+					if (res.code ==200){
+						toast.info('评论成功');
+						mui.back();
+					}else{
+						toast.info('操作失败');
+					}
+				});
+			})
+		});
+		mui('.mui-input').on('tap','.btn',function(){
+			var $this = this;
+			flag = $this.id;
+			sendInfo.response = flag;
+			mGood.style.color = 'black' ;
+			mMid.style.color = 'black' ;
+			mLose.style.color = 'black' ;
+			document.getElementById($this.id).style.color = 'red' ;
+		});
+	</script>
+</html>

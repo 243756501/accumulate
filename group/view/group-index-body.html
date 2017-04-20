@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/core.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/mui.pullToRefresh.js"></script>
+		<script src="../../js/mui.pullToRefresh.material.js"></script>
+		<script src="../js/group.js"></script>
+		<script src="../../js/template.js"></script>
+		<script src="../js/group-render.js"></script>
+		<script src="../../js/mui.pullToRefresh.js"></script>
+		<script src="../../js/mui.pullToRefresh.material.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/group.css" rel="stylesheet" />
+		<link href="../../css/iconfont.css" rel="stylesheet" />
+		<link href="../../css/icomoon.css" rel="stylesheet" />
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.mui-pull-top-pocket {
+				top: 85px !important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="loading_page" style="text-align: center;margin-top: 30%;">
+			<i class="mui-spinner"></i>
+		</div>
+		<div id="pullrefresh" class="mui-scroll-wrapper" style="padding: 8px;display: none;">
+			<div id="mui-scroll" class="">
+				<ul id="group_list" class="mui-table-view" style="background: none;">
+
+				</ul>
+			</div>
+		</div>
+	</body>
+	<script>
+		mui.init();
+		var lists = document.getElementById('pullrefresh');
+		var loadPages = document.getElementById('loading_page');
+		var mGroupList = document.getElementById('group_list');
+		window.addEventListener('userChange', function(event) {
+			mGroupList.innerHTML = '';
+			checkOpenId();
+		});
+		window.addEventListener('joinOrQuit', function(event) {
+			console.log("监听到退出或者加入群组");
+			mGroupList.innerHTML = '';
+			checkOpenId();
+		});
+		mui.plusReady(function() {
+			checkOpenId();
+		});
+		//阻尼系数
+		var deceleration = mui.os.ios ? 0.003 : 0.0009;
+		mui('#pullrefresh').scroll({
+			bounce: true,
+			indicators: true, //是否显示滚动条
+			deceleration: deceleration
+		});
+		var loadPage = function(flag) {
+			if (flag) {
+				lists.style.display = 'block';
+				loadPages.style.display = 'none';
+			} else {
+				lists.style.display = 'none';
+				loadPages.style.display = 'block';
+			}
+		}
+		var getList = function(info) {
+				group.getMyGroup(function(res) {
+					if (res.code == 200 && res.data != null) {
+						loadPage(true);
+						for (var index in res.data) {
+							var li = get_group_li(res.data[index]);
+							mGroupList.appendChild(li);
+						}
+					} else {
+						loadPage(true);
+						mGroupList.innerHTML = '<div style="padding: 30px;text-align: center;margin: 30px 0px;font-size: 14px;color: #AAAAAA;background-color: #EEEEF4;">没有加入任何群组</a></div>';
+					}
+				})
+			}
+			/*获取单个item LI*/
+		var get_group_li = function(groupMsg) {
+			var li = document.createElement('li');
+			li.className = 'mui-table-view-cell item-shadow';
+			li.group_info = groupMsg;
+			var html = parse_group_html(my_group, groupMsg);
+			li.innerHTML = html;
+			return li;
+		};
+		/**
+		 * 新的上拉加载更多
+		 */
+		function new_pullup() {
+			mui('#pullrefresh').pullToRefresh({
+				up: {
+					callback: function() {
+						var thisView = this;
+						setTimeout(function() {
+							eventInfo.page++;
+							events.getEventList(eventInfo, function(res) {
+								if (res.code == 200 && res.data != null) {
+									loadPage(true);
+									for (var index in res.data) {
+										var li = get_event_li(res.data[index]);
+										eventList.appendChild(li);
+									}
+								} else {
+									loadPage(true);
+									toast.info('没有更多了');
+								}
+							})
+							thisView.endPullUpToRefresh();
+						}, 1000);
+					}
+				}
+			});
+		}
+
+		function checkOpenId() {
+			var open_id = app.getState().open_id || "";
+			if (open_id == '') {
+				loadPage(true);
+				mGroupList.innerHTML = '<div style="padding: 30px;text-align: center;margin: 30px 0px;font-size: 14px;color: #AAAAAA;background-color: #EEEEF4;">未登录,<a id="login">前往登录</a></div>';
+				document.getElementById('login').addEventListener('tap', function() {
+					mui.openWindow({
+						url: '../../account/view/login.html',
+						id: 'login',
+						extras: {
+						}
+					})
+				});
+			} else {
+				getList();
+			}
+		}
+		mui('#group_list').on('tap', '.mui-table-view-cell', function() {})
+	</script>
+
+	<!--到详情页面-->
+	<script type="text/javascript">
+		mui.init();
+		mui.plusReady(function() {
+			/*列表项点击事件，链接群组帖子*/
+			mui('.mui-table-view').on('tap', 'li', function(e) {
+				var $this = this;
+				mui.openWindow({
+					url: 'group-item-head.html',
+					id: 'group-item-head',
+					extras: {
+						group_info: $this.group_info
+					}
+				})
+			})
+		});
+	</script>
+
+</html>

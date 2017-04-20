@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <script src="../js/ucenter.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/core.js"></script>
+    <script src="../../js/template.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link href="../../css/icomoon.css" rel="stylesheet" />
+    <style type="text/css">
+    	.mui-pull-top-pocket{
+	    	top: 150px !important;
+	    }
+	    .th-item{
+	    	display: inline-block;
+	    	width: 33%;
+	    	margin-right: -5px;
+	    	text-align: center;
+	    }
+	    .th-item>div{
+	    	padding: 10px;
+	    }
+	    .singn-no-btn{
+			color: white;
+	    	border-radius: 3px;
+	    	background-color: #4cd964;
+	    }
+	    .singn-ok-btn{
+	    }
+    </style>
+</head>
+<body onload="bodyLoad();">
+	<header class="mui-bar mui-bar-nav">
+		<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+		<h1 class="mui-title">签到</h1>
+	</header>
+	
+	<div class="mui-content" style="background: white;"> 
+		<div style="padding: 10px;">
+			<div class="th-item">
+				<div id="weekday"></div>
+			</div>
+			<div class="th-item">
+				<div id="sign_btn">
+					<span class="icon-calendar"></span>
+					<span id="sign_text"></span>
+				</div>
+			</div>
+			<div class="th-item">
+				<div id="day"></div>
+			</div>
+		</div>
+		<div style="padding: 0 10px;">
+			<div id="sign_nav" class="mui-segmented-control">
+				<a id="today" class="mui-control-item mui-active">今日抢签</a>
+				<a id="con" class="mui-control-item">连签</a>
+				<a id="total" class="mui-control-item">累签</a>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" charset="utf-8">
+      	mui.init({
+    		subpages:[{
+      			url:'sign-in-body.html',
+      			id:'sign-in-body',
+      			styles:{
+      				top:'150px',
+      				bottom:'0'
+      			}
+      		}]
+		});
+      	
+      	var sigBtn = document.getElementById('sign_btn');
+      	var signText = document.getElementById('sign_text');
+      	var bodyWeb = null;
+      	
+      	function bodyLoad(){
+	      	var dateTime=new Date();
+          	var hh=dateTime.getHours();
+          	var mm=dateTime.getMinutes();
+		  	var ss=dateTime.getSeconds();
+          
+		  	var yy=dateTime.getFullYear();
+		  	var MM=dateTime.getMonth()+1;  //因为1月这个方法返回为0，所以加1
+		  	var dd=dateTime.getDate();
+
+		  	var week=dateTime.getDay();
+
+			var days=[ "日 ", "一 ", "二 ", "三 ", "四 ", "五 ", "六 ",] 
+
+		  	document.getElementById("weekday").innerHTML="星期"+days[week] ;
+		  	document.getElementById("day").innerHTML=yy+"."+MM+"."+dd;
+
+		  	setTimeout(bodyLoad,1000);
+	 	}
+      	
+      	var doSign = function(is_sign){
+      		if(is_sign){
+      			sigBtn.className = 'singn-ok-btn';
+				signText.innerHTML = '已签到';
+				sigBtn.setAttribute('data-sign',1);
+			}else{
+				sigBtn.className = 'singn-no-btn';
+				signText.innerHTML = '未签到';
+				sigBtn.setAttribute('data-sign',0);
+			}
+      	}
+      	
+      	mui.plusReady(function(){
+      		
+      		/*判断是否签到*/
+			ucenter.getSignInfo(function(res){
+				if(res.code == 200){
+					doSign(res.data.has_checked);
+				}else{
+					toast.info(res.info);
+				}
+			});
+			
+			/*签到按钮*/
+			sigBtn.addEventListener('tap',function(event){
+				var is_sign = sigBtn.getAttribute('data-sign');
+				if(Number(is_sign)){
+					return;
+				}else{
+					toast.showLoading('正在签到...');
+					ucenter.signIn(function(res){
+						toast.hideLoading();
+						if (res.code == 200) {
+							toast.info('签到成功');
+							doSign(true);
+							var signInfo = res.data;
+							bodyWeb = plus.webview.getWebviewById('sign-in-body');
+							//签到成功后直接把记录插入列表中
+							bodyWeb.evalJS('addMe()');
+						}else{
+							toast.info(res.info);
+						}
+					})
+				}
+			},false);
+      	});
+      	
+  			/*模拟导航栏*/
+		mui('#sign_nav').on('tap', 'a', function(e) {
+			var navId = this.id;
+			if(!bodyWeb){
+				bodyWeb = plus.webview.getWebviewById('sign-in-body');
+			}
+      		mui.fire(bodyWeb,'signType',{data:navId});
+		});
+</script>
+</html>

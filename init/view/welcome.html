@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../../css/welcome.css"/>
+	</head>
+
+	<body>
+		<div id="slider" class="mui-slider mui-fullscreen">
+			<div class="mui-slider-group">
+				<!-- 第一张 -->
+				<div class="mui-slider-item">
+					<div class="item-logo guide-show" style="background: url(../../images/wel_imag/welcome01.png);background-size: cover;">
+					<div class="animate_first">
+						</div>
+					</div>
+				</div>
+				<div class="mui-slider-item">
+					<div class="item-logo" style="background: url(../../images/wel_imag/welcome02.png);background-size: cover;">
+						<div class="animate">
+							<button id='start_btn' class="start-btn">进入社区</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="mui-slider-indicator">
+				<div class="mui-indicator mui-active"></div>
+				<div class="mui-indicator"></div>
+			</div>
+		</div>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			mui.init();
+			var selfWeb,botmWebView = null;
+			//更新日志，注意/n为换行符
+//			var updateObj = {
+//				log: '1.6.5更新:\n*【修复】修复一些BUG;\n*【新增】手机密码找回;\n*【优化】优化微博、问答模块;'
+//			};
+//			/*升级后展示更新日志*/
+//			welWebView.addEventListener('show', function(e) {
+//				setTimeout(function() {
+//					mui.alert(updateObj.log);
+//				}, 500)
+//			})
+			mui.plusReady(function() {
+				plus.navigator.closeSplashscreen();
+				selfWeb = plus.webview.currentWebview();
+				botmWebView = plus.webview.getWebviewById('module-bottom');
+				if (mui.os.ios) {
+					plus.navigator.setFullscreen(true);
+				}
+			});
+			
+			//立即体验按钮点击事件
+			document.getElementById("start_btn").addEventListener('tap', function(event) {
+				plus.navigator.setFullscreen(false);
+				selfWeb.close();
+				botmWebView.show('fade-in',WEBTRANSTIME);
+			}, false);
+			apptools.exitApp();
+		</script>
+	</body>
+
+</html>

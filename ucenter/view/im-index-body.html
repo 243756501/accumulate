@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../libs/wukongIM/WKim-3.2.5.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/wkIm.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+        .im-item{
+            padding: 10px;
+        }
+        .im-img{
+            width: 3em;
+            height: 3em;
+            margin-right: 10px;
+            border-radius: 10%;
+        }
+        .item-text2{
+            margin-top: 0.6em;
+        }
+        .unread-count{
+            color: white;
+            border-radius: 10%;
+            background-color: #35B87F;
+            padding: 0px 4px;
+        }
+    </style>
+</head>
+<body>
+<div id="loading_page" style="text-align: center;margin-top: 55%;display: none;">
+    <i class="mui-spinner"></i>
+</div>
+
+<div id="pullrefresh" style="display: block;" class="mui-scroll-wrapper">
+    <div class="mui-scroll">
+
+        <div class="">
+            <!--列表容器-->
+            <ul id="im_list" class="mui-table-view"></ul>
+        </div>
+    </div>
+</div>
+
+<script id="im_tplte" type="text/html">
+    <div class="mui-slider-right mui-disabled">
+        <a id="1" class="top-event mui-btn mui-btn-grey">置顶</a>
+        <a id="2" class="unread-event mui-btn mui-btn-yellow">已读</a>
+        <a id="3" class="del-event mui-btn mui-btn-red">删除</a>
+    </div>
+    <div class="mui-slider-handle">
+        <div class="mui-table-cell">
+            <img class="im-img mui-pull-left" onload="load(this)" src="../../images/default_avatar.jpg" data-src="{{con_user.avatar128}}">
+            <div class="mui-media-body">
+                <div class="">
+                    <span class="mui-ellipsis">{{con_user.nickname}}</span>
+                    <span class="unread-count mui-pull-right">{{if baseConversation.unreadPoint>0}}{{baseConversation.unreadPoint}}{{/if}}</span>
+                </div>
+                <p class='item-text2 mui-ellipsis'>
+                    {{if lastMessages[0]}}{{if lastMessages[0].baseMessage.content.contentType == 1}}
+                    {{lastMessages[0].baseMessage.content.textContent.text}}
+                    {{else if lastMessages[0].baseMessage.content.contentType == 2}}
+                    [图片]
+                    {{else if lastMessages[0].baseMessage.content.contentType == 3}}
+                    [声音]{{else}}{{一个附件信息}}{{/if}}{{/if}}</p>
+            </div>
+        </div>
+    </div>
+</script>
+</body>
+<script type="text/javascript" charset="utf-8">
+mui.init({
+    pullRefresh: {
+        container: '#pullrefresh',
+        down: {
+            contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+            callback: pulldown_refresh
+        }
+    }
+});
+
+var lodView = document.getElementById('loading_page');
+var mainView = document.getElementById('pullrefresh');
+
+var imListView = document.getElementById('im_list');
+
+var ucenterWeb = null,mainWeb = null,sidePage = null;
+var uid = '';
+var userInfo = null;
+var $conversation = null;
+var imChatWeb = null;
+var newConUser = null;		//临时记录创建会话的对象的用户信息
+var tempCon = null;			//临时记录新创建的会话对象
+var isKickout = false;		//记录本页面是否打开，如果打开，被踢下线后自动重连IM服务
+
+var get_cov_item = function(conversion){
+    var li = document.createElement('li');
+    li.className = 'im-item mui-table-view-cell';
+    li.con_info = conversion;
+    li.id = conversion.cid;
+    li.innerHTML = template('im_tplte',conversion);
+    return li;
+}
+
+/*获得一个会话里所有用户的信息*/
+var get_con_user = function(conversion,userList){
+    var uidArr = conversion.cid.split(':');
+    if(conversion.baseConversation.type == 1){
+        for(n in uidArr){
+            if(uidArr[n] != uid){
+                if(userList.indexOf(uidArr[n]) < 0){
+                    userList.push(uidArr[n]);
+                }
+            }
+        }
+    }
+}
+
+/*生成一个会话item并添加*/
+var add_con_item = function(convList,userList){
+    wkIm.getUserInfos(userList,function(userRes){
+        if(userRes.code == 200){
+            var userArr = userRes.data;
+            for(a in convList){
+                var convs = convList[a];
+                var tempUidArr = convs.cid.split(':');
+                for(b in userArr){
+                    for(c in tempUidArr){
+                        if(userArr[b].uid == tempUidArr[c]){
+                            convs.con_user = userArr[b];
+                            convs.self_user = userInfo;
+                            break;
+                        }
+                    }
+                }
+                var li = get_cov_item(convs);
+                if(convList.length != 1){
+                    imListView.appendChild(li);
+                }else{
+                    imListView.insertBefore(li,imListView.childNodes[0]);
+                }
+            }
+        }else{
+            toast.info('获取用户信息失败');
+            return;
+        }
+    });
+}
+
+
+/*会话登陆成功监听器*/
+WKim.authListener.on("loginSuccess",function(res){
+    console.log('IM服务认证成功');
+    WKim.conversation.getTotalUnreadCount().then(function(count){
+        ucenterWeb.evalJS('togImUnTip('+ count +',"im_wk")');
+    });
+    wk_conversion.getList(0,10,function(convList){
+        var userList = [];
+        for(i in convList){
+            var conversion = convList[i];
+            get_con_user(conversion,userList);
+        }
+        add_con_item(convList,userList);
+    });
+});
+
+
+
+
+/*打开好友列表*/
+var open_friend = function(){
+	mui.fire(sidePage,'imChange',{data:'im-index-body'});
+    // 开启遮罩
+    mainWeb.setStyle({mask:"rgba(0,0,0,0.5)"});
+    // 侧滑页面加载后显示（避免白屏）
+    sidePage.show("slide-in-right",200);
+}
+
+/*创建新会话*/
+var creat_convs = function(ConUser){
+    newConUser = ConUser;
+    wk_conversion.create(ConUser.uid,function(Conv){});
+}
+
+
+/*发送消息*/
+var chat_sendMesg = function(message){
+    if(!$conversation || tempCon != null){
+        $conversation = tempCon;
+        tempCon = null;
+    }
+    if(message.type == 1){
+        $conversation.sendText(message.content).then(function(){});
+    }else if(message.type == 2){	//图片信息
+        //
+    }else if(message.type == 3){		//声音信息
+        WKim.upload.trans(message.content).then(function(res){
+            console.log(JSON.stringify(res));
+        });
+    }
+}
+
+/*消息发送成功监听器*/
+WKim.messageListener.on("sendSuccess",function(msg){
+    if(msg.baseMessage.openIdEx.openId != uid){
+        imChatWeb.evalJS('push_record('+ JSON.stringify(msg) +')');
+    }
+})
+
+/*消息发送失败监听器*/
+WKim.messageListener.on("sendFail",function(msg){
+    toast.info('消息发送失败');
+})
+
+/*会话创建成功监听器*/
+WKim.conversationListener.on("convAdd",function(Conv){
+    console.log('创建会话成功');
+    tempCon = Conv;
+    /*解决ios在init里预载失败的办法*/
+    if(!imChatWeb){
+        imChatWeb = mui.preload({
+            url:'im-wk-chat.html',
+            id:'im-wk-chat'
+        });
+    }
+    Conv.listNextMessages(null,10).then(function(msgList){
+        mui.fire(imChatWeb,'con_change',{
+            isdownMsg:false,		//判断是否是拉去的历史记录
+            ischange:true,			//判断是否需要重置信息窗口
+            msgList:msgList,
+            con_user:newConUser
+        });
+    });
+    imChatWeb.show('pop-in');	//会话创建成功后自动打开聊天窗口
+});
+
+/*删除会话监听器*/
+WKim.conversationListener.on("convRemove",function(res){
+    console.log('删除了一个会话');
+});
+
+
+/*IM登陆失败监听器*/
+WKim.authListener.on("loginFail",function(res){
+    toast.info('认证IM服务失败');
+    setTimeout(function(){
+        wkim_login(true);
+    },300);
+})
+
+
+/*IM被踢下线监听器*/
+WKim.authListener.on("kickout",function(res){
+    console.log('账号重复登陆，你已被踢下线');
+    isKickout = true;
+    /*如果当前页面可见，则自动挤下网页端的Im服务*/
+    if(mainHeadWeb.isVisible()){
+        imListView.innerHTML = '';
+        wkim_login(false);
+    }
+});
+
+/*会话未读数目改变监听器*/
+WKim.conversationListener.on("convUnreadPointChange",function(Con){
+    console.log('有未读消息');
+});
+
+
+/*会话最后一条消息改变监听器*/
+WKim.conversationListener.on("convLastMessageChange",function(Con){
+
+    var rec_uid = Con.lastMessages[0].baseMessage.openIdEx.openId;
+    var cov_id = Con.cid;
+    var temp_li = document.getElementById(cov_id);
+    if(temp_li){
+        temp_li.con_info.lastMessages[0] = Con.lastMessages[0];		//即时更改会话的最后一条消息
+        var temp_con = temp_li.con_info;
+        var temp_textView = temp_li.getElementsByClassName('item-text2')[0];
+        if (Con.lastMessages[0].baseMessage.content.contentType == 1){
+            temp_textView.innerText = Con.lastMessages[0].baseMessage.content.textContent.text;	//显示最近一条未读消息
+        }else if(Con.lastMessages[0].baseMessage.content.contentType == 2){
+            temp_textView.innerText = '图片';
+        }else if(Con.lastMessages[0].baseMessage.content.contentType == 3){
+            temp_textView.innerText = '一个附件消息';
+        }
+        if(rec_uid != uid){
+            var tempUnreadView = temp_li.getElementsByClassName('unread-count')[0];
+            if(!imChatWeb || !imChatWeb.isVisible() || cov_id != $conversation.cid){
+                tempUnreadView.style.display = 'block';
+                tempUnreadView.innerText++;
+                ucenterWeb.evalJS('togImUnTip(true,"im_wk")');
+            }else{
+                tempUnreadView.style.display = 'none';
+                tempUnreadView.innerText = 0;
+                Con.lastMessages[0].updateToRead();
+            }
+        }
+    }else{				//生成新的会话列表项
+        var userList=[];
+        get_con_user(Con,userList);
+        add_con_item([Con],userList);
+    }
+});
+
+var mesged = null;
+/*接收到消息*/
+WKim.messageListener.on("msgReceive",function(msg){
+	if(!mesged || mesged.baseMessage.messageId != msg.baseMessage.messageId){
+		mesged = msg;
+	    var conId = msg.baseMessage.conversationId;
+	    if($conversation != null && $conversation.cid == conId){			//为true表示对话窗口加载的是这条消息
+	        mui.fire(imChatWeb,'con_change',{
+	            isdownMsg:false,
+	            ischange:false,
+	            msgList:[msg],
+	            con_user:$conversation.con_user
+	        });
+	    }
+	}
+});
+
+/*标记信息已读*/
+var read_msg = function(){
+    if($conversation && $conversation.lastMessages[0]){
+        var tempCountView = document.getElementById($conversation.cid).getElementsByClassName('unread-count')[0];
+        var thisMsg = $conversation.lastMessages[0];
+        tempCountView.style.display = 'none';
+        tempCountView.innerText = 0;
+        thisMsg.updateToRead();
+    }
+}
+
+/*清空单个会话的所有消息*/
+var clearMsg = function(){
+    if($conversation){
+        $conversation.clearMsg().then(function(){});
+    }
+}
+
+/*向上滚动查看历史聊天信息(上拉消息)*/
+var getPrevMsgs = function(msgId){
+    var thisMsg = $conversation.getMsgById(msgId);
+    $conversation.listNextMessages(thisMsg,10).then(function(msgList){
+        mui.fire(imChatWeb,'con_change',{
+            isdownMsg:true,
+            ischange:false,
+            msgList:msgList,
+            con_user:$conversation.con_user
+        });
+    });
+}
+
+
+/*H5+准备完毕*/
+mui.plusReady(function(){
+
+    document.activeElement.blur();
+    uid = app.getState().uid;		//用户ID
+    userInfo = myStorage.getItem('user_info');
+    mainWeb = plus.webview.currentWebview();
+    mainHeadWeb = plus.webview.getWebviewById('im-index-head.html');
+    ucenterWeb = plus.webview.getWebviewById('nav_ucenter');
+    wkim_login(true);
+    /*延时加载好友侧边栏*/
+    setTimeout(function(){
+        sidePage = plus.webview.create("im-friend-list.html","im-friend-list",{left:"30%",width:"70%",popGesture:"none"});
+        //侧滑页面关闭后关闭遮罩
+        sidePage.addEventListener('hide',function(){
+            mainWeb.setStyle({mask:"none"});
+        },false);
+    },500);
+
+    // 用户点击后
+    mainWeb.addEventListener("maskClick",function(){
+        sidePage.hide("auto");
+    },false);
+
+
+    //监听父页面的显示事件，确认用户来到此页面，以便IM服务的开启标记
+    mainHeadWeb.addEventListener('show',function(e){
+        imChatWeb = mui.preload({
+            url:'im-wk-chat.html',
+            id:'im-wk-chat'
+        });
+        if(isKickout){		//当本页面打开后检查是否被网站端挤下，自动登录
+            imListView.innerHTML = '';
+            wkim_login(false);
+        }
+
+        /*熄灭ucenter页面的未读标记*/
+        ucenterWeb.evalJS('togImUnTip(false,"im_wk")');
+    });
+    //监听父页面的隐藏（退出）事件，确认用户关闭此页面计算未读数是否为0
+    mainHeadWeb.addEventListener('hide',function(e){
+        WKim.conversation.getTotalUnreadCount().then(function(count){
+            ucenterWeb.evalJS('togImUnTip('+ count +',"im_wk")');
+        });
+    });
+})
+
+
+
+
+
+/*模拟的导航栏切换功能*/
+var activeNav = 'sell';
+var chang_nav_store = function(navId){
+    if(navId != activeNav){
+        goodsRestInfo.order = navId;
+        pulldown_refresh();
+        activeNav = navId;
+        changePage(lodView,mainView,true);
+    }
+    window.scrollTo(0,0);
+}
+
+
+/**
+ * 下拉刷新
+ */
+function pulldown_refresh() {
+    setTimeout(function() {
+        imListView.innerHTML = '';
+        wk_conversion.getList(0,10,function(convList){
+            var userList = [];
+            for(i in convList){
+                var conversion = convList[i];
+                get_con_user(conversion,userList);
+            }
+            add_con_item(convList,userList);
+            mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+        });
+//				changePage(lodView,mainView,false);
+    }, 500);
+}
+
+
+/*列表item点击事件*/
+mui('#im_list').on('tap','li',function(e){
+    imChatWeb = plus.webview.getWebviewById('im-wk-chat');
+
+    /*解决ios在init里预载失败的办法*/
+    if(!imChatWeb){
+        imChatWeb = mui.preload({
+            url:'im-wk-chat.html',
+            id:'im-wk-chat'
+        });
+    }
+    if(!$conversation || this.con_info.cid != $conversation.cid){
+        $conversation = this.con_info;
+        $conversation.listNextMessages(null,10).then(function(msgList){
+            mui.fire(imChatWeb,'con_change',{
+                isdownMsg:false,		//判断是否是拉去的历史记录
+                ischange:true,			//判断是否需要重置信息窗口
+                msgList:msgList,
+                con_user:$conversation.con_user
+            });
+        });
+    }
+    imChatWeb.show('pop-in',200);
+})
+
+
+/*item删除事件*/
+mui('#im_list').on('tap','.del-event',function(e){
+    var li = get_parent_node(this,'.im-item');
+    var con_info = li.con_info;
+    wk_conversion.remove(con_info.cid,function(res){});
+    imListView.removeChild(li);
+})
+
+
+/*item置顶事件*/
+mui('#im_list').on('tap','.top-event',function(e){
+    var li = get_parent_node(this,'.im-item');
+    var Conv = li.con_info;
+    Conv.setTop(true).then(function(){});
+    imListView.insertBefore(li,imListView.childNodes[0]);
+    mui.swipeoutClose(li);
+})
+
+
+/*item标记已读事件*/
+mui('#im_list').on('tap','.unread-event',function(e){
+    var li = get_parent_node(this,'.im-item');
+    var conv = li.con_info;
+    conv.clearUnreadPoint().then(function(){});
+    var countView = li.getElementsByClassName('unread-count')[0];
+    countView.style.display = 'none';
+    mui.swipeoutClose(li);
+})
+</script>
+</html>

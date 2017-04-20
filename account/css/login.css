@@ -1,0 +1,82 @@
+html,body{
+    height: 100%;
+}
+.login-content{
+	height: 100%;
+	padding: 0 15%;
+	padding-top: 45px;
+	background: #F7F7F7;
+}
+.app-logo{
+	font-size: 50px;
+	padding: 1.5em 0;
+	text-align: center;
+}
+.mui-input-row{
+	margin: 5px 0 !important;
+	background: white !important;
+	padding: 5px !important;
+	border-radius: 2px;
+}
+.input-icon{
+	width: 32px;
+	padding: 4px;
+	margin-top: 4px;
+}
+.mui-input-row label{
+	width: 0 !important;
+	padding: 0 !important;
+}
+.mui-input-row input{
+	width: 85% !important;
+}
+.mui-icon-clear{
+	top: 15px !important;
+}
+.login-btn{
+	color: white;
+	border-radius: 2px;
+	margin-top: 25px;
+	text-align: center;
+	font-size: 25px;
+	padding: 10px;
+	background: #499EF3;
+}
+.link-area {
+	margin-top: 30px;
+	text-align: center;
+}
+
+.oauth-area {
+	text-align: center;
+	margin-top: 20%;
+}
+
+.oauth-area .oauth-btn {
+	display: inline-block;
+	width: 50px;
+	height: 50px;
+	background-size: 30px 30px;
+	background-position: center center;
+	background-repeat: no-repeat;
+	margin: 0 20px;
+	/*-webkit-filter: grayscale(100%); */
+	border: solid 1px #ddd;
+	border-radius: 25px;
+}
+
+.oauth-area .oauth-btn:active {
+	border: solid 1px #aaa;
+}
+.oauth-area .oauth-btn.disabled {
+	background-color: #ddd;
+}
+.sync-ch{
+	text-align: center;
+	width: 60%;
+	left: 20%;
+	top: 30%;
+}
+.mui-icon-eye{
+	top: 15px !important;
+}

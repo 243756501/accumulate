@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/store-place-order.css"/>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/store.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.mui-scroll-wrapper{
+				top: 45px;
+				bottom: 50px;
+			}
+			.mui-scroll{
+				background: white;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="mui-title">确认订单</h1>
+		</header>
+		
+		<div class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<div id="trans_view" class="trans-view"></div>
+				
+				<!--扩展信息-->
+				<div class="plus-info-view">
+					<div class="plus-li mui-navigate-right">
+						<span>发票</span><span class="plus-right-text">普通发票</span>
+					</div>
+					<div class="plus-li mui-navigate-right">
+						<span>代金券</span><span  class="plus-right-text">无</span>
+					</div>
+				</div>
+				
+				<div class="goods-view">
+					<ul id="goods_list" class="mui-table-view goods-list mui-clearfix"></ul>
+				</div>
+			</div>
+		</div>
+		 
+		<div class="diy-bottom-box">
+			<div class="mui-grid-view mui-clearfix diy-bottom">
+				<div class="mui-col-xs-9 mui-pull-left">
+                    <span>合计:¥</span><span id="sum_total"></span>
+                    <span class="trans-tips">不含运费</span>
+				</div>
+				<div class="mui-col-xs-3 mui-pull-left btn">
+					<p id="okay_btn" style="color: white;font-size: 1em;">
+						<span>确定(</span><span id="sum_count"></span><span>)</span>
+					</p>
+				</div>
+			</div>
+		</div>
+		
+		<!--送货地址模板-->
+		<script id="trans_tmplt" type="text/html">
+			<div class="mui-navigate-right">
+				<div class="trans-info-view">
+					<i class="mui-icon mui-icon-location"></i>
+					<strong>{{contact}}</strong>
+					<span class="trans-list-phone">{{phone}}</span>
+					<div style="margin-left: 30px;" class="trans-list-adres">{{address}}</div>
+		        </div>
+			</div>
+		</script>
+		
+		<!--商品列表模板-->
+		<script id="goods_template" type="text/html">
+			<img class="goods-imges mui-pull-left" onload="load(this)" src="../../images/store.png" data-src="{{goods_detail.goods_icon.thumb}}"/>
+			<div class="mui-media-body">
+				<p class="mui-ellipsis godds-title">{{goods_detail.title}}</p>
+				<div>
+					<div class="mui-pull-left" style="color: red;">
+						<span>￥</span><span class="price" style="margin-right: 1em;">{{goods_detail.price}}</span>
+					</div>
+					<div class="mui-pull-right">
+						<span>x </span><span class="count">{{buy_count}}</span>
+					</div>
+				</div>
+			</div>
+		</script>
+	</body>
+	<script type="text/javascript" charset="utf-8">
+		mui.init();
+		mui('.mui-scroll-wrapper').scroll();
+		
+		var transView = document.getElementById('trans_view');
+		var okayBtn = document.getElementById('okay_btn');
+		var goodsListView = document.getElementById('goods_list');
+		var sumTotal = document.getElementById('sum_total');
+		var sumCount = document.getElementById('sum_count');
+		var thisWeb,goodsDetailWeb,carHedWeb,orderData = null;
+		var carGoodsIdArr = [];
+		var carGoodsCountArr = [];
+		var transCache = null;
+		/*渲染待购买商品列表*/
+		var takeList = function(orderData){
+			var goodsSumCount = 0;
+			sumTotal.innerText = Number(orderData.sumTotal).toFixed(2);
+			var goodsArr = orderData.goodsArr;
+			for(i in goodsArr){
+				var li = document.createElement('li');
+				var carGoodsInfo = goodsArr[i];
+				li.className = 'goods mui-table-view-cell mui-media mui-clearfix';
+				li.goods_info = carGoodsInfo;
+				li.innerHTML = template('goods_template',carGoodsInfo);
+				goodsListView.appendChild(li);
+				goodsSumCount+=Number(carGoodsInfo.buy_count);
+				carGoodsIdArr.push(carGoodsInfo.goods_id);
+				carGoodsCountArr.push(carGoodsInfo.buy_count);
+			}
+			sumCount.innerText = goodsSumCount;
+		}
+		
+		var setTrans = function(info){
+			transView.innerHTML = template('trans_tmplt',info);
+			transView.setAttribute('data-id',info.id);
+			myStorage.setItem('store_trans',JSON.stringify(info));		//把默认地址存储在本地
+		}
+		
+		var nullData = function(){
+			transView.innerHTML = '<p class="trans-null">请选择收货地址</p>';
+			transView.setAttribute('data-id',0);
+			myStorage.removeItem('store_trans');		//删除本地缓存的默认地址
+		}
+		
+		/*订单改变事件*/
+		window.addEventListener('newOrderData',function(event){
+			//通过event.detail可获得传递过来的参数内容
+			orderData = event.detail.data;
+			goodsListView.innerHTML = '';
+			carGoodsIdArr = [];
+			carGoodsCountArr = [];
+			takeList(orderData);
+		});
+		
+		mui.plusReady(function(){
+			
+			transCache = myStorage.getItem('store_trans');
+			if(transCache){
+				transCache = JSON.parse(transCache);
+				setTrans(transCache);
+			}else{
+				nullData();
+			}
+			thisWeb = plus.webview.currentWebview();
+			carHedWeb = plus.webview.getWebviewById('store-car-head');
+			goodsDetailWeb = plus.webview.getWebviewById('store-goods-detail');
+			orderData = thisWeb.orderData;
+			thisWeb.addEventListener('show',function(e){
+				//预载送货地址列表页面
+				transListWeb = mui.preload({
+					url:'store-trans-list.html',
+					id:'store-trans-list'
+				})
+			})
+		})
+		
+		/*确认生成订单按钮*/
+		okayBtn.addEventListener('tap',function(e){
+			plus.nativeUI.showWaiting();
+			var transId = transView.getAttribute('data-id');
+			
+			//发送订单请求
+			if(transId){
+				var restInfo = {
+					trans_id:transId,
+					goods_id:carGoodsIdArr.join(),
+					count:carGoodsCountArr.join(),
+				};
+				store.forOrder(restInfo,function(res){
+					plus.nativeUI.closeWaiting();
+					if(res.code == 200){
+						mui.fire(goodsDetailWeb,'carChange',{
+							isUp:true
+						});
+						var orderArr = res.data;
+						toast.info(res.info);
+						if(orderArr.length == 1){
+							mui.openWindow({
+								url:'store-order-okay.html',
+								id:'store-order-okay',
+								show:{
+									aniShow:'pop-in'
+								},
+							    extras:{
+							    	dataId:orderArr[0]
+							    },waiting:{autoShow:false}
+							})
+						}else{
+							mui.openWindow({
+								url: 'store-order-head.html',
+								id: 'store-order-head',
+								show:{
+									aniShow:'pop-in'
+								},
+								waiting:{
+									autoShow:false
+								},
+								extras: {
+									type:0,
+								},
+							});
+						}
+
+						carHedWeb.close('none');
+					}else{
+						toast.info(res.info);
+					}
+				})
+			}else{
+				plus.nativeUI.closeWaiting();
+				toast.info('请选择正确的收货地址');
+			}
+		})
+		
+		transView.addEventListener('tap',function(e){
+			if(!transListWeb){
+				transListWeb = plus.webview.getWebviewById('store-trans-list');
+			}
+			transListWeb.show('pop-in');
+		})
+	</script>
+</html>

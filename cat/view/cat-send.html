@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../css/cat.css"/>
+	<link href="../../css/previewimage.css" rel="stylesheet"/>
+	<link rel="stylesheet" type="text/css" href="../../css/mui.picker.min.css" />
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/uploader.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/cat.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/mui.zoom.js"></script>
+	<script src="../../js/mui.previewimage.js"></script>
+	<script src="../../js/mui.picker.min.js" type="text/javascript" charset="utf-8"></script>
+    
+    <style type="text/css">
+    	.mui-scroll{
+    		padding: 6px;
+    	}
+    	.cat-label{
+    		padding: 5px 0;
+    		opacity: 0.5;
+    	}
+    	.date-btn{
+    		padding: 5px;
+    	}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+	    <h1 class="mui-title">分类信息</h1>
+	    <button id="send_btn" class="mui-btn mui-btn-green mui-pull-right">发布</button>
+	</header>
+	
+	<div class="mui-scroll-wrapper">
+	    <div class="mui-scroll">
+	    	<div class="cat-label">*选择分类</div>
+    		<select id="type_view" class="mui-btn"></select>
+    		<div class="cat-label">*标题</div>
+    		<input id="title_input" type="text"/>
+    		<div class="cat-label">*截止日期</div>
+    		<div>
+	    		<input id="over_time" type="text"style="width: 60%;"/>
+	    		<button id='time_btn' data-options='{"type":"date","beginYear":2016,"endYear":2020}' class="mui-btn date-btn">选择日期 ...</button>
+    		</div>
+    		<div class="cat-label">*地点</div>
+    		<input id="place_input" type="text"/>
+    		<div class="mui-input mui-clearfix">
+				<label>上传封面图片</label>
+				<br>
+					<div style="margin-bottom: 5px;">
+				        <div id="show_img" style="margin-top: 5px;"></div>
+				    </div>
+				<input type="hidden" value="1" id="attach_ids" name="attach_ids"/>
+				<button id="upload" class="mui-icon mui-icon-image" style="width: 100px; height: 100px;float: left;"></button>
+			</div>
+			<div class="cat-label">*联系电话</div>
+			<input id="phone_input" type="text"/>
+			<div class="cat-label">*联系人</div>
+			<input id="contact_input" type="text"/>
+			<div class="cat-label">*详情</div>
+			<textarea id="detail_input" id="content" placeholder="填写详情内容" style="min-height: 10em;font-size: 14px;"></textarea>
+	    </div>
+	</div>
+</body>
+
+	<script type="text/javascript" charset="UTF-8">
+	  	mui.init();
+	  	mui('.mui-scroll-wrapper').scroll();
+	  	var typeView = document.getElementById("type_view");
+	  	var sendBtn = document.getElementById("send_btn");
+	  	
+	  	//参数
+	  	var titleInput = document.getElementById("title_input");
+	  	var overTime = document.getElementById("over_time");
+	  	var timeBtn = document.getElementById("time_btn");
+	  	var placeInput = document.getElementById("place_input");
+	  	var phoneInput = document.getElementById("phone_input");
+	  	var contactInput = document.getElementById("contact_input");
+	  	var detailInput = document.getElementById("detail_input");
+	  	var upimagBtn = document.getElementById('upload');
+	  	
+	  	var sendWeb = null;
+	  	var catType = null;
+	  	
+	  	//权限控制
+	  	var checkPms = function(ttInfo){
+	  		if(!checkCatPms(ttInfo.can_post_gid)){
+	  			mui.alert('你没有当前选择分类的发布权限', '提示信息', function() {});
+	  		}
+	  	};
+	  	
+	  	/*选择器改变事件*/
+	  	typeView.addEventListener('change',function(){
+	  		var ttInfo = typeView.options[typeView.selectedIndex].type_info;
+	  		checkPms(ttInfo);
+	  	});
+	  	
+	  	timeBtn.addEventListener('tap',function(e){
+	  		var optionsJson = this.getAttribute('data-options') || '{}';
+			var options = JSON.parse(optionsJson);
+			var id = this.getAttribute('id');
+			var picker = new mui.DtPicker(options);
+			picker.show(function(rs) {
+				overTime.value = rs.value;
+				picker.dispose();
+			});
+	  	});
+	  	
+	  	mui.plusReady(function(){
+	  		sendWeb = plus.webview.currentWebview();
+	  		
+  			/*获取分类信息类目*/
+		  	cat.getType({},function(res){
+		  		if(res.code == 200){
+		  			checkPms(res.data[0]);
+		      		for (var i in res.data) {
+		      			var typeInfo = res.data[i];
+		      			var optDom = document.createElement('option');
+		      			optDom.innerHTML = typeInfo.alias;
+		      			optDom.value = typeInfo.id;
+		      			optDom.type_info = typeInfo;
+		      			typeView.appendChild(optDom);
+		      		}
+		  		}else{
+		  			toast.info(res.info);
+		  		}
+		  	});
+	  		upimagBtn.createUploader({limit:1,input_name: 'attach_ids', showDiv: 'show_img', multiple: false});
+	        
+	  	});
+	  	sendBtn.addEventListener('tap',function(e){
+	  		var ttInfo = typeView.options[typeView.selectedIndex].type_info;
+	  		if(checkCatPms(ttInfo.can_post_gid,'没有当前选择分类的发布权限')){
+	  			var photoId;
+		  		try{
+		      		photoId = document.getElementById("show_img").getElementsByTagName('span')[0].getAttribute('picture_id');
+		  		}catch(e){
+		  			photoId = null;
+		  		}
+		  		var restInfo = {
+		  			'entity_id':typeView.options[typeView.selectedIndex].value,		//分类ID
+		  			'title':titleInput.value,				//分类标题
+		  			'expirydate':overTime.value,			//截止时间
+		  			'place':placeInput.value,				//地址信息
+		  			'contactnumber':phoneInput.value,		//联系人电话
+		  			'contacts':contactInput.value,			//联系人
+		  			'details':detailInput.value,			//详细信息
+		  			'photo':photoId
+		  		};
+		  		
+		  		/*信息有效性的验证*/
+		  		if(!restInfo.entity_id.trim() || !restInfo.title.trim() || !restInfo.expirydate.trim() || !restInfo.place.trim() || !restInfo.contacts.trim() || !restInfo.details.trim() || !photoId){
+		  			mui.alert('发布信息不符合要求,请确保信息有意义!', '无意义操作');
+		  			return;
+		  		}
+		  		toast.showLoading('发布中');
+		  		cat.sendCat(restInfo,function(res){
+		  			toast.hideLoading();
+		  			if(res.code ==200){
+		  				toast.info('发布成功!');
+		  				mui.back();
+		  			}else{
+		  				toast.info(res.info);
+		  			}
+		  		})
+	  		}
+	  	},false)
+	</script>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/group.css" rel="stylesheet" />
+		<link href="../../forum/css/forum.css" rel="stylesheet" />
+		<link href="../../forum/css/forum-info-body.css" rel="stylesheet" />
+		<link href="../../forum/css/forum-post-detail.css" rel="stylesheet" />
+		<link href="../css/group.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/forum-info-body.css" />
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/group.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/group-render.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<style>
+			.mui-scroll-wrapper {
+				top: 0px;
+				bottom: 0px;
+			}
+			.member-head{
+				height: 50px;
+				width: 50px;
+				margin-right: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="loading_page" style="text-align: center;margin-top: 55%;">
+			<i class="mui-spinner"></i>
+		</div>
+
+		<div id="pullrefresh" style="display: none;" class="mui-scroll-wrapper">
+			<div id="mui_scroll" class="mui-scroll" style="background:#EEEEF4;">
+				<div id="forum_info" class="forum-info">
+
+				</div>
+
+				<!--论坛信息-->
+				<script id="forum_info_template" type="text/html">
+					<img class="forum-logo mui-pull-left" onload="load(this)" src="../../images/icon.jpg" data-src="{{logo}}"/>
+					<div class="mui-media-body forum-info-text">
+						<div class="forum-title">
+							<span class="group-item-title">{{title}}</span>
+							<span class="mod-css mui-pull-right"></span>
+						</div>
+						<p class="forum-introduce mui-ellipsis-2">{{if detail == null}}没有设置介绍内容！{{else}}{{{{detail}}}}{{/if}}</p>
+						<button id="follow_btn" type="button" class="mui-pull-right forum-follow">
+							{{if localUid == uid}} 创始者 {{else}} {{if is_join == 1}} 退出 {{else if is_join == 0}} 加入 {{else}} 审核中 {{/if}} {{/if}}
+						</button>
+						<div style="margin-top: 15px;">
+							<span id="postFlag" class="select" style="font-size: 13px;">帖子
+							<span class="forum-count" id="group_post_{{id}}">{{post_count}}</span></span>
+							<span id="memberFlag" style="margin-left: 1em;font-size: 13px;">成员
+							<span class="forum-count" id="group_member_{{id}}">{{member_count}}</span></span>
+						</div>
+					</div>
+				</script>
+
+				<!--全部帖子列表-->
+				<ul id="post_list" class="post-list mui-table-view" style="display: block;">
+
+				</ul>
+
+				<!--全部帖子列表-->
+				<ul id="member_list" class="post-list mui-table-view" style="display: none;">
+
+				</ul>
+
+			</div>
+		</div>
+
+		<script id="post_template" type="text/html">
+			<img class="list-user-head mui-pull-left user-flag" data-uid="{{user.uid}}" onload="load(this)" src="../../images/default_avatar.jpg" data-src="{{user.avatar128}}">
+			<div class="mui-media-body" style="font-size: 14px;">{{user.nickname}} {{if user.rank_link.length > 0}}{{each user.rank_link as value i}}<span style="background: {{value.label_bg}};color: {{value.label_color}};" class="rank-label">{{value.title}}</span>{{/each}}{{/if}}
+				<div style="float: right;">
+					<i class="mui-icon mui-icon-chat reply-count" style="font-size:14px;"></i>
+					<span class="forum-count">{{reply_count}}</span>
+				</div>
+				<p style="font-size: 12px;text-align: center;" class='mui-ellipsis'>
+					<span class="mui-pull-left">{{create_time}}</span>
+					<span>{{supportCount}}人喜欢</span>
+					<span class="mui-pull-right">收藏:{{BookmarkCount}}</span>
+				</p>
+			</div>
+			<div id="post_content" class="content-group">
+				<h5 class="group-item-body-content">{{title}}</h5>
+				<p class="mui-ellipsis-2">{{summary}}</p>
+			</div>
+			<div id="image_list">{{each imgList as value i}}{{if i<3}} 
+			<img class="post-img" onload="load(this)" src="../../images/img_error.png" data-src="{{value}}">
+					{{/if}}{{/each}}
+			</div>
+		</script>
+
+		<script id="member_template" type="text/html">
+			<img onload="load(this)" src="../../images/default_avatar.jpg" data-src="{{user.avatar128}}" class="mui-pull-left member-head user-flag" data-uid="{{user.uid}}"/>
+			<div class="mui-media-body">
+				<p class="mui-ellipsis event-title">{{user.nickname}} </p>
+				<a class="uid" uid="{{user.uid}}"></a>
+				</p>
+			</div>
+		</script>
+	</body>
+	<script type="text/javascript" charset="utf-8">
+		mui.plusReady(function() {
+			var thisWeb = plus.webview.currentWebview();
+			var forumInfoDiv = document.getElementById('forum_info');
+			var groupInfo = thisWeb.groupInfo;
+			var groupId = groupInfo.id;
+			var localUid = is_login();
+			groupInfo.localUid = localUid;
+			forumInfoDiv.innerHTML = template('forum_info_template', groupInfo);
+			var groupMember = document.getElementById('group_member_' + groupId);
+			var postFlag = document.getElementById('postFlag');
+			var memberFlag = document.getElementById('memberFlag');
+			/**
+			 * 加入退出群组
+			 **/
+			var followBtn = document.getElementById('follow_btn');
+			var myGroup = plus.webview.getWebviewById('group-index-body');
+			followBtn.addEventListener('tap', function(e) {
+				if (is_login()) {
+					if (followBtn.innerText == '加入') {
+						group.joinGroup({
+							group_id: groupId
+						}, function(res) {
+							if (res.code == 200) {
+								followBtn.innerText = '退出';
+								toast.info('加入群组成功');
+								console.log(typeof(groupMember.innerHTML));
+								groupMember.innerHTML = parseInt(groupMember.innerHTML) + 1;
+								mui.fire(myGroup, "joinOrQuit", {});
+							} else {
+								toast.info(res.info);
+							}
+						});
+					}
+					if (followBtn.innerText == '退出') {
+						group.quitGroup({
+							group_id: groupId
+						}, function(res) {
+							if (res.code == 200) {
+								followBtn.innerText = '加入';
+								toast.info('退出群组成功');
+								groupMember.innerHTML = groupMember.innerHTML - 1;
+								mui.fire(myGroup, "joinOrQuit", {});
+							} else {
+								toast.info(res.info);
+							}
+						});
+					}
+				} else {
+					toast.info('请登录后操作')
+				}
+			});
+			mui.init({
+				pullRefresh: {
+					container: '#pullrefresh',
+					down: {
+						contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+						callback: pulldown_refresh
+					},
+					up: {
+						contentrefresh: '正在加载...',
+						callback: pullup_refresh
+					}
+				}
+			});
+			var postList = document.getElementById('post_list');
+			var memberList = document.getElementById('member_list');
+			var block = true;
+			/*数据请求参数*/
+			var restInfo = {
+				group_id: groupId,
+				page: 1
+			};
+			var memberInfo = {
+				id: groupId,
+				page: 1
+			}
+			if (mui.os.plus) {
+				setTimeout(function() {
+					mui('#pullrefresh').pullRefresh().pulldownLoading();
+				}, 1000);
+			} else {
+				mui('#pullrefresh').pullRefresh().pulldownLoading();
+			}
+			/*获取单个群组帖子LI*/
+			var get_post_li = function(post) {
+				var li = document.createElement('li');
+				li.className = 'post-li';
+				li.post_info = post;
+				var html = template('post_template', post);
+				li.innerHTML = html;
+				return li;
+			};
+			/*获取单个群组成员LI*/
+			var get_member_li = function(memberInfo) {
+				var li = document.createElement('li');
+				li.className = 'mui-table-view-cell post-li';
+				li.member_info = memberInfo;
+				var html = template('member_template', memberInfo);
+				li.innerHTML = html;
+				return li;
+			};
+			/*loading的加载和显示*/
+			var changePage = function(loading) {
+					if (loading) {
+						document.getElementById('loading_page').style.display = 'block';
+						document.getElementById('pullrefresh').style.display = 'none';
+					} else {
+						document.getElementById('loading_page').style.display = 'none';
+						document.getElementById('pullrefresh').style.display = 'block';
+					}
+				}
+				/**
+				 * 下拉刷新
+				 */
+			function pulldown_refresh() {
+				setTimeout(function() {
+					restInfo.page = 1;
+					group.getOneGroupItems(restInfo, function(res) {
+						if (res.code == 200) {
+							if (res.data != null) {
+								postList.innerHTML = '';
+								for (var index in res.data) {
+									var li = get_post_li(res.data[index]);
+									postList.appendChild(li);
+								}
+							}
+						} else {
+							postList.innerHTML = '<div style="padding: 30px;text-align: center;margin: 30px 0px;font-size: 14px;color: #AAAAAA;background-color: #EEEEF4;">该群组没有任何帖子</a></div>';
+						}
+						/*加载完毕通知父页面显示*/
+						if (block) {
+							block = false;
+							changePage(false);
+						}
+					});
+					group.getGroupMember(memberInfo, function(res) {
+						if (res.code == 200) {
+							if (res.data != null) {
+								memberList.innerHTML = '';
+								for (var index in res.data) {
+									var li = get_member_li(res.data[index]);
+									memberList.appendChild(li);
+								}
+							}
+						}
+						mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+						/*重置底部加载状态*/
+						mui('#pullrefresh').pullRefresh().refresh(true);
+					})
+				}, 500);
+			}
+			/**
+			 * 上拉加载更多
+			 */
+			function pullup_refresh() {
+				setTimeout(function() {
+					if (postList.getAttribute('style') == 'display: block;') {
+						restInfo.page++;
+						group.getOneGroupItems(restInfo, function(res) {
+							var length = typeof(res.data) == 'undefined' ? 0 : res.data.length;
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh(length == 10 ? false : true);
+							if (res.code == 200) {
+								for (var index in res.data) {
+									var li = get_post_li(res.data[index]);
+									postList.appendChild(li);
+								}
+							} else {
+								toast.info('没有更多数据');
+							}
+						});
+					} else {
+						memberInfo.page++;
+						group.getGroupMember(memberInfo, function(res) {
+							var length = typeof(res.data) == 'undefined' ? 0 : res.data.length;
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh(length == 10 ? false : true);
+							if (res.code == 200) {
+								if (res.data != null) {
+									for (var index in res.data) {
+										var li = get_member_li(res.data[index]);
+										memberList.appendChild(li);
+									}
+								}
+							} else {
+								toast.info('没有更多数据');
+							}
+						})
+					}
+				}, 1000);
+			}
+			/*列表项点击事件*/
+			mui('#post_list').on('tap', '.post-li', function(event) {
+				if(event.target.tagName == "IMG"){
+					return;
+				}
+				var postInfo = this.post_info;
+				mui.openWindow({
+					url: 'group-post-detail.html',
+					id: 'group-post-detail',
+					waiting: {
+						autoShow: true
+					},
+					extras: {
+						postInfo: postInfo
+					},
+					createNew: false
+				})
+			},false);
+			/**
+			 * 成员列表点击事件
+			 */
+			app.userListener();
+			memberFlag.addEventListener('tap', function() {
+				postList.style.display = 'none';
+				memberList.style.display = 'block';
+				this.className = 'select';
+				postFlag.className = '';
+			})
+			postFlag.addEventListener('tap', function() {
+				postList.style.display = 'block';
+				memberList.style.display = 'none';
+				this.className = ' select';
+				memberFlag.className = '';
+			})
+		});
+	</script>
+</html>

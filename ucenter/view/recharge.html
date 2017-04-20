@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/ucenter.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+    	.mui-scroll-wrapper{
+    		top: 45px;
+    		background: white;
+    	}
+    	.mui-table-view:after{
+    		height: 0;
+    	}
+    	.type-ps{
+    		padding: 15px;
+    		border-bottom: 1px solid #ddd;
+    	}
+    	.mui-radio p{
+    		display: inline-block;
+    	}
+    	.money-panel{
+    		border-top: 10px solid #eee;
+    	}
+    	.mui-btn-success{
+    		padding: 10px;
+    		width: 60%;
+    		margin: 40px 0 0 20%;
+    		font-size: 16px;
+    	}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+	    <h1 class="mui-title">充值</h1>
+	</header>
+	
+    <div class="mui-scroll-wrapper">
+    	<div class="mui-scroll">
+    		<!--充值类型-->
+    		<ul id="type_list_view" class="mui-table-view">
+    			<li class="type-ps">请选择充值类型</li>
+    		</ul>
+    		
+    		<!--充值面额面板-->
+    		<div class="money-panel">
+    			<div class="mui-input-row">
+	    			<label>充值金额</label>
+	    			<input id="re_money" type="number" placeholder="人民币" readOnly="readonly">
+    			</div>
+	    		<ul id="money_list_view" style="background: white;" class="mui-table-view mui-grid-view mui-grid-9"></ul>
+    		</div>
+    		
+    		<!--提交按钮-->
+    		<button id="sub_btn" type="button" class="mui-btn mui-btn-success">提交订单</button>
+    	</div>
+	</div>
+	
+	<script id="re_type_tplt" type="text/html">
+		<input name="radio" type="radio" value="{{FIELD}}">{{type_info.title}}
+		<p>(1RMB={{UNIT}}点{{type_info.title}})</p>
+	</script>
+</body>
+    <script type="text/javascript" charset="UTF-8">
+      	mui.init();
+      	mui('.mui-scroll-wrapper').scroll();
+      	
+      	var selfWeb = null;
+      	var rechCfg = null;
+      	var moneyIpt = document.getElementById("re_money");
+      	var typeList = document.getElementById("type_list_view");
+      	var moneyList = document.getElementById("money_list_view");
+      	var subtn = document.getElementById("sub_btn");
+      	var typeArr = [];
+      	/*plus准备完成*/
+      	mui.plusReady(function(){
+      		selfWeb = plus.webview.currentWebview();
+      		rechCfg = selfWeb.data;
+      		for(var i in rechCfg.exchange){
+      			var tmpInfo = rechCfg.exchange[i];
+      			var li = document.createElement('li');
+      			li.className = 'mui-table-view-cell mui-radio mui-left';
+      			li.type_info = tmpInfo;
+      			li.innerHTML = template('re_type_tplt',tmpInfo);
+      			typeList.appendChild(li);
+      			typeArr[tmpInfo.FIELD] = tmpInfo.type_info.title
+      		}
+      		if(rechCfg.is_free == 1){
+      			moneyIpt.removeAttribute('readOnly');
+      			moneyIpt.setAttribute('placeholder','不得低于' + rechCfg.min_amount);
+      		}
+      		for(var j in rechCfg.rc_amount){
+      			var lli = document.createElement('li');
+      			lli.className = 'mui-table-view-cell mui-col-xs-4 mui-col-sm-3';
+      			lli.innerText = rechCfg.rc_amount[j];
+      			moneyList.appendChild(lli);
+      		}
+      	})
+      	
+      	/*提交按钮*/
+      	subtn.addEventListener('tap',function(e){
+      		var tpIpt = document.querySelector('input[type="radio"]:checked');
+      		if(!tpIpt){
+      			toast.info('请选择充值类型');
+      			return;
+      		}
+      		var amount = Number(moneyIpt.value);
+      		if(amount <= 0){
+      			toast.info('充值金额不符合');
+      			return;
+      		}
+  			if(rechCfg.is_free == 1 && amount < rechCfg.min_amount){
+  				toast.info('低余最低充值金额');
+  				return;
+  			}
+      		toast.showLoading();
+  			var restInfo = {
+  				type_id:tpIpt.value,
+  				amount:amount
+  			};
+  			ucenter.crtReOrder(restInfo,function(res){
+				toast.hideLoading();
+  				if(res.code == 200){
+  					console.log(JSON.stringify(res));
+  					var orderData = {mod:'recharge',payMoney:Number(res.data.amount),orderId:res.data.id,subject:'充值'+ typeArr[tpIpt.value]};
+					mui.openWindow({
+						url:'../../plus/view/pay-okay.html',
+						id:'pay-okay',
+						show:{
+							aniShow:'pop-in'
+						},
+					    waiting:{
+      						autoShow:false
+      					},
+					    extras:{
+					    	data:orderData
+					    }
+					});
+					setTimeout(function(){
+						selfWeb.close('none');
+					},500)
+  				}else{
+  					toast.info(res.info);
+  				}
+  			})
+      	})
+      	
+      	mui('#money_list_view').on('tap','li',function(e){
+      		moneyIpt.value = this.innerText;
+      	})
+    </script>
+</html>

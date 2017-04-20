@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/cat.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="../css/cat.css"/>
+    <style type="text/css">
+	    .top-view{
+	    	min-height: 9em;
+	    	padding-bottom: 5px;
+	    	margin-bottom: 0.5em;
+	    	text-align: center;
+	    	background: white;
+	    }
+	    .top-head-img{
+	    	width: 4em;
+	    	height: 4em;
+	    	margin-top: 1em;
+	    	border-radius: 50%;
+	    }
+    	.center-view{
+    		height: 3em;
+    		padding: 5px;
+    		background: white;
+    		text-align: center;
+    		margin-bottom: 1em;
+    	}
+    	.center-right-view{
+    		width: 32%;
+    		display: inline-block;
+    		border-left: 1px solid #ccc;
+    	}
+    	.center-right-view p{
+    		margin: 0;
+    	}
+    	.sign-text{
+    		text-align: center;
+    		padding: 0 10px;
+    	}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+	    <h1 class="mui-title">个人中心</h1>
+	</header>
+	<div class="mui-scroll-wrapper">
+		<div class="mui-scroll">
+			<div class="top-view">
+				<img id="head_img" class="top-head-img" src="../../images/default_avatar.jpg"/>
+				<h4 id="username"></h4>
+				<p id="user_sign" class="mui-ellipsis-2 sign-text"></p>
+			</div>
+			<div class="center-view">
+				<div style="width: 32%;display: inline-block;">
+					<div id="">发布</div>
+					<p id="rels_count"></p>
+				</div>
+				<div class="center-right-view">
+					<div id="">收藏</div>
+					<p id="fav_count"></p>
+				</div>
+				<div class="center-right-view">
+					<div id="">信箱</div>
+					<p id="cat_news"></p>
+				</div>
+			</div>
+			<ul id="list_view" class="mui-table-view mui-table-view-chevron">
+				<li id="cat_we" class="mui-table-view-cell mui-media">
+					<a class="mui-navigate-right">
+						<div id="">
+							我的发布
+						</div>
+					</a>
+				</li>
+				<li id="cat_we_fav" class="mui-table-view-cell mui-media">
+					<a class="mui-navigate-right">
+						<div id="">
+							我的收藏
+						</div>
+					</a>
+				</li>
+				<li id="cat_mail" class="mui-table-view-cell mui-media">
+					<a class="mui-navigate-right">
+						<div id="">
+							我的信箱
+						</div>
+					</a>
+				</li>
+				<li id="5" class="mui-table-view-cell mui-media">
+					<a class="mui-navigate-right">
+						<div id="">
+							我的简历
+						</div>
+					</a>
+				</li>
+				<li id="1" class="mui-table-view-cell mui-media">
+					<a class="mui-navigate-right">
+						<div id="">
+							我的招聘
+						</div>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</body>
+    <script type="text/javascript" charset="UTF-8">
+      	mui.init();
+      	
+      	var uListheadWeb,uListBodyWeb,selfWeb,userInfo = null;
+      	var tagInfo = {};
+      	var headImg =document.getElementById("head_img");
+      	var username =document.getElementById("username");
+      	var userSign =document.getElementById("user_sign");
+      	var relsCount =document.getElementById("rels_count");
+      	var favCount =document.getElementById("fav_count");
+      	var catNews =document.getElementById("cat_news");
+      	
+      	//初始化页面内容
+      	var initWeb = function(){
+      		userInfo = JSON.parse(myStorage.getItem('user_info'));		//用户信息数据
+      		headImg.src = userInfo.avatar128;
+      		username.innerHTML = userInfo.nickname;
+      		userSign.innerHTML = userInfo.signature;
+      		
+      		cat.getCatCenter(function(res){
+      			if(res.code == 200){
+      				var centerInfo = res.data;
+      				relsCount.innerHTML = centerInfo.send_count;
+      				favCount.innerHTML = centerInfo.fav_count;
+      				catNews.innerHTML = centerInfo.rec_count;
+      			}
+      		})
+      	};
+      	
+      	/*监听用户更改事件*/
+      	window.addEventListener('userChange',function(){
+      		initWeb();
+      	})
+      	
+      	mui.plusReady(function(){
+      		selfWeb = plus.webview.currentWebview();
+			initWeb();
+      		
+      		uListheadWeb = mui.preload({
+      			url:'cat-ucenter-list-head.html',
+      			id:'cat-ucenter-list-head',
+      		})
+      	})
+      	
+      	mui('#list_view').on('tap','li',function(e){
+      		var tagId = this.id;
+      		switch(tagId){
+      			case 'cat_we_fav':
+      				tagInfo.title = '我的收藏'
+      				tagInfo.port = tagId;
+      				tagInfo.tag = tagId;
+      				break
+      			case 'cat_we':
+      				tagInfo.title = '我的发布'
+      				tagInfo.port = tagId;
+      				tagInfo.tag = tagId;
+      				break;
+      			case 'cat_mail':
+      				tagInfo.title = '我的信箱'
+      				tagInfo.port = tagId;
+      				tagInfo.tag = tagId;
+      				break;
+      			case '5':
+      				tagInfo.title = '我的简历'
+      				tagInfo.port = 'cat_we';
+      				tagInfo.id = tagId;
+      				tagInfo.tag = 'we'+tagId;
+      				break;
+      			case '1':
+      				tagInfo.title = '我的招聘'
+      				tagInfo.port = 'cat_we';
+      				tagInfo.id = tagId;
+      				tagInfo.tag = 'we'+tagId;
+      				break;
+      		}
+      		
+      		if(!uListBodyWeb){
+	      		uListBodyWeb = plus.webview.getWebviewById('cat-ucenter-list-body');
+      		}
+      		mui.fire(uListBodyWeb,'ucTagChange',{data:tagInfo});
+      		if(!uListheadWeb){
+      			uListheadWeb = plus.webview.getWebviewById('cat-ucenter-list-head');
+      		}
+      		uListheadWeb.show('slide-in-right');
+      	})
+    </script>
+</html>

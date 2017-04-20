@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+	<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../css/forum-post-detail.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/icomoon.css"/>
+	<link href="../../css/previewimage.css" rel="stylesheet" type="text/css"/>
+    <script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/support.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/forum.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/loadingbBtn.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/forum-render.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/loadingbBtn.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/share.js"></script>
+	<script src="../../js/mui.zoom.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/mui.previewimage.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+	<style type="text/css">
+		.icon-box{
+			width: 50%;
+			height: 100%;
+		}
+		.icon-box ul{
+			width: 100%;
+			height: 100%;
+			list-style: none;
+		}
+		.icon-box li{
+			width: 33%;
+			text-align: center;
+			border-left: 1px solid #CCCCCC;
+			float: left;
+		}
+	
+		.masking{
+			position: absolute;
+			top: 0;
+			background: rgba(0,0,0,.4);
+			z-index: 999;
+			width: 100%;	
+		}
+		.bottom-btn span{
+			margin-left: 10px;
+		}
+	</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+		<h1 id="title" class="mui-title"></h1>
+	</header>
+
+	<div id="loading_page" style="text-align: center;margin-top: 55%;">
+		<i class="mui-spinner"></i>
+	</div>
+	<div id="pullrefresh" style="display: none;">
+		<div id="scroll_wrapper" class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<div>
+					
+					<!--帖子详情部分-->
+					<div id="post_detail" class="post-detail">
+						
+					</div>
+					<div id="post_content" class="post-content"></div>
+					<!--帖子回复部分-->
+					<div id="comment_box" class="comment-box">
+						<ul id="comment_list" class="mui-table-view"></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!--底部区域 评论 点赞-->
+		<footer class="mui-bar mui-bar-footer" id="show_foot" style="height: 50px;">
+			<i class="diy-icon icon-edit mui-pull-left" style="line-height: 50px;"></i>
+			<a id="show_hide" class="mui-btn mui-btn-link mui-pull-left" style="color: #C0C0C0;line-height: 50px;margin-left: 10px;">添加你的评论</a>
+			<div class="icon-box mui-pull-right">
+				<ul class="mui-text-center" style="margin: 0;padding: 0px;">
+					<li id="shares" >
+						<div class="bottom-btn">
+							<i class="diy-icon icon-share"  style="line-height: 50px;"></i>
+						</div>
+					</li>
+					<li id="sendcomment" >
+						<div class="bottom-btn">
+							<i class="diy-icon icon-bubble2"  style="line-height: 50px;"></i><span id="chat_icon"></span>
+						</div>
+					</li>
+					<li id="support" class="forum_support">
+						<div class="bottom-btn" id="support_btn"> 
+							<i class="diy-icon icon-heart"  style="line-height: 50px;"></i><span id="suppt_num" ></span>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</footer>
+		<!--快速回复栏-->
+		<div id="reply_box" class="diy-bottom-box" style="display: none;height: 50px;">
+			<div class="mui-grid-view mui-clearfix diy-bottom">
+				<div class="mui-col-xs-9 mui-pull-left ">
+					<form style="background: #fafafa;border: none; ">
+						<div class="mui-input-row ">
+							<label  style="border: none;width: 10%;padding: 7px 0px">
+								<i class="mui-icon mui-icon mui-icon-compose"></i>
+							</label>
+							<input  id="reply_text" type="text"  placeholder="回复楼主" class="noscrollbars"></input>
+						</div>
+					</form>
+				</div>
+				<div class="mui-col-xs-3 mui-pull-left">
+					<button id="send_btn" class="mui-btn mui-btn-blue"style="padding:9px 20px;width:80%">
+					发送</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--detail模板-->
+	<script id="detail_template" type="text/html">
+		<p class="post-title">{{title}}</p>
+		<img class="forum-header mui-pull-left" onload="load(this)" src="../../images/default_avatar.jpg" data-src="{{user.avatar128}}">
+		<div class="mui-media-body">{{user.nickname}}{{if user.rank_link.length > 0}}{{each user.rank_link as value i}}<span style="background: {{value.label_bg}};color: {{value.label_color}};" class="rank-label">{{value.title}}</span>{{/each}}{{/if}}
+			<span class="louzhu-text">楼主</span><span id="report" data="{{}}" style="float: right;font-size:12px;margin-right: 10px;">举报</span>
+			<p class='mui-ellipsis'>{{create_time}}</p>
+		</div>
+	</script>
+	
+</body>
+
+    <script type="text/javascript" charset="utf-8">
+      	mui.init({
+      		gestureConfig:{
+			   doubletap: true
+      		}
+  		});
+      	mui('.mui-scroll-wrapper').scroll();
+		mui.previewImage();
+      	
+      	var postTitle = document.getElementById('title');
+      	var postDetail = document.getElementById('post_detail');
+      	var postContent = document.getElementById('post_content');
+      	var commentList = document.getElementById('comment_list');
+      	var replyBox = document.getElementById('reply_box');
+      	var supportBtn = document.getElementById('support_btn');
+      	var sendBtn = document.getElementById('send_btn');
+      	var supports = document.getElementById('support');
+      	var ScroBody = document.getElementById('scroll_wrapper');
+      	var $forum_support = new support();
+      	var	show_hide = document.getElementById('show_hide');
+      	var	show_foot = document.getElementById('show_foot');
+      	var oglHeight = document.querySelector("body").offsetHeight;
+      	/*回复数据块*/
+      	var replyText = document.getElementById('reply_text');
+      	var masking = document.createElement('div');
+		masking.className = 'masking';
+      	var thisWeb = null;
+  		var postInfo = null;
+  		var postId = 0;
+  		var postRestInfo = null;
+		var fistCount = 0;
+		var secondCount = 0;
+		var block = true;
+		var lzlRestInfo = null;
+  		var lzlPage = 0;
+		var loadBar = loadBtn();
+		var shareContent = '';
+      	var share;
+      	var showMask = function(is_show){		//关闭输入框
+			masking.style.display = is_show?'block':'none';
+		 	replyBox.style.display = is_show?'block':'none';
+			show_foot.style.display = is_show?'none':'block';
+			//关闭软键盘
+			document.activeElement.blur();
+      	}
+      	
+      	/*监听post改变事件*/
+      	window.addEventListener('frumPostChange',function(event){
+      		postInfo = event.detail.postInfo;
+      		if(!postId || postInfo.id != postId){
+      			mui('.mui-scroll-wrapper').scroll().scrollTo(0,0);
+	      		postId = postInfo.id;
+	      		postTitle.innerText = postInfo.forum.title;
+	      		      		
+	      		/*帖子详情*/
+	      		forum.getPostDetail(postId,function(res){
+	      			if(res.code == 200){
+	      				var	chat_icon = document.getElementById('chat_icon');
+	      				var	suppt_num = document.getElementById('suppt_num');
+	      				var detailHtml = template('detail_template',res.data);
+	      				var temp = res.data;
+	      				app.shareHref(temp.share_url,temp.title,temp.content);
+	      				postDetail.innerHTML = detailHtml;
+	      				postContent.innerHTML = imgTools.getDtlContent(res.data.content);
+	      				suppt_num.innerHTML = temp.support_count > 99?'99+':temp.support_count;
+	      				chat_icon.innerHTML = temp.reply_count > 99?'99+':temp.reply_count;
+	      				var reportBtn = document.getElementById('report');     		
+			      		reportBtn.addEventListener('tap',function(){
+			      			app.openReportWeb('forum',temp);
+			      		})
+	      				supports.setAttribute('row-id',res.data.id);
+	  					supportBtn.setAttribute('is_bind_event',res.data.is_supported);
+	      				if(res.data.is_supported == 1){
+	      					supportBtn.style.color = 'red';
+	      				}
+	      			}else{
+	      				toast.info(res.info);
+	      				return;
+	      			}
+	      			thisChangePage(false);
+	      		});
+	      		
+      			/*帖子回复评论*/
+		  		postRestInfo = {post_id:postId,page:1};
+				fistCount = 0;
+				secondCount = 0;
+				block = true;
+				commentList.innerHTML = '';
+				/*初始化回复列表*/
+	      		forum.getPostComment(postRestInfo,function(res){
+	      			if(res.code == 200){
+	      				for(index in res.data){
+		      				var commentInfo = res.data[index];
+						    commentInfo.page = postRestInfo.page;
+						    var floor = (postRestInfo.page-1)*10 + parseInt(index,10) + 1;
+					    	floor = apptools.createFloor(floor);
+						    commentInfo.floor = floor;
+		      				var li = get_comment_li(commentInfo);
+						    commentList.appendChild(li);
+	      				}
+	      				if (commentList.children.length == 0) {
+							postRestInfo.page--;
+							loadBar.innerText = '暂无评论';
+						} else if (res.data.length < 10) {
+							secondCount = res.data.length;
+							postRestInfo.page--;
+							loadBar.innerText = '暂无更多评论';
+						} else {
+							loadBar.innerText = '点击加载更多';
+						}
+						document.getElementById('comment_box').appendChild(loadBar);
+						
+	      			}else{
+	      				toast.info(res.info);
+	      				return;
+	      			}
+	      		});
+	      		/*加载更多楼中楼回复*/
+	      		lzlRestInfo = {post_id:postId,to_f_reply_id:'',page:1}
+	      		lzlPage = 0;
+      		}else{
+      			thisChangePage(false);
+      		}
+      	})
+
+		
+      	show_hide.addEventListener('tap',function(){
+			if(is_login()){
+				showMask(true);
+				var sHeight = plus.screen.resolutionHeight;
+				var fHeight =parseInt(replyBox.style.height);
+				var mHeight = sHeight-fHeight;
+				masking.style.height=(mHeight-20)+'px';
+				document.body.appendChild(masking);
+				masking.addEventListener('tap',function(){
+					showMask(false);
+				})
+			}else{
+				toast.info("请登录后操作")
+			}
+			
+		});
+		
+		//回顶操作
+  		postTitle.addEventListener('tap',function(e){
+  			goTop(thisWeb);
+  		})
+		
+		/*回复列表项*/
+  		var get_comment_li = function(commentInfo){
+			var li = document.createElement('li');
+		    li.className = 'post-comment';
+		    li.comment_info = commentInfo;
+		    commentInfo.content = imgTools.getDtlContent(commentInfo.content);
+		    li.innerHTML = post_detail_render(commentInfo);
+		    return li;
+  		}
+		
+      	mui.plusReady(function(){
+			share = new share();
+      		thisWeb = plus.webview.currentWebview();
+			thisWeb.addEventListener('hide',function(e){
+				thisChangePage(true);
+				showMask(false);
+			})
+      		$forum_support.create('forum_support', {
+				appname: 'forum',
+				table: 'post',
+				jump: 'forum/index/Detail'
+			});
+			forum.bindEvent();
+      		
+      		//加载按钮
+			loadBar.addEventListener('tap', function(event) {
+				if (block) {
+					block = false;
+					postRestInfo.page++;
+					forum.getPostComment(postRestInfo, function(res) {
+						if (res.code == 200) {
+							fistCount = typeof(res.data) == 'undefined' ? 0 : res.data.length
+							for (var i = secondCount; i < fistCount; i++) {
+								var commentInfo = res.data[i];
+								commentInfo.page = postRestInfo.page;
+					    		var floor = (postRestInfo.page-1)*10 + parseInt(i,10) + 1;
+						    	floor = apptools.createFloor(floor);
+							    commentInfo.floor = floor;
+								commentList.appendChild(get_comment_li(commentInfo));
+							}
+							if (fistCount < 10) {
+								secondCount = fistCount;
+								postRestInfo.page--;
+								loadBar.innerText = '暂无更多评论';
+							} else {
+								secondCount = 0;
+								loadBar.innerText = '点击加载更多';
+							}
+						} else {
+							mui.toast(res.info);
+						}
+						block = true;
+					});
+				}
+			});
+      		
+      		/*更多楼中楼回复*/
+      		mui('#comment_list').on('tap','.more-btn',function(e){
+      			lzlPage++;
+      			var lzlList = this.previousSibling;
+      			var lzlReplyCount = this.getAttribute('lzl-count');
+      			var thisId = this.id;
+      			var moreDiv = document.getElementById(thisId);
+      			moreDiv.style.display = "none";
+      			lzlRestInfo.to_f_reply_id = lzlList.id;
+      			lzlRestInfo.page = lzlPage;
+      			forum.getPostLzlComment(lzlRestInfo,function(res){
+      				if(res.code == 200 && res.data != null){
+      					var tempReplyCount = res.data.length;
+      					var moreCount = lzlReplyCount - ((lzlPage - 1)*10 + tempReplyCount);
+      					var lzlCount = 0;
+      					if(lzlPage == 1){
+      						lzlCount = 3;
+      					}
+      					for(var d = lzlCount;d < tempReplyCount;d++){
+      						var li = document.createElement('li');
+			    			li.className = 'lzl-comment';
+			    			li.innerHTML = post_lzl_render(res.data[d]);
+			    			lzlList.appendChild(li);
+      					}
+      					if(moreCount > 0){
+      						moreDiv.style.display = "block";
+      						moreDiv.innerText = '更多'+ moreCount +'条回复';
+      					}
+      				}
+      			})
+      		},false)
+      		
+      		
+      		/*发表评论功能*/
+      		sendBtn.addEventListener('tap',function(e){
+      			if(is_login()){
+					var replyContent = replyText.value;
+					var replyRest = {
+						post_id:postId,
+						content:replyContent
+					}
+					if(replyRest.post_id != null && replyRest.content.length >= 2){
+						forum.replyToPost(replyRest,function(res){
+							showMask(false);
+							plus.nativeUI.showWaiting();
+							if(res.code == 200){
+								replyText.value = '';
+								toast.info('回复成功');
+							}else{
+								toast.info(res.info);
+							}
+							plus.nativeUI.closeWaiting();
+						})
+					}else{
+						toast.info('请提交有意义的评论');
+					}
+					
+      			}else{
+      				toast.info('需要登陆后操作');
+      			}
+      		});
+      		
+      		var openFloorWeb = function(domEle){
+				var comment_li = get_parent_node(domEle,'.post-comment');
+				webtools.openSingleWeb('forum-floor-reply',comment_li.comment_info);
+      		}
+      		/*回复楼中楼*/
+      		mui('#comment_list').on('tap','.lzl_content',function(e){
+      			if(app.loginHandle()){
+					openFloorWeb(this);
+      			}
+      		},false)
+      		
+      		/*打开楼中楼回复列表*/
+      		mui('#comment_list').on('tap','#floor_reply_btn',function(e){
+      			openFloorWeb(this);
+      		},false)
+      		
+      		/*举报*/
+			mui('#comment_list').on('tap','#report_forum_comment',function(){
+				var info = this.parentNode.parentNode.comment_info;
+				app.openReportWeb('forum_comment',info);
+			})
+      	});
+    </script>
+</html>

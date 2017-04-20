@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<style>
+			.nav-icon {
+				width: 20px !important;
+				height: 20px !important;
+			}
+			
+			.mui-bar-tab .mui-tab-item.mui-active {
+				color: #1ABC9C;
+			}
+			
+			.message-point {
+				width: 10px;
+				background-color: #CF2D28;
+				height: 10px;
+				border-radius: 50%;
+				display: none;
+				position: relative;
+				top: -10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<nav id="nav_list" class="mui-bar mui-bar-tab"></nav>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/module.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			var styles = {
+				top: '0',
+				bottom: '50px'
+			};
+
+			var active = '';
+			var navList = document.getElementById('nav_list');
+			var selfWeb, baseCfg, plusCfg, navCache, navInfos;
+			var navFragment, fixeds = [];
+			var icon;
+			/*
+			 * @param {navTab} nav标签
+			 * @param {state} 1：点击标签  0：当前活跃标签
+			 */
+			var change_icon = function(navTab, state) {
+				if(!navTab) return;
+				state == 1 ? icon = navTab.firstChild.getAttribute('name') + '-pressed.png' : icon = navTab.firstChild.getAttribute('name') + '.png';
+				navTab.firstChild.src = '../../images/' + icon;
+			}
+
+			/*导航栏切换*/
+			var change_nav = function(targetTab) {
+				var targetNav = document.getElementById(targetTab);
+				if(targetNav && active == 'nav_module') {
+					document.getElementById('nav_module').classList.remove('mui-active')
+					targetNav.classList.add('mui-active');
+				}
+				//icon图片的切换
+				activeNav = document.getElementById(active);
+				change_icon(activeNav, 0);
+				change_icon(targetNav, 1)
+				plus.webview.hide(active);
+				plus.webview.show(targetTab);
+				active = targetTab;
+			}
+
+			/*添加子web*/
+			var add_web = function(navInfo) {
+				var webId = 'nav_' + navInfo.name;
+				if(navInfo.type == 'custom' && navInfo.target == 1) {} else {
+					var web = plus.webview.getWebviewById(webId);
+					if(!web) {
+						web = plus.webview.create(navInfo.href, webId, styles, { data: navInfo });
+						web.hide();
+						selfWeb.append(web);
+					}
+					return web;
+				}
+			}
+
+			/*加载可变动导航*/
+			var load_net_mod = function(infos) {
+				navFragment = document.createDocumentFragment();
+				var count_1 = 0;
+				for(var index = 0; index < infos.length && count_1 < DEFMODCOUNT; index++) {
+					var navInfo = get_mod(infos[index]);
+					if(navInfo.open) {
+						count_1++;
+						var loadWeb = add_web(navInfo);
+						navFragment.appendChild(rander_nav(navInfo));
+					}
+				}
+				navList.appendChild(navFragment);
+				for(var i in fixeds) {
+					navList.appendChild(fixeds[i]);
+				}
+			}
+
+			mui.plusReady(function() {
+				selfWeb = plus.webview.currentWebview();
+				var render_nav = function() {
+					/*先加载本地模组*/
+					appMods.module.adm_open = baseCfg.nav_change == 0 ? false : true; //应用的开关，由网站控制
+					appMods.im.adm_open = plusCfg.im && plusCfg.im.rongyun && plusCfg.im.rongyun.open == 1 ? true : false; //IM开关，由网站控制
+					for(var i in appMods) {
+						var navInfo = appMods[i];
+						if(navInfo.open && navInfo.adm_open) {
+							var loadWeb = add_web(navInfo);
+							fixeds.push(rander_nav(navInfo));
+						}
+					}
+					load_net_mod(navInfos);
+
+					/*默认显示第一个模块*/
+					var firstNav = navList.children[0];
+					if(firstNav != null) {
+						firstNav.className = 'mui-tab-item mui-active';
+						change_icon(firstNav, 1);
+						plus.webview.show(firstNav.id);
+						active = firstNav.id;
+					}
+				}
+
+				/*用于站长在pc后台控制加载的模块顺序和开关*/
+				baseCfg = app.getConfig('base');
+				plusCfg = app.getConfig('plus');
+				navCache = JSON.parse(myStorage.getItem('nav_info'));
+				navInfos = navCache ? navCache.mod_list : [];
+				/*判断是否需要重置模块顺序*/
+				if(!navCache || baseCfg.nav_time != navCache.nav_time) {
+					app.getNavList(function(res) {
+						navInfos = res.data;
+						console.log('重组模块面板中...');
+						for(var index in navInfos) {
+							navInfos[index].open = index < DEFMODCOUNT ? true : false;
+						}
+						navCache = { nav_time: baseCfg.nav_time, mod_list: navInfos };
+						myStorage.setItem('nav_info', JSON.stringify(navCache));
+						render_nav();
+					})
+				} else {
+					render_nav();
+				}
+
+				/*自定义事件用于响应导航重组请求*/
+				window.addEventListener('nav_change', function(event) {
+					if(event.detail.change) {
+						var navInfoArr = JSON.parse(myStorage.getItem('nav_info')).mod_list;
+						navList.innerHTML = '';
+						/*检测模块是否创建，如果没有创建则后台创建*/
+						load_net_mod(navInfoArr);
+						/*按需求重置导航栏模块图标*/
+						document.getElementById('nav_module').className = 'mui-tab-item mui-active';
+					}
+				})
+			});
+
+			//选项卡点击事件
+			mui('#nav_list').on('tap', 'a', function(e) {
+				var tmpInfo = this.detail_info;
+				var webId = this.id;
+				if(tmpInfo.type == 'custom' && tmpInfo.target == 1) {
+					openOutWeb(tmpInfo);
+					return false;
+				} else {
+					if(webId == active) {
+						/*再次点击底部相同导航栏自动回到顶部*/
+						var headWeb = plus.webview.getWebviewById(webId);
+						goTop(headWeb);
+					} else {
+						change_nav(webId);
+						var weibo = plus.webview.getWebviewById('nav_weibo');
+						mui.fire(weibo, 'popover-hide', {
+							popover_key: true
+						})
+					}
+				}
+			});
+
+			//处理逻辑：1秒内，连续两次按返回键，则退出应用；
+			apptools.exitApp();
+		</script>
+
+	</body>
+
+</html>

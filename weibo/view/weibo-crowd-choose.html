@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css"/>
+		<style type="text/css">
+			.mui-radio input[type=radio]:before {
+				font-size: 25px;
+				color: #1ABC9C !important;
+			}
+			.mui-media-body p{
+				width: 90%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <i class="mui-action-back mui-icon text-btn base-head-btn base-cancel-color">取消</i>
+		    <h1 class="mui-title base-head-title">选择圈子</h1>
+		</header>
+		
+		<div class="mui-content">
+			<ul id="crowd_listview" class="mui-table-view base-table-view"></ul>
+		</div>
+		<script id="crowd_choose_tpl" type="text/html">
+			<input class="base-list-radio" name="radio" type="radio">
+			<img class="base-img-small mui-pull-left" onload="load(this)" src="../../images/app-logo.png" data-src="{{logo}}">
+			<div class="mui-media-body">
+				<div class="mui-ellipsis">{{title}}</div>
+				<p class="mui-ellipsis base-content-1">{{intro}}</p>
+			</div>
+		</script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/weibo.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/weibo-crowd-choose.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

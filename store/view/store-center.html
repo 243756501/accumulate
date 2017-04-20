@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/icomoon.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/store-center.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/module.css"/>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/store.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/store-public.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="mui-title">个人中心</h1>
+			<i id="shopping_car" class="mui-icon icon-cart mui-pull-right hu-hd-btn"></i>
+		</header>
+
+		<div class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				
+				<div class="center-top-view">
+					<div id="top_view" style="height:50px;">
+					</div>
+				</div>
+				
+				<!--订单view-->
+				<div class="all-order">
+					<div style="padding: 10px;" class="mui-clearfix">
+						<div class="mui-pull-left"><i class="mui-icon icon-paste icon-title"></i>我的订单</div>
+						<a id="allOrder" class="mui-pull-right" style="font-size: 12px;">查看全部订单 ></a>
+					</div>
+					 
+					<div class="">
+						<ul id="order_list" class="mui-table-view mui-grid-view mui-grid-9">
+							<li class="mui-table-view-cell mui-media mui-col-xs-3">
+								<a id="0">
+									<div class="nine-space">
+										<span class="mui-icon icon-clipboard"><span style="display: none;" id="pay_count" class="mui-badge"></span></span>
+										<div class="mui-media-body">未付款</div>
+									</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-3">
+								<a id="1">
+									<div class="nine-space">
+										<span class="mui-icon icon-gift"><span id="payed_count" style="display: none;" class="mui-badge"></span></span>
+										<div class="mui-media-body">已付款</div>
+									</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-3">
+								<a id="2">
+									<div class="nine-space">
+										<span class="mui-icon icon-truck"><span id="ac_count" style="display: none;" class="mui-badge"></span></span>
+										<div class="mui-media-body">已发货</div>
+									</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-3">
+								<a id="3">
+									<div class="nine-space">
+										<span class="mui-icon icon-hammer2"></span>
+										<div class="mui-media-body">已完成</div>
+									</div>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				
+				
+				<!--收藏view-->
+				<div class="">
+					<div style="padding: 10px;"><i class="mui-icon icon-folder-plus icon-title"></i>我的收藏</div>
+					<ul id="fav_list" class="fav-view mui-table-view mui-grid-view mui-grid-9"></ul>
+				</div>
+			</div>
+		</div>
+		
+		<!--头部信息展示模板-->
+		<script id="top_tmplte" type="text/html">
+			<img id="" class="top-img" onload="load(this)" src="../../images/default_avatar.jpg" data-src="{{user.avatar128}}"/>
+			<span class="top-title">{{user.nickname}}</span>
+			<span style="display: block;"> 账户余额：¥{{currency}}</span>
+		</script>
+		
+		<!--收藏商品模板-->
+		<script id="fav_tmplte" type="text/html">
+			<div>
+				<img class="fav-img" onload="load(this)" src="../../images/store.png" data-src="{{goods_icon.thumb}}"/>
+				<p class="fav-title mui-ellipsis">{{title}}</p>
+				<div>¥ {{price}}</div>
+			</div>
+		</script>
+	</body>
+	<script type="text/javascript" charset="utf-8">
+		mui.init();
+		mui('.mui-scroll-wrapper').scroll();
+		var allOrder = document.getElementById('allOrder');
+
+		var topView = document.getElementById('top_view');
+		var favList = document.getElementById('fav_list');
+		var shoppingCar = document.getElementById('shopping_car');
+		
+		var payed_count = document.getElementById('payed_count');
+		var pay_count = document.getElementById('pay_count');
+		var ac_count = document.getElementById('ac_count');
+		var godsDetlWeb= null;
+		
+		mui.plusReady(function(){
+			
+			/*渲染头部*/
+			store.getUSInfo(function(res){
+	      		if(res.code == 200){
+	      			var centerInfo = res.data;
+	      			myStorage.setItem('userStoreInfo',JSON.stringify(centerInfo));
+					topView.innerHTML = template('top_tmplte',centerInfo);
+					if(centerInfo.unpaid_order_count > 0){
+						pay_count.style.display = 'block';
+						pay_count.innerHTML = centerInfo.unpaid_order_count;
+					}
+					if(centerInfo.send_order_count > 0){
+						ac_count.style.display = 'block';
+						ac_count.innerHTML = centerInfo.send_order_count;
+					}
+					if(centerInfo.paid_order_count > 0){
+						payed_count.style.display = 'block';
+						payed_count.innerHTML = centerInfo.paid_order_count;
+					}
+	      		}
+	      	})
+			
+			
+			/*收藏列表*/
+			store.myFavGoods(function(res){
+				if(res.code == 200){
+					for(i in res.data){
+						var favGsInfo = res.data[i];
+						var li = document.createElement('li');
+						li.className = 'fav-item mui-table-view-cell mui-col-xs-3 goods-item';
+						li.goods_info = favGsInfo;
+						li.id = favGsInfo.id;
+						li.innerHTML = template('fav_tmplte',favGsInfo);
+						favList.appendChild(li);
+					}
+				}else{
+					favList.innerHTML = '<div style="font-size: 15px;text-align: center;padding: 50px 5px;color: #666;">还没有收藏商品~</div>';
+				}
+			})
+		})
+		
+		
+		allOrder.addEventListener('tap',function(res){
+			mui.openWindow({
+				url: 'store-order-head.html',
+				id: 'store-order-head',
+				extras: {
+					
+				},
+				createNew: false,
+				show:{
+					autoShow:true
+				}
+			});
+		})
+		
+		mui('#order_list').on('tap','.nine-space',function(){
+			var $this = this;
+			mui.openWindow({
+				url: 'store-order-head.html',
+				id: 'store-order-head',
+				extras: {
+					type:$this.parentNode.id
+				},
+				createNew: false,
+				show:{
+					autoShow:true
+				}
+			});
+		});
+		
+		shoppingCar.addEventListener('tap',function(e){
+			mui.openWindow({
+				url:'store-car-head.html',
+				id:'store-car-head',
+				show:{
+					aniShow:'pop-in'
+				}
+			})
+		})
+		
+		
+		goods_li_click("#fav_list");
+	</script>
+
+</html>

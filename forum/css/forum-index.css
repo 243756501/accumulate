@@ -1,0 +1,46 @@
+.mui-scroll-wrapper{
+	top: 45px;
+}
+.mui-table-view-cell{
+	padding-bottom:3px;
+}
+.mui-scroll{
+	min-height: 100%;
+	background: white;
+	padding-bottom: 5px;
+}
+.mui-table-view{
+	padding-bottom: 5px;
+}
+.two-view{
+	margin: 5px 3px 0px 2px;
+	padding: 5px 3px;
+	width: 48.5%;
+	height: 4.5em;
+	display: inline-block;
+	float: left;
+	-webkit-box-shadow: 0px 0px 10px #C3C3C3;
+	box-shadow: 0px 0px 10px #C3C3C3;
+}
+.next-li{
+	padding: 5px;
+}
+.forum-header{
+	width: 3em;
+	height: 3em;
+	border-radius: 5px;
+	margin-right: 5px;
+}
+.count-box{
+	font-size: 0.7em;
+	text-align: right;
+}
+.module-name{
+	border: solid 1px #E4E3E6;
+	font-size: 18px;
+	padding: 5px;
+	margin-top: 5px;
+}
+.forum-title-one{
+	font-size: 15px;
+}

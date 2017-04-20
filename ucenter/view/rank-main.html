@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css"/>
+		<style type="text/css">
+			html,body{background: #FFF;overflow-x: hidden;}
+			.main-view{margin-top: 45px;padding: 15px;display: none;}
+			.rank-item:last-child{margin-bottom: 0;}
+			.rank-item{border-radius: 5px;background: #EEE;display: flex;height: 140px;padding: 10px 15px;overflow: hidden;margin-bottom: 10px;}
+			.rank-item-img{position: relative;height: 140px;width: 12em;left: -15px;top: -10px;}
+			.mui-media-body{width: 100%;display: flex;flex-direction: column;justify-content: space-between;}
+			.user-view div{padding: 2px 0;color: #888;}
+			.user-view div:first-child{color: #1ABC9C;}
+			.user-view img{position: relative;width: 20px;top: 4px;}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">荣誉榜</h1>
+		</header>
+		
+		<div id="load_view" style="text-align: center;margin-top: 30%;">
+			<i class="mui-spinner"></i>
+		</div>
+		<div id="main_view" class="main-view base-fade-view"></div>
+		
+		<!--模板-->
+		<script id="rank_tpl" type="text/html">
+			<img class="rank-item-img" src="../../images/bgm/rank_{{rank_type}}.png" >
+		        <div class="mui-media-body">
+            	<div>{{rank_title}}榜</div>
+            	<div class="user-view">
+            		{{each list as value}}
+	            	<div class="mui-ellipsis">
+						<span>{{value.ranking}}</span>
+						<img class="base-cir" onload="load(this)" src="../../images/default_avatar.jpg" data-src="{{value.avatar128}}"/>
+						<span>{{value.nickname}}</span>
+	            	</div>
+	            	{{/each}}
+            	</div>
+	        </div>
+		</script>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/ucenter.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init();
+			var selfWeb,myInfo;
+			var loadView = document.getElementById("load_view");
+			var mainView = document.getElementById("main_view");
+			
+			mui.plusReady(function () {
+				
+			    selfWeb = plus.webview.currentWebview();
+			    selfWeb.setStyle({scrollIndicator:'none'});
+			    myInfo = JSON.parse(myStorage.getItem('user_info'));
+			    
+			    ucenter.getRankInfo('',function(res){
+			    	for(var i in res.data){
+			    		var typeInfo = res.data[i];
+			    		var ul = app.createListItem(typeInfo,'rank-item','div');
+			    		ul.id = typeInfo.type;
+			    		ul.innerHTML = template('rank_tpl',typeInfo);
+			    		mainView.appendChild(ul);
+			    	}
+				    changePage(loadView,mainView,false);
+			    })
+			})
+			
+			mui('#main_view').on('tap','.rank-item',function(e){
+				var info = this.detail_info;
+				info = mui.extend(myInfo,info);
+				webtools.createRptWeb('rank-detail',function(web){
+					mui.fire(web,'rankChange',{data:info});
+					web.show('pop-in',WEBTRANSTIME);
+				});
+			})
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <style type="text/css">
+		.bottom-buy-box{
+			display: none;
+			line-height: 50px;
+			height:50px;
+		    position: absolute;
+		    bottom: 0px;
+		    width: 100%;
+		    opacity: 1;
+		    background-color: #000;
+		    z-index: 999;
+		}
+		.mui-table-view-cell{
+			margin-right: 0px !important;
+			padding: 0px !important;
+			background: #333 !important;
+		}
+		.mui-btn-danger{
+			border: 0;
+			font-size: 20px;
+			border-radius: 0;
+			height: 50px !important;
+			padding: 0px;
+			margin-right: -1px;
+		}
+		.mui-table-view:after{
+			background: none;
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+	    <h1 class="mui-title">购物车</h1>
+	</header>
+		<!--购买操作栏-->
+	<div id="bottom_view" class="bottom-buy-box">
+		<div class="mui-bar-tab">
+			<div style="padding: 0px;" class="mui-table-view mui-grid-view">
+				<div class="mui-table-view-cell mui-col-xs-9" style="height: 50px;">
+					<div style="color: red;font-size: 18px;">
+						<label>合计：¥</label>
+						<span id="sum_count">0.00</span>
+					</div>
+				</div>
+				<button id="to_order" type="button" class="mui-btn-danger mui-col-xs-3">下单</button>
+			</div>
+		</div>
+	</div>
+</body>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init({
+      		subpages:[{
+      			url:'store-car-body.html',
+      			id:'store-car-body',
+      			styles:{
+      				top:'45px',
+      				bottom:'0'
+      			}
+      		}],
+      		beforeback: function(){
+				if(page){
+					page.close('none');
+				}
+				return true;
+			},
+      	});
+      	
+      	var sumCount = document.getElementById('sum_count');
+      	var bottomView = document.getElementById('bottom_view');
+      	var orderData = {};
+      	var page = null;	//下单页面
+      	var getOrderData = function(orderInfo){
+      		orderData = orderInfo;
+      		sumCount.innerText = Number(orderData.sumTotal).toFixed(2);
+      	}
+      	mui.plusReady(function(){
+      		
+	      	page = mui.preload({
+			    url:'store-place-order.html',
+				id:'store-place-order',
+			});
+	      	
+	      	document.getElementById('to_order').addEventListener('tap',function(e){
+	      		if(Number(orderData.sumTotal) > 0){
+	      			if(page == null){
+	      				page = plus.webview.getWebviewById('store-place-order');
+	      			}
+	      			mui.fire(page,'newOrderData',{
+						data:orderData
+					});
+					plus.webview.show(page,'pop-in');
+	      		}else{
+	      			mui.toast('请选择商品后操作');
+	      		}
+	      	})
+      	})
+      	
+    </script>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../event/css/event.css" />
+		<script src="../../js/core.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../js/people.js"></script>
+		<script src="../js/people-render.js"></script>
+		<script src="../../js/template.js"></script>
+		<script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+		<style>
+			.mui-media-body {
+				padding-left: 10px;
+				margin-top: 5px;
+			}
+			
+			.mui-table-view:after {
+				background: none;
+			}
+			
+			.mui-table-view:before {
+				background: none;
+			}
+			
+			#topPopover {
+				position: fixed;
+				top: 16px;
+				right: 6px;
+			}
+			
+			#topPopover .mui-popover-arrow {
+				left: auto;
+				right: 6px;
+			}
+			
+			.mui-popover {
+				width: 40%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="loading_page" style="text-align: center;margin-top: 30%;">
+			<i class="mui-spinner"></i>
+		</div>
+		<div id="pullrefresh" style="display: none;" class="mui-content mui-scroll-wrapper">
+			<div id="mui-scroll" class="mui-scroll">
+				<ul id="neighborhood-list" class="mui-table-view">
+
+				</ul>
+			</div>
+		</div>
+
+		<!--右上角弹出菜单-->
+		<div id="topPopover" class="mui-popover">
+			<div class="mui-popover-arrow"></div>
+			<div class="mui-scroll-wrapper">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell"><a id="tenKM">10KM内</a>
+					</li>
+					<li class="mui-table-view-cell"><a id="allKM">查看全部</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a id="test">清除位置信息</a>
+					</li>
+				</ul>
+			</div>
+
+		</div>
+	</body>
+	<script>
+		mui.init({
+			pullRefresh: {
+				container: '#pullrefresh',
+				down: {
+					contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+					callback: pulldown_refresh
+				},
+				up: {
+					contentrefresh: '正在加载...',
+					callback: pullup_refresh
+				}
+			}
+		});
+		var loadPages = document.getElementById('loading_page');
+		var lists = document.getElementById('pullrefresh');
+		var peopleList = document.getElementById('neighborhood-list');
+		var placeInfo = {
+			page: 1,
+			distance: 10
+		};
+		mui.plusReady(function() {
+			plus.geolocation.getCurrentPosition(function(p) {
+				console.log("Geolocation\nLatitude:" + p.coords.latitude + "\nLongitude:" + p.coords.longitude + "\nAltitude:" + p.coords.altitude);
+				placeInfo.lat = p.coords.latitude;
+				placeInfo.lng = p.coords.longitude;
+				people.getNearPeople(placeInfo, function(res) {
+					loadPage(true);
+					if (res.code == 200) {
+						for (var index in res.data) {
+							var li = get_people_li(res.data[index]);
+							peopleList.appendChild(li);
+						}
+					} else {
+						peopleList.innerHTML = '<div style="padding: 30px;text-align: center;margin: 30px 0px;font-size: 14px;color: #AAAAAA;background-color: #EEEEF4;">暂无附近的人</div>';
+					}
+				})
+			}, function(e) {
+				toast.info('定位失败');
+				console.log("Geolocation error: " + e.message);
+			});
+			open_id = app.getState().open_id || '';
+			document.getElementById('test').addEventListener('tap', function() {
+				console.log(open_id);
+				if (open_id == '') {
+					toast.info('未登入');
+				} else {
+					plus.nativeUI.showWaiting();
+					people.clearNearPeople(function(res) {
+						plus.nativeUI.closeWaiting();
+						if (res.code == 200) {
+							var btnArray = ['确定'];
+							mui.confirm('您的地理位置信息已被清除。', '提示', btnArray, function(e) {
+								if (e.index == 0) {
+									mui.back();
+									mui.back();
+								}
+							})
+						} else {
+							toast.info("网络异常");
+						}
+					})
+				}
+			})
+			document.getElementById('tenKM').addEventListener('tap', function() {
+				peopleList.innerHTML = '';
+				plus.nativeUI.showWaiting();
+				mui.back();
+				placeInfo.distance = 10;
+				pulldown_refresh();
+			})
+			document.getElementById('allKM').addEventListener('tap', function() {
+				peopleList.innerHTML = '';
+				plus.nativeUI.showWaiting();
+				mui.back();
+				placeInfo.distance = 999999;
+				pulldown_refresh();
+			})
+		})
+		var clear = function() {
+				var btnArray = ['确定', '取消'];
+				mui.confirm('清除地理位置？', '提示', btnArray, function(e) {
+					if (e.index == 0) {
+						if (open_id == '') {
+							toast.info('未登入');
+						} else {
+							plus.nativeUI.showWaiting();
+							people.clearNearPeople(function(res) {
+								plus.nativeUI.closeWaiting();
+								if (res.code == 200) {
+									var btnArray = ['确定'];
+									mui.confirm('您的地理位置信息已被清除。', '提示', btnArray, function(e) {
+										if (e.index == 0) {
+											mui.back();
+											mui.back();
+										}
+									})
+								} else {
+									toast.info("网络异常");
+								}
+							})
+						}
+					}
+				})
+			}
+			/**
+			 * 上拉加载更多
+			 */
+		function pullup_refresh() {
+			placeInfo.page++;
+			setTimeout(function() {
+				people.getNearPeople(placeInfo, function(res) {
+					var length = typeof(res.data) == 'undefined' ? 0 : res.data.length;
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(length == 10 ? false : true);
+					if (res.code == 200) {
+						for (var index in res.data) {
+							var li = get_people_li(res.data[index]);
+							peopleList.appendChild(li);
+						}
+					} else {
+						toast.info('没有更多了');
+					}
+				})
+			}, 500);
+		}
+		/**
+		 * 下拉刷新
+		 */
+		function pulldown_refresh() {
+			setTimeout(function() {
+				placeInfo.page = 1;
+				//				console.log(placeInfo.lat);
+				people.getNearPeople(placeInfo, function(res) {
+					plus.nativeUI.closeWaiting();
+					if (res.code == 200) {
+						peopleList.innerHTML = '';
+						for (var index in res.data) {
+							var li = get_people_li(res.data[index]);
+							peopleList.appendChild(li);
+						}
+					}
+					mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+					//重置底部加载状态
+					mui('#pullrefresh').pullRefresh().refresh(true);
+				})
+			}, 1000);
+		}
+		var loadPage = function(flag) {
+				if (flag) {
+					lists.style.display = 'block';
+					loadPages.style.display = 'none';
+				} else {
+					lists.style.display = 'none';
+					loadPages.style.display = 'block';
+				}
+			}
+			//获得一个people列表li
+		var get_people_li = function(peopleInfo) {
+			var li = document.createElement('li');
+			li.className = 'mui-table-view-cell event-item';
+			li.detail_info = peopleInfo;
+			li.data_uid = peopleInfo.uid;
+			li.setAttribute('uid', peopleInfo.user.uid);
+			var html = parse_people_html(peopleInfo, near);
+			li.innerHTML = html;
+			return li;
+		}
+		//点击头像进入个人主页。
+		app.userListener();
+	</script>
+
+</html>

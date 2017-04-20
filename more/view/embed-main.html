@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css" />
+		<link rel="stylesheet" type="text/css" href="../css/embed-main.css"/>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav base-white-color">
+			<i class="mui-icon mui-icon-back base-head-btn base-ok-color"></i>
+			<h1 id="url_view" class="mui-title head-title">百度一哈</h1>
+			<i data-event="screen" class="mui-icon mui-icon-refreshempty base-head-btn base-ok-color mui-pull-right"></i>
+		</header>
+
+		<nav id="nav_list" class="mui-bar mui-bar-tab">
+
+		</nav>
+		<nav id="btm_bar" class="mui-bar mui-bar-tab">
+			<a data-event="index" class="mui-tab-item">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">主页</span>
+			</a>
+			<a data-event="flush" class="mui-tab-item">
+				<span class="mui-icon mui-icon-refreshempty"></span>
+				<span class="mui-tab-label">刷新</span>
+			</a>
+			<a data-event="back" class="mui-tab-item">
+				<span class="mui-icon mui-icon-arrowthinleft"></span>
+				<span class="mui-tab-label">后退</span>
+			</a>
+			<a data-event="forward" class="mui-tab-item">
+				<span class="mui-icon mui-icon-arrowthinright"></span>
+				<span class="mui-tab-label">前进</span>
+			</a>
+		</nav>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init({
+				beforeback: function() {
+					if(isFull()){
+						embed.back();
+						return false;
+					}else{
+						return true;
+					}
+				}
+			});
+			var selfWeb, embed,
+				urlView = document.getElementById("url_view"),
+				homeUrl = 'http://www.baidu.com',
+				screenH = document.body.clientHeight;
+				
+
+			mui.plusReady(function() {
+				selfWeb = plus.webview.currentWebview();
+				console.log(JSON.stringify(selfWeb.data));
+				createEmbed();
+				window.addEventListener('resize',function(e){
+					if(document.body.clientHeight == screenH){
+						embed.evalJS('document.activeElement.blur()');
+					}
+				})
+			})
+			
+			//加载view
+			function showWait(){
+				var wView = plus.nativeUI.showWaiting('', {
+					style: 'black',
+					modal: false,
+					background: 'rgba(0,0,0,0)'
+				});
+				setTimeout(function(){
+					plus.nativeUI.closeWaiting();
+				},2000)
+				return wView;
+			}
+			
+			// 创建子Webview
+			function createEmbed(url,id) {
+				showWait();
+				embed = plus.webview.getWebviewById('embed-sub');
+				if(!embed){
+					var topoffset = '45px';
+					embed = plus.webview.create(homeUrl, 'embed-sub', {
+						top: topoffset,
+						bottom: '50px'
+					});
+				}
+				selfWeb.append(embed);
+				//embed页面时间监听
+				embed.addEventListener('loaded', function() {
+					plus.nativeUI.closeWaiting();
+				}, false);
+				
+				embed.addEventListener('titleUpdate', function(e){
+					showWait();
+					setTimeout(function(){
+						onBrowserLoading();
+					},500)
+				});
+			}
+			// 打开网址
+			function openUrl(url) {
+				onBrowserLoading();
+				embed.loadURL(url);
+			}
+
+			// 页面跳转完成事件
+			function onBrowserLoading(url) {
+				url = url|| embed.getTitle();
+				urlView.innerHTML = url;
+			}
+			//页面是否全屏
+			function isFull(){
+				return parseInt(selfWeb.getStyle().bottom) == 0;
+			}
+			//事件处理
+			function eventCenter(domEl){
+				var eventName = domEl.getAttribute('data-event');
+				switch (eventName){
+					case 'screen'://全屏切换
+						if(isFull()){
+							domEl.innerHTML = '全屏';
+							selfWeb.setStyle({bottom:'50'});
+						}else{
+							domEl.innerHTML = '返回';
+							selfWeb.setStyle({bottom:'0'});							
+						}
+						break;
+					case 'setting':
+						break;
+					case 'index'://回到主页
+						openUrl(homeUrl);
+						break;
+					case 'flush'://页面设置
+						embed.reload();
+						break;
+					case 'back'://页面后退
+						embed.canBack(function(e){
+							console.log(JSON.stringify(e))
+						});
+						embed.back();
+						break;
+					case 'forward'://页面前进
+						embed.forward();
+						break;
+					default:
+						break;
+				} 
+			}
+			
+			//打开地址输入页面
+			urlView.addEventListener('tap',function(e){
+				webtools.createRptWeb('embed-float',function(web){
+					web.show('fade-in',300);
+					web.evalJS('writeUrl("'+urlView.innerHTML+'")');
+				});
+			})
+			
+			document.getElementById("header").addEventListener('tap',function(e){
+				eventCenter(e.srcElement);
+			})
+			
+			mui('#btm_bar').on('tap','a',function(e){
+				eventCenter(this);
+				embed.evalJS('document.activeElement.blur()');
+			})
+		</script>
+	</body>
+
+</html>

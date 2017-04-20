@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../../css/module.css"/>
+    <script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<i id="forum" class="mui-icon mui-icon-bars hu-hd-btn mui-pull-right"></i>
+		<h1 class="mui-title">论坛</h1>
+	</header>
+</body>
+<script>
+	mui.init({
+		subpages: [{
+			url: 'forum-body.html', //子页面HTML地址，支持本地地址和网络地址
+			id: 'forum-body', //子页面标志
+			styles: {
+				top: '45px',
+				bottom: '0px'
+			}
+		}]
+	});
+	
+	mui.plusReady(function(){
+		var thisWeb = plus.webview.currentWebview();
+		 
+		/*监听forum的隐藏事件，关闭几个窗口*/
+		thisWeb.addEventListener('hide',function(e){
+			console.log('离开论坛页面');
+			webtools.closeWeb('forum-index');
+			webtools.closeWeb('forum-info-head');
+		})
+	})
+	
+	document.getElementById('forum').addEventListener('tap',function(e){
+		mui.openWindow({
+			url:'forum-index.html',
+			id:'forum-index',
+			createNew:false,
+			show:{
+		    	aniShow:'slide-in-right',
+		    	duration:200
+	    	}
+		})
+	});
+</script>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/pull-top-tips.css"/>
+		<link href="../css/weibo-main.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css"/>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="mui-title">选择好友</h1>
+			<a id='done' class="mui-btn mui-btn-link mui-pull-right mui-btn-blue mui-disabled">完成</a>
+		</header>
+
+		<div id="loading_page" class="base-loading">
+			<i class="mui-spinner"></i>
+		</div>
+		<div id="pullrefresh" style="display: none;" class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<div id="list" style="background-color: #EFEFEF;">
+					<div class="mui-input-row mui-search search-view">
+						<input id="search_ipt" type="text" class="diy-search-before" placeholder="搜索好友" onfocus="getFocus(this)" onblur="loseFocus(this)" />
+						<button id="search_btn" class="mui-btn mui-btn-link search-btn" style="display: none;">
+							<span class="mui-icon mui-icon-search"></span>
+						</button>
+					</div>
+					<div id="group_view">
+						<ul id="at_freind_list" class="mui-table-view mui-clearfix"></ul>
+						<div id="search_result_view" style="display: none;background: white;">
+							<div id="close_sech_btn" class="close-btn-view">
+								<a class="mui-icon mui-icon-closeempty close-btn"></a>
+							</div>
+							<ul id="sech_list_view" class="mui-table-view mui-clearfix">
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script id="friend_template" type="text/html">
+			<input class="check-input" type="checkbox" data-uid="{{uid}}" data-name={{nickname}}/>
+			<div class="left-view">
+				<img onload="load(this)" src="../../images/default_avatar.jpg" data-src="{{avatar128}}" class="avatar">
+			</div>
+			<div class="right-view">
+				<p class="mui-ellipsis">{{nickname}}</p>
+			</div>
+		</script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../ucenter/js/ucenter.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../people/js/people.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+	    <script src="../../js/mui.pullToRefresh.js"></script>
+	    <script src="../../js/mui.pullToRefresh.material.js"></script>
+	    <script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+	    <script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+	    <script src="js/weibo-atfriend.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>

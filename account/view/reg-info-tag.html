@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		
+		<link rel="stylesheet" type="text/css" href="../css/animate.min.css"/>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reg-main.css"/>
+		<style type="text/css">
+			#nav_div button
+			{
+				margin: 5px;
+			}
+			
+			#btn_div button
+			{
+				margin: 5px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">注册资料完善</h1>
+		</header>
+		<div class="mui-content animated fadeInUp" style="margin: 10% 5% 5% 5%;">
+			<div style="margin-top: 5%;"> 
+				<div>
+				<label>擅长语言:</label>	
+				</div>	
+				<div id="btn_div" style="height: 50px;">
+					
+					<button id="1" type="button" class="mui-btn mui-btn-nav mui-icon mui-icon-clear mui-right"style="background-color: #CCCCCC">java</button>
+					<button id="2" type="button" class="mui-btn mui-btn-nav " style="background-color: #CCCCCC">C#</button>
+				 
+				</div>
+			</div>
+			<div>
+				<label style="margin-top: 10%;">个人标签:</label>	
+			</div>
+			<div style="margin-top: 5%;">			
+				<div id="nav_div" style="height: 100px;background-color: #E8E8E8;">					
+				
+				
+				</div>
+			</div>
+			<div style="margin-top: 5%;">
+			<button  id="tag_submit" class="mui-btn-primary  reg-okay-btn-submit">保存</button>	
+			</div>
+			
+		</div>
+		<script src="../../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function(){
+				
+			});
+			mui('#btn_div').on('tap','button',function(){
+				//获得移动目标容器
+				var nav_div=document.getElementById("nav_div");
+				//获得点击按钮Id
+				var btn_id=this.getAttribute('id');
+				console.log(btn_id);
+				//赋值对象
+				var btn_object=document.getElementById(btn_id);
+				//转移按钮
+				nav_div.appendChild(btn_object);
+			})
+			
+			mui('#nav_div').on('tap','button',function(){
+				var btn_div=document.getElementById("btn_div");
+				var btn_id=this.getAttribute('id');
+				console.log(btn_id);
+				var btn_object=document.getElementById(btn_id);
+				btn_div.appendChild(btn_object);
+			})
+			//模拟测试跳转到登录页面，注册成功后实现自动登录功能，直接传入相应数据跳转到主页
+			document.getElementById("tag_submit").addEventListener('tap',function(){
+			//上传数据
+			submitTag();
+			mui.openWindow({
+				url:'../../init/view/module-bottom.html',
+				id:'module-bottom'
+			})
+		
+			})
+			//上传标签数据方法
+			var submitTag=function(){
+			//待实现	
+			}
+		
+		</script>
+	</body>
+
+</html>

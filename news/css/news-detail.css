@@ -1,0 +1,146 @@
+.mui-scroll-wrapper {
+	top: 45px;
+	bottom: 49px;
+}
+
+.f14 {
+	font-size: 14px;
+}
+
+.info {
+	line-height: 32px;
+	margin-left: 10px;
+}
+
+.diy-bottom-box {
+	position: fixed;
+	width: 100%;
+	height: 50px;
+	min-height: 50px;
+	border-top: solid 1px #bbb;
+	left: 0px;
+	z-index: 9999!important;
+	bottom: 0px;
+	overflow: hidden;
+	background-color: #fafafa;
+}
+
+.diy-bottom {
+	position: absolute;
+	width: 100%;
+	height: 55px;
+	left: 0px;
+	bottom: 0px;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 40px;
+	padding: 12px 4px;
+}
+
+.noscrollbars {
+	background: #fff!important;
+	width: 90%!important;
+	border: solid 1px #ddd!important;
+	padding: 2px 5px !important;
+	line-height: 18px !important;
+	font-family: verdana !important;
+}
+
+.comment-title {
+	padding: 10px;
+}
+
+.txt-xxs {
+	font-size: 12px;
+}
+
+.item-minor {
+	padding: 0;
+	line-height: 1rem;
+}
+
+.txt-color-gr {
+	color: #929292;
+}
+
+.mui-media {
+	padding-top: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-bottom: solid 1px #E4E3E6;
+}
+
+.news-detail-title {
+	font-size: 20px;
+	margin: 10px;
+}
+
+.avatar-image {
+	width: 38px;
+	height: 38px;
+	border-radius: 50%;
+	margin-right: 10px;
+}
+
+.news-logo {
+	max-height: 260px;
+	max-width: 100%;
+}
+
+.news-comment {
+	min-height: 13px;
+	margin-bottom: 0px;
+}
+
+.comment-li-btn {
+	border: none;
+	padding: 5px;
+	margin-left: 20px;
+	font-size: 22px;
+}
+
+.news-user-info {
+	margin-bottom: 5px;
+	padding: 10px;
+	border-bottom: solid 1px #F2F2F2;
+}
+
+.news-content-img {
+	max-width: 100%;
+	height: auto;
+}
+
+.news-content-text {
+	border-bottom: 1px solid #CCCCCC;
+	padding: 15px 5px;
+}
+
+.icon-box {
+	width: 50%;
+	height: 100%;
+}
+
+.icon-box ul {
+	width: 100%;
+	height: 100%;
+	list-style: none;
+}
+
+.icon-box li {
+	width: 33%;
+	text-align: center;
+	border-left: 1px solid #CCCCCC;
+	float: left;
+}
+
+.masking {
+	position: absolute;
+	top: 0;
+	background: rgba(0, 0, 0, .4);
+	z-index: 999;
+	width: 100%;
+}
+
+.bottom-btn span {
+	margin-left: 10px;
+}

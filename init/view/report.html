@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <script src="../../js/core.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/template.js"></script>
+    <script src="../../js/report.js"></script>
+    <script src="../../js/mui.lazyload.js"></script>
+    <script src="../../js/mui.lazyload.img.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <style>
+    	.cell {
+			display: inline-block;
+			padding: 5px 5px;
+			width: 46%;
+			margin: 5px;
+			font-size: 14px;
+		}
+		.mui-table-view{
+			margin-top: 15px;
+			padding: 5px;
+		}
+		.mui-table-view-cell:after{
+			height: 0px; 
+		}
+		input[type=radio] {
+		    width: 20px;
+		    height: 20px;
+		    margin: 0 10px 0 0;
+		    border-radius: 20px;
+		    border: #ccc 1px solid;
+		    appearance: none;
+		    float: left;
+		}
+		.active {
+		    background-color: #ebebeb;
+		}
+		.btn-blue {
+		    color: #fff;
+		    border-color: #0e90d2;
+		    background: #0e90d2;
+		}
+		.btn-block {
+			padding: 10px;
+			margin-top: 5px;
+		    width: 100%;
+		}
+		.btn{
+			padding-left: 10px;
+			padding-right: 10px;
+		}
+		.mui-text-center {
+		    text-align: left!important;
+		}
+		.wb {
+		    background-color: #ffffff;
+		    margin: 0 10px;
+		    padding: 10px 0;
+		    font-size: 15px;
+		    line-height: 1.5em;
+		}
+   		.resport-source{
+			padding:0 10px;
+		}
+    </style>
+</head>
+<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">举报</h1>
+		</header>
+
+		<script id="weibo_template" type="text/html">
+			<p class="resport-source">举报<span class="detail" style="color: dodgerblue;">@{{user.nickname}}</span>的微博：</p>
+			<p class="module-infobox wb"><a class="detail" >@{{user.nickname}}:</a>{{content}}</p>
+		</script>
+		
+		<script id="weibo_comment_template" type="text/html">
+			<p class="resport-source">举报<span class="detail" style="color: dodgerblue;">@{{user.nickname}}</span>的评论：</p>
+			<p class="module-infobox wb"><a class="detail" >@{{user.nickname}}:</a>{{content}}</p>
+		</script>
+		
+		<script id="forum_template" type="text/html">
+			<p class="resport-source">举报<span class="detail" style="color: dodgerblue;">@{{user.nickname}}</span>的帖子：</p>
+			<p class="module-infobox wb"><a class="detail" >@{{user.nickname}}:</a>{{title}}</p>
+		</script>
+		
+		<script id="forum_comment_template" type="text/html">
+			<p class="resport-source">举报<span class="detail" style="color: dodgerblue;">@{{user.nickname}}</span>的回复：</p>
+			<div class="module-infobox wb"><a class="detail" >@{{user.nickname}}:</a>{{#content}}</div>
+		</script>
+		
+		<script id="Issue_template" type="text/html">
+			<p class="resport-source">举报<span class="detail" style="color: dodgerblue;">@{{user.nickname}}</span>的专辑：</p>
+			<div class="module-infobox wb"><a class="detail" >@{{user.nickname}}:</a>{{title}}</div>
+		</script>
+
+		<script id="Issue_comment_template" type="text/html">
+			<p class="resport-source">举报<span class="detail" style="color: dodgerblue;">@{{user.nickname}}</span>的评论：</p>
+			<p class="module-infobox wb"><a class="detail" >@{{user.nickname}}:</a>{{content}}</p>
+		</script>
+		
+		<script id="group_template" type="text/html">
+			<p class="resport-source">举报<span class="detail" style="color: dodgerblue;">@{{user.nickname}}</span>的帖子：</p>
+			<p class="module-infobox wb"><a class="detail" >@{{user.nickname}}:</a>{{title}}</p>
+		</script>
+		
+		<script id="group_comment_template" type="text/html">
+			<p class="resport-source">举报<span class="detail" style="color: dodgerblue;">@{{user.nickname}}</span>的回复：</p>
+			<div class="module-infobox wb"><a class="detail" >@{{user.nickname}}:</a>{{#content}}</div>
+		</script>
+
+		<script id="report_template" type="text/html">
+			{{each data as value i}}
+				<li class="mui-table-view-cell cell"><label><input type="radio" name="report_radio" id="resport_{{i}}" value="{{data[i]}}">{{data[i]}}</label></li>
+			{{/each}}
+		</script>
+
+		<div class="mui-content">
+			<div id="resport_info" class="mui-content mui-text-center" style="margin-top: 20px;">
+			</div>
+			
+			<ul id="reports" class="mui-table-view">
+			</ul>
+			
+			<div style="padding: 8px 8px 0 8px;">
+				<textarea id="report_content" style="height: 60px;font-size: 14px;" placeholder="请详细填写，以确保举报能够被受理"></textarea>
+			</div>
+			
+			<div class="btn">
+				<button class="btn_submit btn btn-blue btn-block" id="subBtn" autocomplete="off">举报</button>
+			</div>
+		</div>
+</body>
+<script>
+	mui.init();
+	//举报类型
+	var mType = '';
+	var $mReport = new report();
+	var reportInfo = document.getElementById('resport_info');
+	var reports = document.getElementById('reports');
+	var subBtn = document.getElementById('subBtn');
+	var reportName = document.getElementsByName('report_radio');
+	var reportContent = document.getElementById('report_content');
+
+	mui.plusReady(function(){
+		// 隐藏滚动条
+		plus.webview.currentWebview().setStyle({scrollIndicator:'none'}); 
+		template.config("escape",true);
+		var thisWeb = plus.webview.currentWebview();
+		var mInfo = thisWeb.info;
+		mType = thisWeb.type;
+		var reportType = APP_CONFIG.app.reportType;
+		switch(mType){
+			case "weibo":
+				$mReport.create({
+					type:'微博/微博',
+					url: 'Weibo/Index/weiboDetail?id='+mInfo.id,
+					id: mInfo.id,
+					comment_id:''
+				});
+				reportInfo.innerHTML = template('weibo_template',mInfo);
+			break;
+			case "weibo_comment":
+				$mReport.create({
+					type:'微博/评论',
+					url: 'Weibo/Index/weiboDetail?id='+mInfo.weibo_id+"#comment_"+mInfo.id,
+					id: mInfo.weibo_id,
+					comment_id:mInfo.id
+				});
+				reportInfo.innerHTML = template('weibo_comment_template',mInfo);
+			break;
+			case "forum":
+				$mReport.create({
+					type:'论坛/论坛',
+					url: 'Forum/Index/Detail?id='+mInfo.id,
+					id: mInfo.id,
+					comment_id:''
+				});
+				reportInfo.innerHTML = template('forum_template',mInfo);
+			break;
+			case "forum_comment":
+				$mReport.create({
+					type:'论坛/评论',
+					url: 'Forum/Index/Detail?id='+mInfo.post_id+"#comment_"+mInfo.id,
+					id: mInfo.post_id,
+					comment_id:mInfo.id
+				});
+				reportInfo.innerHTML = template('forum_comment_template',mInfo);
+			break;
+			case "issue":
+			$mReport.create({
+				type:'专辑/专辑',
+				url:'Issue/Index/issueDetail?id='+mInfo.id,
+				id: mInfo.id,
+				comment_id:''
+			});
+			reportInfo.innerHTML = template('Issue_template',mInfo);
+			break;
+			case "issue_comment":
+			console.log(mInfo.id);
+			console.log(mInfo.row_id);
+				$mReport.create({
+					type:'专辑/评论',
+					url: 'Issue/Index/issueDetail?id='+mInfo.id+"#comment_"+mInfo.row_id,
+					id: mInfo.id,
+					comment_id:mInfo.row_id
+					
+				});
+				
+				reportInfo.innerHTML = template('Issue_comment_template',mInfo);
+			break;
+			case "group":
+				$mReport.create({
+					type:'群组/帖子',
+					url: 'Group/Index/Detail?id='+mInfo.id,
+					id: mInfo.id,
+				});
+				reportInfo.innerHTML = template('group_template',mInfo);
+			break;
+			case "group_comment":
+				$mReport.create({
+					type:'群组/回帖',
+					url: 'Group/Index/Detail?id='+mInfo.post_id+"#comment_"+mInfo.id,
+					id: mInfo.post_id,
+					comment_id:mInfo.id
+				});
+				reportInfo.innerHTML = template('group_comment_template',mInfo);
+			break;
+		}
+		reports.innerHTML = template("report_template",reportType);
+		reportName[0].setAttribute("checked","checked");
+		subBtn.addEventListener('tap',function(){
+			$mReport.bindResport();
+		})
+		plus.nativeUI.closeWaiting();
+		setTimeout(function(){
+			mui.currentWebview.show();
+		},100);
+	})
+</script>
+</html>

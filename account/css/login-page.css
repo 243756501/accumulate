@@ -1,0 +1,146 @@
+html,body{
+	height: 100%;
+}
+.login-page-background {
+	text-align: center;
+	background: #FFFFFF;
+}
+
+.login-page-maincontent {
+	overflow: hidden;
+	top: 25px;
+}
+
+.login-page-logo {
+	width: 100px;
+	height: 100px;
+	border-radius: 10%;
+}
+
+.login-page-title {
+	font-size: 30px;
+	top: 20px;
+	position: relative;
+	color: #1ABC9C;
+}
+
+.login-page-accountdiv {
+	margin: 60px 60px 5px 60px;
+	border-bottom: 1px solid #AAAAAA;
+	justify-content: flex-end !important;
+}
+
+.input-icon {
+	width: 15px;
+	height: 15px;
+	position: relative;
+	left: -10px;
+}
+
+.login-page-account {
+	font-size: 15px;
+	position: relative;
+	left: -30px;
+	top: -2px;
+}
+
+.login-page-password {
+	font-size: 15px;
+	position: relative;
+	left: -30px;
+	top: -2px;
+}
+
+.login-page-passworddiv {
+	margin: 20px 60px 5px 60px;
+	border-bottom: 1px solid #AAAAAA;
+	justify-content: flex-end !important;
+}
+
+.login-page-forgetdiv {
+	margin: 0px 60px 20px 0px;
+}
+
+.login-page-loginbtndiv {
+	margin: 0px 60px 8px 60px;
+}
+
+.login-page-loginbtn {
+	border-radius: 20px;
+	width: 100%;
+	height: 40px;
+	background-color: #1ABC9C;
+	color: #FFFFFF;
+}
+
+.login-page-otherbtn {
+	margin: 0px 60px 10px 60px;
+	display: flex;
+	justify-content: space-around;
+}
+
+.show-around-btn {
+	flex: 1;
+	border-radius: 20px;
+	margin-right: 5px;
+	color: #AAAAAA;
+}
+
+.register-btn {
+	flex: 1;
+	border-radius: 20px;
+	color: #1ABC9C;
+}
+
+.split-line {
+	margin: 10px 60px 0px 60px;
+	background: #000;
+	filter: alpha(opacity: 30);
+	opacity: 0.3;
+}
+
+.split-line-text {
+	position: relative;
+	top: -14px;
+	font-size: 12px;
+	color: #8F8F94;
+	background: #FFFFFF;
+}
+
+.oauth-area {
+	text-align: center;
+}
+
+.oauth-area .oauth-btn {
+	display: inline-block;
+	width: 50px;
+	height: 50px;
+	background-size: 30px 30px;
+	background-position: center center;
+	background-repeat: no-repeat;
+	margin: 0 20px;
+	/*-webkit-filter: grayscale(100%); */
+	border: solid 1px #ddd;
+	border-radius: 25px;
+}
+
+.oauth-area .oauth-btn:active {
+	border: solid 1px #aaa;
+}
+.oauth-area .oauth-btn.disabled {
+	background-color: #ddd;
+}
+.sync-ch{
+	text-align: center;
+	width: 60%;
+	left: 20%;
+	top: 30%;
+}
+.login-backgroundImg-div{
+	background-image: url(../../images/login_background.png);
+	background-size: 100% 100%;
+	min-height: 30%;
+	position: absolute;
+	width: 100%;
+	bottom: 0;
+}

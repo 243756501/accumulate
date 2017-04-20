@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/embed-main.css"/>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon text-btn base-ok-color base-head-btn">取消</i>
+			<h1 class="mui-title head-title">
+		    	<input id="url_ipt" type="url" value="" />
+		    </h1>
+			<i id="sub_btn"  class="mui-icon text-btn base-head-btn mui-pull-right base-ok-color">确认</i>
+		</header>
+		
+		<div class="base-scroll-view mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<div class="mui-table-view-cell base-white-color">历史记录
+					<button id="del_all" type="button" class="mui-btn">清空</button>
+				</div>
+				<ul id="his_view" class="mui-table-view"></ul>
+			</div>
+		</div>
+		
+		
+		<!--模板-->
+		<script id="url_tpl" type="text/html">
+			<h5>{{url}}</h5>
+			<i data-event="del" class="mui-icon mui-icon-clear"></i>
+		</script>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init();
+			var selfWeb,mainWeb,urlInfos,
+				urlIpt = document.getElementById("url_ipt"),
+				hisListView = document.getElementById("his_view"),
+				delAllBtn = document.getElementById("del_all"),
+				subBtn = document.getElementById("sub_btn");
+			mui('.mui-scroll-wrapper').scroll();
+			
+			//地址连写入url
+			var writeUrl = function(url){
+				urlIpt.value = url;
+				urlIpt.setSelectionRange(urlIpt.value.length,urlIpt.value.length);
+				urlIpt.focus();
+			}
+			//添加item
+			var add_item = function(urlInfo){
+		    	var li = app.createListItem(urlInfo,'mui-table-view-cell');
+		    	li.innerHTML = template('url_tpl',urlInfo);
+		    	hisListView.appendChild(li);
+			}
+			
+			mui.plusReady(function () {
+			    selfWeb = plus.webview.currentWebview();
+			    mainWeb = selfWeb.opener();
+			    urlInfos = myStorage.getItem('ebed_urls') ||{};
+			    for(var i in urlInfos){
+					add_item(urlInfos[i]);
+			    }
+			})
+			
+			//确认按钮
+			subBtn.addEventListener('tap',function(e){
+				var urlStr = urlIpt.value;
+				if(urlStr.trim()){
+					urlStr = apptools.netUrl(urlStr);
+					var urlKey = md5(urlStr);
+					if(!urlInfos[urlKey]){
+						var info = {name:urlKey,url:urlStr};
+						add_item(info);
+						urlInfos[md5(urlStr)] = info;
+						myStorage.setItem('ebed_urls',urlInfos);
+					}
+					mainWeb.evalJS('openUrl("'+urlStr +'")');
+					mui.back();
+				}
+			})
+			
+			//一键清空所有历史记录
+			delAllBtn.addEventListener('tap',function(e){
+				hisListView.innerHTML = '';
+				urlInfos = {};
+				myStorage.removeItem('ebed_urls');
+			},false)
+			
+			mui('#his_view').on('tap','li',function(e){
+				var li = this;
+				var tmpinfo = li.detail_info;
+				var eName = e.srcElement.getAttribute('data-event');
+				if(eName == 'del'){
+					document.activeElement.blur();
+					delete urlInfos[tmpinfo.name];
+					myStorage.setItem('ebed_urls',urlInfos);
+					hisListView.removeChild(li);
+				}else{
+					writeUrl(tmpinfo.url);
+				}
+			},false)
+		</script>
+	</body>
+
+</html>

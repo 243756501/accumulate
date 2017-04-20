@@ -1,0 +1,21 @@
+.verify-btn{
+	font-size: 18px;
+    margin-bottom: 20px;
+}
+.reg-type-btn{
+	font-size: 18px;
+	display: block;
+	width: 100%;
+	margin-bottom: 10px;
+}
+.reg-okay-btn{
+	font-size: 18px;
+	width: 100%;
+	margin-top: 20px;
+}
+.reg-okay-btn-submit{
+	font-size: 18px;
+	width: 100%;
+	
+	margin-bottom: 10px;
+}

@@ -1,0 +1,35 @@
+.app-content{
+	margin-top: 55px;
+	padding: 0 10px;
+}
+input{
+	border: none !important;
+}
+.flex-box{
+	display: -webkit-flex;
+	justify-content: space-between;
+}
+.flex-box>input{
+	margin: 0;
+	max-width: 50%;
+}
+.sub-btn{
+	padding: 10px;
+	margin-top: 20px;
+}
+.app-form-textarea{
+	border: 1px solid #fff !important;
+	margin: 0 !important;
+}
+.addself-textarea{
+	min-height: 83px;
+	overflow:scroll;
+	overflow-y:hidden;
+	overflow-x:hidden
+}
+.app-ipt-title{
+	padding-bottom: 5px ;
+}
+.app-form-block{
+	margin-bottom: 20px;
+}

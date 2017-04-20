@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../../js/mui.min.js"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<style>
+			.mui-pull-top-pocket {
+				top: 90px !important;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="mui-title">我的订单</h1>
+		</header>
+		<div class="mui-content">
+			<nav style="background: white;border:solid 3px #EFEFF4;" class="mui-segmented-control mui-segmented-control-inverted">
+				<a id="0" class="mui-control-item">未付款</a>
+				<a id="1" class="mui-control-item">已付款</a>
+				<a id="2" class="mui-control-item">已发货</a>
+				<a id="3" class="mui-control-item">已完成</a>
+			</nav>
+		</div>
+	</body>
+	<script>
+		
+		var eventTopNav = document.getElementById('top_nav');
+		mui.plusReady(function() {
+			var thisWeb = plus.webview.currentWebview();
+			var id = thisWeb.type;
+			var beforWeb = plus.webview.getWebviewById('store-place-order');
+			if(beforWeb){
+				beforWeb.close('none');
+			}
+			if(id != null){
+				document.getElementById(id).className += ' mui-active';
+			}else{
+				document.getElementById('0').className += ' mui-active';
+			}
+			mui.init({ 
+			subpages: [{
+					url: 'store-order-body.html', //子页面HTML地址，支持本地地址和网络地址
+					id: 'store-order-body', //子页面标志
+					styles: {
+						top: '90px',
+						bottom: '0px'
+					},
+					extras: {
+						condition:id
+					} //额外扩展参数
+				}, ]
+			});
+		});
+		mui('.mui-content').on('tap', '.mui-control-item', function(event) {
+			var type = this.id;
+			var store_my_body = plus.webview.getWebviewById('store-order-body');
+			mui.fire(store_my_body, 'myStore', {
+				condition: type
+			});
+		});
+	</script>
+</html>

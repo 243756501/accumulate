@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../css/store-main.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/store-goods-list.css"/>
+    <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/store.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/store-render.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/store-public.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../libs/imgtools/md5.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+    	.mui-scroll-wrapper{
+    		top: 45px;
+    	}
+    	.mui-scroll{
+    		background: white;
+    	}
+    	.view-title{
+    		padding: 5px 0px;
+    		border-bottom: solid 1px #eee;
+    	}
+    	.reco-item{
+    		padding: 10px 20px;
+    		background: #eee;
+    		border-radius: 5px;
+    		margin: 5px;
+    		display: inline-block;
+    	}
+    	#trash_btn{
+    		padding-right: 10px;
+    	}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <form action="" method="get" onsubmit="submiting();return false;" class="mui-search top-search">
+			<input id="searsh_input" type="search" class="mui-input-clear" placeholder="商品名">
+		</form>
+		<i class="mui-icon mui-action-back mui-icon-back scan-btn"></i>
+		<i id="search_btn"class="mui-icon search-btn">搜索</i>
+	</header>
+	
+    <div class="mui-scroll-wrapper">
+    	<div class="mui-scroll">
+    		
+    		<!--历史搜索记录-->
+    		<div id="search_view" style="padding: 5px;display: block;">
+    			<div class="view-title mui-clearfix">历史搜索<span id="trash_btn" class="mui-icon mui-icon-trash mui-pull-right"></span>
+    			</div>
+    			<div id="reco_view" style="padding-top: 5px;"></div>
+    		</div>
+    		
+    		
+    		<!--查询结果容器-->
+    		<ul id="list_view" class="mui-table-view"></ul>
+    		
+    	</div>
+    </div>
+</body>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init({
+		  gestureConfig:{longtap: true}
+		});
+      	mui('.mui-scroll-wrapper').scroll();
+      	var searchInput = document.getElementById('searsh_input');
+      	var searchBtn = document.getElementById('search_btn');
+      	var recoView = document.getElementById('reco_view');
+      	var searchView = document.getElementById('search_view');
+      	var goodsList = document.getElementById('list_view');
+      	var trashBtn = document.getElementById('trash_btn');
+      	var doSearch;
+      	var godsDetlWeb = null;
+      	
+      	mui.plusReady(function(){
+      		
+      		var sechRecoInfo = JSON.parse(myStorage.getItem('sech_reco_info'));
+      		
+      		var add_reco_li = function(recoInfo){
+      			var div = document.createElement('div');
+      				div.className = 'reco-item';
+      				div.innerHTML = recoInfo;
+      				recoView.appendChild(div);
+      		}
+      		
+      		/*渲染历史记录*/
+      		if(sechRecoInfo != null){
+	      		var recoArr = sechRecoInfo.dataArr;
+      			for(i in recoArr){
+      				add_reco_li(recoArr[i]);
+      			}
+      		}else{
+      			sechRecoInfo = {dataArr:[]};
+      		}
+      		
+      		/*搜索操作函数*/
+	      	doSearch = function(){
+	      		plus.nativeUI.showWaiting();
+	      		var inputValue = searchInput.value.trim();
+	      		if(inputValue != null){
+	      			
+	      			/*添加历史记录*/
+	      			if(sechRecoInfo.dataArr.indexOf(inputValue) < 0){
+						sechRecoInfo.dataArr.unshift(inputValue);
+		      			myStorage.setItem('sech_reco_info',JSON.stringify(sechRecoInfo));
+		      			add_reco_li(inputValue);
+					}
+	      			
+					store.searchGoods(inputValue,function(res){
+						goodsList.innerHTML = '';
+						if(res.code == 200){
+							for(i in res.data){
+								var goodsInfo = res.data[i];
+								var li = get_goods_li(goodsInfo);
+								goodsList.appendChild(li);
+							}
+						}else{
+							toast.info('没有找到商品');
+						}
+						plus.nativeUI.closeWaiting();
+					})
+	      		}
+					
+	      	}
+	      	
+	      	/*input获得焦点事件*/
+	      	searchInput.addEventListener('focus',function(e){
+	      		searchView.style.display = 'block';
+	      	})
+	      	/*input失去焦点事件*/
+	      	searchInput.addEventListener('blur',function(e){
+	      		searchView.style.display = 'none';
+	      	})
+	      	
+	      	searchBtn.addEventListener('tap',function(e){
+	      		searchView.style.display = 'none';
+	      		doSearch();
+	      	})
+	      	
+	      	
+	      	mui('#reco_view').on('tap','div',function(e){
+	      		searchInput.value = this.innerText;
+	      	})
+	      	
+	      	/*历史记录全部删除*/
+	      	trashBtn.addEventListener('tap',function(e){
+	      		recoView.innerHTML = '';
+	      		sechRecoInfo = {dataArr:[]};
+	      		myStorage.removeItem('sech_reco_info');
+	      	})
+	      	
+	      	/*删除历史记录*/
+	      	mui('#reco_view').on('longtap','div',function(e){
+	      		var temText = this.innerText;
+	      		var thisDiv = this;
+	      		var btnArray = ['是', '否'];
+				mui.confirm('删除此条历史记录', '确认删除？', btnArray, function(e) {
+					if (e.index == 0) {
+						recoView.removeChild(thisDiv);
+						for(i in sechRecoInfo.dataArr){
+							if(temText == sechRecoInfo.dataArr[i]){
+								sechRecoInfo.dataArr.splice(sechRecoInfo.dataArr[i],1);
+								myStorage.setItem('sech_reco_info',JSON.stringify(sechRecoInfo));
+								break;
+							}
+						}
+					}
+				})
+	      	})
+      	})
+      	
+      	function submiting(){
+      		doSearch(); 
+      	}
+		
+      	
+      	/*商品列表点击连接事件*/
+		goods_li_click('.mui-scroll');
+    </script>
+</html>

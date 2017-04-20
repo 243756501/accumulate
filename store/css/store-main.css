@@ -1,0 +1,118 @@
+.mui-slider-item {
+	height: 15em !important;
+}
+
+.top-search {
+	width: 70%;
+	left: 15%;
+}
+.mui-search .mui-placeholder {
+	text-align: left;
+	padding-left: 5px;
+}
+
+.top-right-view{
+	text-align: right;
+}
+.right-search{
+	margin-right: 5px !important;
+}
+.search-btn{
+	position: absolute !important;
+	top: 2px;
+	right: 3%;
+	font-size: 1.2em !important;
+	color: #666666;
+}
+.notice-icon{
+	top: 0.8em !important;
+	left: 100% !important;
+	width: 0.7em !important;
+	height: 0.7em !important;
+	border-radius:50% !important;
+	padding: 0px !important;
+}
+.scan-btn {
+	position: absolute !important;
+	top: 0px;
+	color: #666666;
+}
+
+.store-nav {
+	top: 45px;
+	background: white;
+}
+
+.goods-class {
+	background: white;
+	margin: 10px 5px;
+	padding: 10px 0px;
+	text-align: center;
+}
+
+.mui-grid-view {
+	padding: 0px !important;
+}
+
+.right-new {
+	border-left: solid 1px #DDDDDD;
+}
+
+#store_index .mui-table-view-cell {
+	padding: 0px !important;
+}
+
+.smoll-left {
+	border-right: solid 1px #DDDDDD;
+	margin-right: 0px !important;
+}
+
+.store-list-img {
+	width: 5em;
+	height: 5em;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+
+#shop_list li{
+	padding: 2px!important;
+	margin-left: 2px;
+}
+
+.shop-cell {
+	padding: 2px!important;
+	border: solid 1px #DDDDDD;
+}
+
+.shop-img {
+	width: 80px;
+	height: 80px;
+	margin: 0 auto;
+}
+
+.recoImg {
+	width: 100% !important;
+	height: auto !important;
+}
+
+.goods-price {
+	margin-top: 5px !important;
+	color: red;
+	font-size: 18px;
+}
+
+.mui-ellipsis-2 {
+	min-height: 40px;
+}
+
+.item-bottom {
+	font-size: 15px;
+}
+
+.price {
+	color: red;
+}
+
+.index-img {
+	padding: 5px;
+}

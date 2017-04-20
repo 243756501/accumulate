@@ -1,0 +1,77 @@
+
+.mui-scroll-wrapper{
+	top: 45px;
+	bottom:50px ;
+}
+.mui-scroll{
+	background: white;
+}
+.mui-slider{
+	border-bottom: solid 1px #eee;
+}
+.goods-img{
+	max-width: 100% !important;
+	min-height: 40% !important;
+	max-height:60% !important;
+}
+.mui-slider-item{
+	text-align: center;
+}
+.goods-text-view{
+	padding: 5px 10px;
+}
+.goods-title{
+	padding-top: 10px;
+}
+.goods-price{
+	color: red;
+	padding-top: 5px;
+}
+
+.appraise-top{
+	border-top: solid 1px #ddd;
+	padding: 10px 5px;
+}
+.appraise-list-view{
+	padding: 0px 5px;
+}
+.appraise-cell{
+	padding: 10px 5px;
+}
+.bottom-buy-box{
+	line-height: 50px;
+	color: white;
+	height: 50px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    opacity: 1;
+    background-color: #000;
+    z-index: 9;
+}
+.bottom-buy-box button{
+	border:none;
+}
+.box-item{
+	border-radius: 0;
+	width: 25%;
+	height: 50px;
+	text-align: center;
+	display: table-cell !important;
+	
+}
+.btn-icon{
+	font-size: 17px;
+	padding-right: 5px;
+}
+.mui-badge-danger{
+    position: absolute;
+    right: 15%;
+    top: 5%;
+}
+.text-count{
+	margin: 5px 0px;
+}
+.mui-clearfix h5{
+	margin-top: 10px;
+}

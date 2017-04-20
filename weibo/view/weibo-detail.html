@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/icomoon.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/previewimage.css" />
+		<link rel="stylesheet" type="text/css" href="../css/weibo-dertail.css" />
+		<link rel="stylesheet" type="text/css" href="../css/weibo.css" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<i id="back" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="mui-title">微博详情</h1>
+			<i id="share_btn" class="mui-icon icon-share2 mui-pull-right"></i>
+		</header>
+
+		<div id="loading_page" style="text-align: center;margin-top: 55%;">
+			<i class="mui-spinner"></i>
+		</div>
+		<div id="pullrefresh" style="display: none;">
+			<div class="weibo-detail-foot-box">
+				<div id="repost" class="transpond-btn li-bottom-btn">
+					<div class="bottom-btn">
+						<i class="diy-icon icon-forward2"></i>转发
+					</div>
+				</div>
+				<div id="sendcomment" class="li-bottom-btn">
+					<div class="bottom-btn">
+						<i class="diy-icon icon-bubble2"></i>评论
+					</div>
+				</div>
+				<div class="support-btn li-bottom-btn">
+					<div id="support_data" class="bottom-btn">
+						<i id="support_icon" class="diy-icon icon-heart"></i>点赞
+					</div>
+				</div>
+			</div>
+
+			<div class="mui-scroll-wrapper">
+				<div id="mui-scroll" class="mui-scroll">
+					<div class="weibo-item info-view">
+						<div id="weibo_detail"></div>
+					</div>
+					<div class="detail-footer">
+						<div class="mui-clearfix bottom-line">
+							<div id="commentbutton" class="my-btn mui-pull-left my-active">
+								评论<span id="comment_count"></span>
+							</div>
+							<div id="supportbutton" class="my-btn mui-pull-right">
+								赞<span id="support_count" class=""></span>
+							</div>
+						</div>
+
+						<div id="commentDiv">
+							<ul id="commentList" class="weibo-item"></ul>
+						</div>
+
+						<div id="support" style="display: none;">
+							<ul id="supportList" class="weibo-item"></ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/weibo.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.zoom.js"></script>
+		<script src="../../js/mui.previewimage.js"></script>
+		<script src="../js/weibo-render.js"></script>
+		<script src="../../js/support.js"></script>
+		<script src="../../js/report.js"></script>
+		<script src="../../js/expression.js"></script>
+		<script src="../../libs/imgtools/imgtools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/voice/voiceload.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/share.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/weibo-detail.js" type="text/javascript"></script>
+	</body>
+
+</html>

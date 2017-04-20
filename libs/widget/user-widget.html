@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css"/>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">好友列表</h1>
+		</header>
+		
+		<div class="mui-content mui-scroll-wrapper">
+		    <div class="mui-scroll">
+		    	<ul class="mui-table-view">
+		    		<li class="mui-table-view-cell">
+        				<div class="app-grid mui-col-xs-2">
+							<img data-uid="{{user.uid}}" class="user-flag base-cir base-img-small" onload="" data-src="{{user.avatar128}}" src="../../images/testimg/dul_head.png" />
+						</div>
+						<div class="app-grid mui-col-xs-10">
+							<div class="mui-ellipsis">{{user.nickname}}</div>
+							<h5 class="base-content-1 mui-ellipsis">
+								{{user.signature?user.signature:'还没有个性签名'}}
+							</h5>
+						</div>
+		    		</li>
+		    	</ul>
+		    </div>
+		</div>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+		</script>
+	</body>
+
+</html>

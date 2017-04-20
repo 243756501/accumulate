@@ -1,0 +1,81 @@
+			.cb-li {
+				padding: 10px;
+			}
+			
+			.cb-userInfo {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+			
+			.cb-userInfo-headimg {
+				border-radius: 50%;
+				width: 50px;
+				height: 50px;
+			}
+			
+			.cb-userInfo-replybtn {
+				border-radius: 5px;
+				background: #F9F9F9;
+				font-size: 12px;
+				font-weight: bold;
+				color: #AAAAAA;
+				height: 30px;
+				width: 45px;
+				padding: 5px;
+			}
+			
+			.cb-userInfo-left {
+				display: flex;
+			}
+			
+			.ch-userInfo-detaildiv {
+				padding: 5px;
+			}
+			
+			.ch-userInfo-nickname {
+				color: #000000;
+				font-weight: bold;
+			}
+			
+			.ch-userInfo-positiondiv {
+				display: flex;
+			}
+			
+			.ch-userInfo-positiondiv p:first-child {
+				margin-right: 15px;
+			}
+			
+			.cb-content {
+				font-size: 15px;
+				margin: 5px 0px 5px 0px;
+			}
+			
+			.cb-transmit-contentdiv {
+				flex: 3;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-around;
+				margin-left: 10px;
+			}
+			
+			.cb-transmit-div {
+				background: #EAEAEA;
+				display: flex;
+				height: 80px;
+			}
+			
+			.cb-transmit-img {
+				width: 80px;
+				height: 80px;
+			}
+			
+			.cb-transmit-content-title {
+				margin-top: 5px;
+				font-size: 15px;
+			}
+			
+			.cb-transmit-content-text {
+				word-wrap: break-word;
+				word-break: break-all;
+			}

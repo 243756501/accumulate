@@ -1,0 +1,35 @@
+.avatar {
+	width: 45px;
+	height: 45px;
+	border-radius: 50%;
+}
+.area {
+	height: 45px;
+}
+.question-title {
+	font-size: 15px;
+	color: black;
+}
+.question-content {
+	font-size: 15px;
+	padding-bottom: 5px;
+}
+.user-header {
+	margin-right: 10px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+}
+.user-header1 {
+	margin-right: 10px;
+	margin-top: 5px;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+}
+.create-time {
+	font-size: 13px;
+}
+.count-style{
+	margin-left: 0.5em;
+}
