@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/pull-top-tips.css" />
+		<link rel="stylesheet" type="text/css" href="../css/gamble-history.css"/>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav base-head-title">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="mui-title">历史期数</h1>
+		</header>
+		<div id="loading" class="base-loading">
+			<i class="mui-spinner"></i>
+		</div>
+		<div id="loaded" class="mui-scroll-wrapper base-pagebody" style="display: none;">
+			<div class="mui-scroll">			
+				<table id="gambleTable" class="gamble-table" border="2" cellspacing="0" width="90%">
+					<tr>
+						<th class="th-history">历史期数</th>
+						<th class="th-time">开奖时间</th>
+						<th class="th-num">开奖号码</th>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<script id="gamble_result_script" type="text/html">
+			<td class="mui-text-center">{{id}}</td>
+			<td class="mui-text-center">{{prize_time}}</td>
+			<td class="mui-text-center">
+				{{if gamble_type}}
+				{{gamble_type}}
+				{{else}}
+				未开奖
+				{{/if}}
+			</td>
+		</script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/gamble.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.pullToRefresh.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.pullToRefresh.material.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/gamble-history.js" type="text/javascript" charset="utf-8"></script>
+</html>

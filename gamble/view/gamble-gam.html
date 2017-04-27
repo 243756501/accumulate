@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css" />
+		<link rel="stylesheet" type="text/css" href="../css/gamble-gam.css"/>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav base-head-title">
+			<i class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></i>
+			<h1 class="mui-title">押注区</h1>
+		</header>
+		<div id="unload" class="base-loading">
+			<i class="mui-spinner"></i>
+		</div>
+		<div id="loaded" class="base-pagebody" style="display: none;">
+			<div class="user-info-container base-white-color">
+				<div id="userInfo" class="userInfo-contianer">
+				</div>
+				<div class="othertool-contianer">
+					<button id="rechBtn" class="recharge-btn mui-btn mui-btn-green">充值积分</button>
+					<button id="exchBtn" class="exchange-btn mui-btn mui-btn-grey">兑换商品</button>
+				</div>
+			</div>
+			<div class="gamble-info-contianer base-white-color">
+				<div class="info-text">
+					<span>每注消耗积分</span>
+					<span id="costPrice">0</span>
+				</div>
+				<div id="gambleArea" class="gamble-result-div">
+				</div>
+				<div class="gamble-all-contianer">
+					<span>需消耗积分</span>
+					<span id="gamCost" class="gamble-cost">0</span>
+				</div>
+				<button id="gamSubmit" class="gamble-submit mui-btn mui-btn-danger">立即投注</button>
+				<span id="submitTxt"></span>
+			</div>
+		</div>
+		<script id="gamble_area_item" type="text/html">
+			<!--<div class="gamble-result-item">-->
+			<div class="gamble-result-item-type">
+				{{title}}
+			</div>
+			<div class="gamble-result-item-times">
+				<div class="mui-numbox">
+					<button class="num-btn mui-btn mui-btn-numbox-minus" type="button">-</button>
+					<input id="{{id}}" class="mui-input-numbox" type="number"/>
+					<button class="num-btn mui-btn mui-btn-numbox-plus" type="button">+</button>
+				</div>
+			</div>
+			<!--</div>-->
+		</script>
+		<script id="gamble_userInfo_script" type="text/html">
+			<div class="user-avatar">
+				<img class="user-avatar" src="../../account/img/default_avatar.jpg" data-src="{{avatar128}}" onload="load(this)" />
+			</div>
+			<div class="user-other-info">
+				<div class="user-info">
+					<span>{{nickname}}</span>
+					<div>{{score_rank}}</div>
+				</div>
+				<div class="user-score-container">
+					<span id="scoreType" class="score-type mui-badge mui-badge-danger">积分类型</span>
+					<span>{{now_shop_score}}</span>
+				</div>
+			</div>
+		</script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mytools/my_storage.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/gamble.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/gamble-gam.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

@@ -6,6 +6,7 @@
 /*默认的导航栏加载模块是用于第一次安装程序调用,可以通过改变数组里open的状态来关闭或者打开模块*/
 /*网站默认拥有的模块*/
 var netMods = {
+	Gamble:{name: 'gamble', adm_open:true, open:false, first_mod:false, image: '../../images/custom.png', title: '竞猜', des: '竞猜',href:'../../gamble/view/gamble-main.html',icon:'icon-feed3'},
     Weibo:{name: 'weibo', adm_open:true, open:false, first_mod:true, image: '../../images/weibo.png', title: '微博', des: '微博',href:'../../weibo/view/weibo-main.html',icon:'icon-leaf2'},
     Forum:{name: 'forum', adm_open:true, open:false, first_mod:false, image: '../../images/forum.png', title: '论坛', des: '论坛',href:'../../forum/view/forum-head.html',icon:'icon-feed22'},
     News:{name: 'news', adm_open:true, open:false, first_mod:false, image: '../../images/news.png', title: '资讯', des: '资讯',href:'../../news/view/news-main.html',icon:'icon-file-text2'},
@@ -17,7 +18,7 @@ var netMods = {
 	Issue:{name: 'issue', adm_open:true, open:false, first_mod:false, image: '../../images/issue.png', title: '专辑', des: '专辑',href:'../../issue/view/issue-main.html',icon:'icon-newspaper'},
 	Group:{name: 'group', adm_open:true, open:false, first_mod:false, image: '../../images/group.png', title: '群组', des: '群组',href:'../../group/view/group-index-head.html',icon:'icon-users'},
 	Cat:{name: 'cat', adm_open:true, open:false, first_mod:false, image: '../../images/cat.png', title: '分类信息', des: '分类信息',href:'../../cat/view/cat-main.html',icon:'icon-feed3'},
-	custom:{name: 'custom', adm_open:true, open:false, first_mod:false, image: '../../images/custom.png', title: '自定义', des: '自定义',href:'../../embed/view/embed-main.html',icon:'icon-feed3'}
+	custom:{name: 'custom', adm_open:true, open:false, first_mod:false, image: '../../images/custom.png', title: '自定义', des: '自定义',href:'../../embed/view/embed-main.html',icon:'icon-feed3'},
 };
 
 /*APP特有的模块*/

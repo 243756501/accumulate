@@ -3,6 +3,21 @@
 	from  {opacity: 0;}
 	to {opacity: 1;}
 }
+.base-avatar-icon
+{
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+}
+.base-padding{
+	padding: 5% !important;
+}
+.base-pagebody{
+	margin-top: 45px;
+}
+.base-small-icon{
+	font-size: 18px !important;
+}
 .base-fade-view{
 	display: none;
 	opacity: 0;
@@ -90,8 +105,14 @@
 	background-color: #1ABC9C !important;
 }
 .base-head-title{
-	color: #1ABC9C;
-	font-weight: bold;
+	color: #1ABC9C !important;
+	background-color: #FFFFFF;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.base-head-title h1 {
+	color: #1ABC9C !important;
 }
 .base-table-view{
 	margin-top: 0 !important;

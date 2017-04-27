@@ -1,0 +1,23 @@
+.gamble-table {
+	margin: 5% 5% 0 5%;
+	border-color: #1ABC9C !important;
+}
+
+.th-history {
+	padding: 2%;
+	background-color: #1ABC9C;
+}
+
+.th-num {
+	padding: 2%;
+	background-color: #1ABC9C;
+}
+
+th {
+	color: #FFFFFF;
+}
+
+.th-time
+{
+	background-color: #1ABC9C;
+}

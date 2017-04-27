@@ -106,6 +106,7 @@
 			};
 			account.login(loginInfo, function(res) {
 				toast.hideLoading();
+				myStorage.setItem('userInfo_all',JSON.stringify(res));
 				if(res.code == 200) {
 					goLg();
 				} else {

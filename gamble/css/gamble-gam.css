@@ -1,0 +1,90 @@
+			.user-info-container {
+				padding: 5%;
+			}
+			
+			.user-avatar {
+				width: 80px;
+				margin-right: 20%;
+			}
+			
+			.userInfo-contianer {
+				display: flex;
+			}
+			
+			.user-info {
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+			}
+			
+			.user-other-info {
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+			}
+			
+			.othertool-contianer {
+				margin-top: 5%;
+				display: flex;
+				justify-content: space-between;
+			}
+			
+			.gamble-info-contianer {
+				margin-top: 2%;
+				padding: 5%;
+			}
+			
+			.gamble-result-div {
+				width: 100%;
+			}
+			
+			.gamble-result-item {
+				display: inline-block;
+				box-shadow: 0 0 10px #AAAAAA;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				width: 30%;
+				margin-left: 2%;
+				margin-bottom: 2%;
+			}
+			
+			.gamble-result-item-type {
+				display: flex;
+				padding: 5px;
+				justify-content: center;
+				width: 100%;
+				background-color: #1ABC9C;
+				color: #FFFFFF;
+			}
+			
+			.gamble-result-item-times {
+				display: flex;
+				padding: 5px;
+				align-items: center;
+				justify-content: center;
+				height: 50px;
+				background-color: #EEEEEE;
+				width: 100%;
+			}
+			
+			.info-text {
+				margin-bottom: 5%;
+			}
+			
+			.gamble-all-contianer {
+				margin-top: 5%;
+			}
+			
+			.gamble-cost {
+				color: red;
+			}
+			
+			.gamble-submit {
+				margin-top: 5%;
+				width: 100%;
+			}
+			
+			.score-type {
+				font-size: 15px;
+			}

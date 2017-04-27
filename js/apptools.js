@@ -94,35 +94,46 @@ var webtools = {
 		}
 	},
 	/*测试函数的运行时间*/
-	testTime:function(callback,time){
+	testTime: function(callback, time) {
 		time = time || 1;
-		var start = new Date().getTime();//起始时间
-		for(var i = 0;i<time;i++){
-			callback();//执行待测函数
+		var start = new Date().getTime(); //起始时间
+		for(var i = 0; i < time; i++) {
+			callback(); //执行待测函数
 		}
-		var end = new Date().getTime();//结束时间
-		console.log('总耗时：'+(end-start)+"ms|<><>|平均耗时："+(end-start)/time+'ms');
-		return end - start;//返回函数执行需要时间
+		var end = new Date().getTime(); //结束时间
+		console.log('总耗时：' + (end - start) + "ms|<><>|平均耗时：" + (end - start) / time + 'ms');
+		return end - start; //返回函数执行需要时间
 	}
 };
 
 //APP工具类
 var apptools = {
-	
+	/*
+	 * 表格清空工具
+	 * @param{obj}
+	 */
+	clearTable: function(targetId) {
+		var table = document.getElementById(targetId),
+			trs = table.getElementsByTagName("tr");
+		for(var i = trs.length - 1; i > 0; i--) {
+			table.deleteRow(i);
+		}
+	},
+
 	/**
 	 * 过滤html文本
 	 * @param {String} str
 	 */
-	htmlStr:function(str){
-		return str.replace(/<[^>]*>/g,'');
+	htmlStr: function(str) {
+		return str.replace(/<[^>]*>/g, '');
 	},
 	/**
 	 * 过滤@原本的输入形式为@xxxx
 	 * @param {String} str
 	 */
-	atCompile:function(str){
-	    var compileStr=str.replace(/( @[^ ]* )/g,function(word){
-			return '[at:'+atArray[word]+']';
+	atCompile: function(str) {
+		var compileStr = str.replace(/( @[^ ]* )/g, function(word) {
+			return '[at:' + atArray[word] + ']';
 		});
 		return compileStr;
 	},
@@ -130,61 +141,61 @@ var apptools = {
 	 * 过滤发送文本中的\n为<br>
 	 * @param {String} str
 	 */
-	newlineCompile:function(str){
-		var compileStr=str.replace(/\n/g,'<br>');
+	newlineCompile: function(str) {
+		var compileStr = str.replace(/\n/g, '<br>');
 		return compileStr;
 	},
 	/**
-	  * 获得合格的网络地址
-	  * @param {String} str
-	  */
-	netUrl:function(str){
-		if(!~str.indexOf('http://') && !~str.indexOf('https://')){
+	 * 获得合格的网络地址
+	 * @param {String} str
+	 */
+	netUrl: function(str) {
+		if(!~str.indexOf('http://') && !~str.indexOf('https://')) {
 			return 'http://' + str;
 		}
 		return str;
 	},
-	
+
 	/**
 	 * 键盘确认键监听器
 	 * @param {Function} callback
 	 */
-	lisEnter:function(callback){
-		window.addEventListener('keypress',function(e){
-			if(e.keyCode == 13){
+	lisEnter: function(callback) {
+		window.addEventListener('keypress', function(e) {
+			if(e.keyCode == 13) {
 				callback();
 			}
 		})
 	},
-	
+
 	/**从html文本里面提取img标签的图片url
 	 * @param {String} richText 含有img标签的html文本
 	 * @param {Boolean} flag	是否提取所有图片
 	 */
-	getCover:function(richText,flag){
+	getCover: function(richText, flag) {
 		var urls = [];
-		if(richText){
+		if(richText) {
 			var regex = /<img[^>]*src=['"]([^'"]+)[^>]*>/;
-			regex = flag? eval(regex+'gi'):eval(regex+'i');
-			richText.replace(regex, function (match, imgUrl) {
-			    if(!~imgUrl.indexOf('http')){
+			regex = flag ? eval(regex + 'gi') : eval(regex + 'i');
+			richText.replace(regex, function(match, imgUrl) {
+				if(!~imgUrl.indexOf('http')) {
 					imgUrl = APP_BASE.domain + imgUrl;
 				}
-			    urls.push(imgUrl);
+				urls.push(imgUrl);
 			});
 		}
 		return urls;
 	},
-	
+
 	/*
 	 * 避免软键盘弹出屏幕变小导致底部栏上推
 	 * @param{object} nav对象的id
 	 */
-	fixNavposition:function(nav){
+	fixNavposition: function(nav) {
 		//设置bottom绝对位置
-         document.getElementById(nav).style.top = (plus.display.resolutionHeight - 50) + "px";
+		document.getElementById(nav).style.top = (plus.display.resolutionHeight - 50) + "px";
 	},
-	
+
 	/**
 	 * 将秒数格式化时间
 	 * @param {string|number} seconds 整数类型的秒数
@@ -199,12 +210,11 @@ var apptools = {
 			hour = Math.floor(min / 60);
 			newMin = min % 60;
 		}
-
 		if(second < 10) {
 			second = '0' + second;
 		}
-		if(min < 10) {
-			min = '0' + min;
+		if(newMin < 10) {
+			min = '0' + newMin;
 		}
 
 		return time = hour ? (hour + ':' + newMin + ':' + second) : (min + ':' + second);
@@ -275,9 +285,9 @@ var apptools = {
 	fmtVersion: function(str) {
 		var arr = [];
 		var version = 0;
-		if(str){
+		if(str) {
 			arr = str.split('.');
-			version = parseInt((arr[0]||'0')+(arr[1]||'0')+(arr[2]||'0'));
+			version = parseInt((arr[0] || '0') + (arr[1] || '0') + (arr[2] || '0'));
 		}
 		return version;
 	},
@@ -286,45 +296,52 @@ var apptools = {
 	setOkcolor: function(dom) {
 		dom.style.color = '#5AE05A';
 	},
+	/*
+	 * 时间戳转日期
+	 * @param{Object} sTime
+	 */
+	getLocalTime: function(nS) {
+		return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/, ' ');
+	},
 	/**
 	 * 时间戳友好解析
 	 * @param {Object} sTime
 	 */
-	friendlyDate:function(sTime){
-	    if(!sTime)return '';
-	    if(sTime.toString().length > 10)sTime = sTime/1000;
-	    
-	    var myDate = new Date(sTime*1000);
-	    var myHours = myDate.getHours();
-	    var myMin = myDate.getMinutes();
-	    myHours = myHours<10 ?'0'+ myHours:myHours;
-	    myMin = myMin<10 ?'0'+ myMin:myMin;
-	    var timeStr = myHours+':'+ myMin;
-	    var dayStr = myDate.getMonth()+1 +'-' + myDate.getDate();
-	    
-	    //sTime=源时间，cTime=当前时间，dTime=时间差
-	    var cTime = new Date()
-	    var dTime = Date.parse(cTime)/1000 - sTime;
-	    var dDay = cTime.getDate() - myDate.getDate();
-	    var dMonth = cTime.getMonth() - myDate.getMonth();
-	    var dYear = cTime.getFullYear() - myDate.getFullYear();
-        if( dTime < 60 ){
-        	dTime = dTime>0?dTime:0;
-            return dTime +'秒前';
-        }else if(dTime < 3600 ){
-            return Math.floor(dTime/60) +'分钟前';
-            //今天的数据.年份相同.日期相同.
-        }else if(dYear == 0 && dMonth == 0 && dDay<1){
-            return '今天 '+ timeStr;
-    	}else if(dYear == 0 && dMonth == 0 && dDay<2){
-        	return '昨天 '+ timeStr;
-        }else if(dYear == 0){
-            return myDate.getMonth()+1 +'月' + myDate.getDate() + '日 '+ timeStr;
-        }else{
-            return myDate.getFullYear() + '-'+ dayStr;
-        }
+	friendlyDate: function(sTime) {
+		if(!sTime) return '';
+		if(sTime.toString().length > 10) sTime = sTime / 1000;
+
+		var myDate = new Date(sTime * 1000);
+		var myHours = myDate.getHours();
+		var myMin = myDate.getMinutes();
+		myHours = myHours < 10 ? '0' + myHours : myHours;
+		myMin = myMin < 10 ? '0' + myMin : myMin;
+		var timeStr = myHours + ':' + myMin;
+		var dayStr = myDate.getMonth() + 1 + '-' + myDate.getDate();
+
+		//sTime=源时间，cTime=当前时间，dTime=时间差
+		var cTime = new Date()
+		var dTime = Date.parse(cTime) / 1000 - sTime;
+		var dDay = cTime.getDate() - myDate.getDate();
+		var dMonth = cTime.getMonth() - myDate.getMonth();
+		var dYear = cTime.getFullYear() - myDate.getFullYear();
+		if(dTime < 60) {
+			dTime = dTime > 0 ? dTime : 0;
+			return dTime + '秒前';
+		} else if(dTime < 3600) {
+			return Math.floor(dTime / 60) + '分钟前';
+			//今天的数据.年份相同.日期相同.
+		} else if(dYear == 0 && dMonth == 0 && dDay < 1) {
+			return '今天 ' + timeStr;
+		} else if(dYear == 0 && dMonth == 0 && dDay < 2) {
+			return '昨天 ' + timeStr;
+		} else if(dYear == 0) {
+			return myDate.getMonth() + 1 + '月' + myDate.getDate() + '日 ' + timeStr;
+		} else {
+			return myDate.getFullYear() + '-' + dayStr;
+		}
 	},
-	
+
 	/**
 	 * 时间戳解析 改
 	 * @param {int} unixTime
@@ -573,7 +590,7 @@ var goTop = function(thisWeb) {
 				headChidWebArr[index].evalJS('window.scrollTo(0,0)');
 			}
 		}
-	}else{
+	} else {
 		thisWeb.evalJS('window.scrollTo(0,0)');
 	}
 };

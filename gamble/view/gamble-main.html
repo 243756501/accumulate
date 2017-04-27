@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/app/base.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/icons-extra.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/pull-top-tips.css" />
+		<link rel="stylesheet" type="text/css" href="../css/gamble-main.css" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav base-head-title">
+			<h1 class="mui-title">竞猜</h1>
+		</header>
+		<div class="gamble-body base-pagebody mui-fullscreen" style="overflow: hidden;">
+			<div class="gamble-time-container base-white-color base-padding">
+				<div class="time-div">
+					<span id="count_info"></span>
+					<span id="count_time" class="gamble-count"></span>
+				</div>
+				<button id="hisGambleBtn" class="mui-btn mui-btn-danger mui-btn-outlined">查看历史期数</button>
+			</div>
+			<div class="gamble-result-container base-white-color base-padding">
+				<div class="gamble-now">当前押注</div>
+				<div id="gambleResult" class="gamble-result-div">
+				</div>
+			</div>
+			<div class="gamble-slider-container mui-slider base-white-color" style="height: 100%;">
+				<div class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+					<a class="mui-control-item" href="#item1">近期中奖会员</a>
+					<a class="mui-control-item" href="#item2">我的投注信息</a>
+				</div>
+				<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-6"></div>
+				<div class="mui-slider-group">
+					<div id="item1" class="mui-slider-item mui-control-content mui-active base-padding">
+						<div class="mui-scroll-wrapper">
+							<div class="mui-scroll ">
+								<ul id="gambleList" class="mui-table-view">
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div id="item2" class="mui-slider-item mui-control-content base-padding">
+						<div id="item2_loaded" style="display: none;">
+							<div id="mineGam" class="gamble-result-div">
+							</div>
+							<button id="gambleBtn" class="gamble-btn mui-btn  mui-btn-danger">我要投注</button>
+						</div>
+						<div id="item2_unload" class="mui-text-center" style="display: block;">
+							<img class="base-avatar-icon" src="../../images/default_avatar.jpg" style="width: 60px;height: 60px;" />
+							<div class="mui-content-padded">
+								<div>
+									<p>登录后，你的更多信息将会显示在此页面</p>
+								</div>
+								<div id="join_view" class="link-area">
+									<button id="reg" class="unload-btn mui-btn mui-btn-positive">注册</button>
+									<button id="login" class="unload-btn mui-btn">登录</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script id="gamble_reward_script" type="text/html">
+			<div class="gamble-user-container">
+				<div class="base-avatar-icon">
+					<img class="base-avatar-icon" src="../../account/img/default_avatar.jpg" data-src="{{avatar128}}" onload="load(this)" />
+				</div>
+				<div class="gamble-userinfo-container">
+					<div>{{nickname}}</div>
+					<div>{{reward_rank}}</div>
+				</div>
+			</div>
+
+			<div class="gamble-num-container">
+				{{reward_num}}
+			</div>
+		</script>
+		<script id="gamble_allRes_script" type="text/html">
+			<div class="gamble-result-item-type">
+				{{title}}
+			</div>
+			<div class="gamble-result-item-times">
+				{{times_sum}}
+			</div>
+		</script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../js/gamble.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.pullToRefresh.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.pullToRefresh.material.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/apptools.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/imgtools/imgload.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mytools/my_storage.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/core.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/gamble-main.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>
